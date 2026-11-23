@@ -1,35 +1,75 @@
 # XunTradeOMSEMS
 
-基于现有 `emt-win-gateway` 优化的 **C++20 + Python OMS/EMS 交易中台**。
-Python 承载订单领域、OMS/EMS 编排、持久化恢复与 EMT/QMT/Paper 适配；C++ 承载日志 CRC32C、
-保持原协议的批量分片与有界并行整数计算。
+**面向策略接入、订单管理与交易执行的 C++20 / Python 混合架构交易中台。**
 
-源工程保持不变；本仓库本地目录为 `D:\荨安\XunTradeOMSEMS`。来源提交及导入文件哈希见
-[provenance.json](docs/provenance.json)。本地密钥、账户数据、供应商 SDK、虚拟环境和历史运行产物未导入。
+XunTradeOMSEMS 围绕 OMS 订单生命周期和 EMS 执行调度，提供订单身份管理、幂等处理、
+持久化日志、账户执行权隔离、会话分片与券商适配能力，让策略请求、执行结果和恢复过程可关联、可核对。
 
-## 已实现
+Python 负责领域模型、业务编排、恢复与接口集成；C++20 负责日志校验、批量分片和整数金额计算。
+两者通过进程内原生扩展协作，兼顾业务开发效率与计算性能。
 
-- **实际日志路径接入 C++**：`emt_gateway.journal.crc32c` 直接调用原生扩展，x64 自动检测 SSE4.2，
-  不支持时使用 C++ 可移植算法。旧日志帧、Castagnoli 校验、损坏尾截断和 fsync 语义保持兼容。
-- **EMS 批量分片**：`AccountSessionShardRouter.route_execution_ids()` 使用 C++ BLAKE2s-128，
-  与原单笔 `tcshard1` 路由结果一致。原账户 fence、路由 epoch、精确撤单身份继续生效。
-- **整数金额批量计算**：检查数量、金额、现金上限、订单上限和 int64 溢出，避免浮点金额；
-  每行是独立快照，结果不作为共享现金预留或实际下单授权。
-- **C++ 并行**：批量计算释放 GIL，最多 32 个 worker；拒绝超界批次和类型不符输入。
-- **可验证构建**：pip 原生扩展、独立 CMake/CTest、跨后端一致性测试、Windows/Linux CI 和离线性能脚本。
+## 核心能力
 
-完整设计、语言边界与多进程分片规则见 [HYBRID_ARCHITECTURE.md](docs/HYBRID_ARCHITECTURE.md)。
-本次提供单机 C++ 并行和既有账户分片接口；跨机器计算 RPC、集群共识和自动迁移不在本版本实现范围。
+| 能力 | 说明 |
+| --- | --- |
+| OMS 订单管理 | 管理订单身份、状态、幂等请求与撤单关联，维护订单生命周期 |
+| EMS 执行调度 | 按账户管理有界队列、执行额度和会话路由，隔离订单与撤单通道 |
+| 持久化与恢复 | journal-first 写入顺序、提交标记、校验与连续前缀恢复，保留不确定提交的核对依据 |
+| 账户与会话隔离 | 通过账户 fence、不可变路由计划和路由 epoch 约束执行权；撤单与回报按精确订单身份归属 |
+| 券商适配 | 提供 EMT、QMT 与 Paper 适配模块，通过适配边界连接交易服务 |
+| C++ 计算内核 | CRC32C、BLAKE2s-128 批量分片、int64 金额与限额检查，支持有界 CPU 并行 |
+| 接口与读模型 | Consumer 协议、订单查询、事件回放、快照和读模型投影 |
+| 工程验证 | 原生构建、离线自检、跨后端一致性测试、性能基准与 Windows/Linux CI 配置 |
 
-## 构建和离线自检
+## 架构
 
-使用 **CPython 3.10**。Windows 需要 Visual Studio 2022 C++ Build Tools（MSVC 与 Windows SDK）；
-Linux 需要支持 C++20 的 GCC/Clang 和 Python 开发头文件。原生扩展编译失败会阻止安装。
+```mermaid
+flowchart TD
+    Strategy[策略 / Consumer 客户端] --> OMS["Python OMS<br/>订单身份、幂等、状态管理"]
+    OMS --> Journal[持久化日志 / 账户执行权]
+    Journal --> CRC[C++ CRC32C]
+    OMS --> EMS["Python EMS<br/>调度、额度、会话路由"]
+    EMS --> Routing[C++ 批量分片]
+    EMS --> Adapter[EMT / QMT / Paper 适配器]
+    Adapter --> Broker[交易服务]
+    Journal --> Projection[事件回放 / 快照 / 读模型]
+    Batch[独立计算快照] --> Compute[C++ 整数金额计算]
+```
+
+### C++ 与 Python 的职责
+
+- **C++20**：日志 CRC32C 校验、与会话路由协议一致的 BLAKE2s-128 批量分片，以及整数金额和限额计算。
+  x64 自动检测 SSE4.2；其他 CPU 使用可移植 CRC32C 实现。
+- **Python**：订单领域、OMS/EMS 编排、账户执行权、持久化屏障、恢复、查询与券商适配。
+- **原生扩展边界**：批量输入在持有 GIL 时完成复制，纯计算阶段释放 GIL，结果按输入顺序返回。
+  每批最多 1,000,000 行，最多 32 个 worker，小批次自动串行。
+
+系统遵循 journal-first 与 fail-closed 原则：无法确认持久化或执行权时停止进入交易调用；
+提交结果不确定时保留核对流程，不自动重复发送订单。
+
+当前计算并行度覆盖单机 CPU，账户和会话通过显式计划分片。跨机器计算 RPC、集群共识和自动迁移尚未实现。
+
+## 快速开始
+
+### 环境要求
+
+| 环境 | 要求 |
+| --- | --- |
+| Python | CPython 3.10 |
+| Windows 原生构建 | x64，Visual Studio 2022 C++ Build Tools，MSVC 与 Windows SDK |
+| Linux 原生构建 | x64，支持 C++20 的 GCC/Clang，Python 开发头文件 |
+| 独立 C++ 构建 | CMake 3.25 或更高版本 |
+
+获取代码：
+
+```bash
+git clone git@github.com:XunAn523/Xun-Trade-platform.git XunTradeOMSEMS
+cd XunTradeOMSEMS
+```
 
 Windows PowerShell：
 
 ```powershell
-cd D:\荨安\XunTradeOMSEMS
 py -3.10 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -e . pytest hypothesis
 .\.venv\Scripts\python.exe -m xuntrade_omsems self-check --require-native
@@ -43,10 +83,17 @@ python3.10 -m venv .venv
 .venv/bin/python -m xuntrade_omsems self-check --require-native
 ```
 
-自检仅使用临时目录和离线示例，不连接交易柜台。`uv.lock` 固定应用与可选依赖的解析结果，
-需要锁定安装时使用 `uv sync --locked --python 3.10`；常规 pip 命令按 `pyproject.toml` 版本范围安装。
+安装过程会编译 C++ 扩展，原生编译失败时终止安装。自检使用临时目录和离线示例，
+验证计算内核、分片协议与持久化日志，不连接交易服务。
 
-独立构建 C++ 核心：
+使用锁定依赖安装：
+
+```bash
+uv sync --locked --python 3.10
+uv run xuntrade-omsems self-check --require-native
+```
+
+### 独立构建 C++ 核心
 
 ```bash
 cmake -S . -B build/cmake -DCMAKE_BUILD_TYPE=Release
@@ -54,44 +101,107 @@ cmake --build build/cmake --config Release
 ctest --test-dir build/cmake -C Release --output-on-failure
 ```
 
-`XUNTRADE_BACKEND` 默认为 `native`，扩展缺失时启动失败。设置为 `python` 可运行诊断对照；
-设置为 `auto` 可显式允许缺少扩展的兼容运行。`python -m xuntrade_omsems info` 显示实际后端。
+C++ 核心可独立构建和测试，不依赖券商 SDK、数据库或交易连接。
 
-## Python 调用
+## 运行模式
+
+通过环境变量 `XUNTRADE_BACKEND` 选择计算后端，进程启动时生效：
+
+| 模式 | 行为 |
+| --- | --- |
+| `native`（默认） | 使用 C++ 扩展；扩展缺失时启动失败 |
+| `python` | 使用 Python 参考实现，适合诊断与结果对照 |
+| `auto` | 优先使用 C++；扩展缺失时允许 Python 兼容运行 |
+
+查看当前计算后端：
+
+```bash
+python -m xuntrade_omsems info
+```
+
+原生计算运行失败会向调用方返回异常，不静默切换后端。
+
+## Python 接口
 
 ```python
 from xuntrade_omsems.compute import assess_orders, backend_info, session_shards
 
 print(backend_info())
+
+# 将执行身份映射到固定数量的会话分片。
 indices = session_shards(("execution-1", "execution-2"), 3, workers=4)
-# quantity, price_minor, available_minor, order_limit_minor
+
+# 每行：数量、单位价格、可用金额、订单金额上限。
+# 所有金额采用同一最小货币单位，使用整数表示。
 results = assess_orders(((100, 1250, 200000, 200000),), workers=1)
 assert results == ((125000, 0),)
 ```
 
-批量金额结果为 `(notional_minor, code)`；code：`0` 通过算术检查、`1` 非法数值、`2` 溢出、
-`3` 超订单上限、`4` 超现金上限。数量和价格为正整数，金额统一使用调用方选定的最小货币单位。
-无效或溢出行的 notional 为 `0`。接口每批最多 1,000,000 行、最多 32 个 worker。
+金额计算返回 `(notional_minor, code)`：
 
-现有 `xuanling_tradecore`、`emt_gateway` 包和 `xuanling-tradecore` CLI 保留兼容。
-所有真实交易仍必须走已有 OMS/EMS、journal、账户执行权和券商适配器。
+| code | 含义 |
+| --- | --- |
+| `0` | 通过算术和限额检查 |
+| `1` | 非法数值 |
+| `2` | int64 乘法溢出 |
+| `3` | 超过订单金额上限 |
+| `4` | 超过可用金额 |
 
-## 回归和性能
+数量和价格必须为正整数；无效或溢出行的 `notional_minor` 为 `0`。
+每行输入代表独立快照，计算结果不承担共享资金预留或实际下单授权。
+交易请求应通过 OMS/EMS、持久化日志、账户执行权与券商适配流程。
 
-安装后执行核心回归（将 `python` 替换为当前虚拟环境解释器）：
+账户内批量路由入口为 `AccountSessionShardRouter.route_execution_ids()`，
+在完成账户与身份校验后，将批量计算结果映射到不可变会话计划。
+
+## 测试与性能
+
+安装后运行核心回归，将 `python` 替换为当前虚拟环境解释器：
 
 ```bash
 python -m pytest -q tests/test_hybrid_compute.py tests/test_account_session_sharding.py tests/test_journal.py tests/test_gateway.py tests/test_account_execution_router.py tests/test_execution_scheduler.py tests/test_tradecore_oms.py tests/test_execution_session_runtime.py tests/test_account_ownership_fence.py
-python -m tools.benchmarks.hybrid_compute --output benchmark-results.local.json
 ```
 
-已测环境、通过/跳过数量及限制见 [VALIDATION.md](docs/VALIDATION.md)。基准原始结果位于
-[docs/benchmarks](docs/benchmarks)。性能脚本包含 Python 调用与数据转换成本，比较 Python、
-C++ 单线程和 C++ 多线程；不包含磁盘 fsync、网络或柜台延迟，也不代表实盘 C0→C7 验收。
+运行离线计算基准：
 
-导入的原测试还包含历史证据、SDK、PostgreSQL、Linux 进程和部署环境测试。完整运行前需按
-原文档提供相应环境；`pip install -e '.[test,tooling]' -e tools/performance` 提供可选测试工具。
-历史文档和 [UPSTREAM_README.md](docs/UPSTREAM_README.md) 仅反映源工程状态。
+```bash
+python -m tools.benchmarks.hybrid_compute --batch-size 50000 --repeats 7 --workers 4 --output benchmark-results.local.json
+```
 
-新的计算层和离线 journal 支持 Windows/Linux；原 EMT 实盘部署仍以 Linux x86_64 和官方
-CPython 3.10 SDK 约束为准。没有实际账户、SDK 和现场验收时，本仓库不宣称实盘可用。
+基准比较 Python、C++ 单线程与 C++ 多线程，包含 Python 调用和数据转换成本。
+测量范围不含磁盘 fsync、网络、OMS 领域校验或券商延迟，不能外推为完整交易链路的性能保证。
+
+可选测试工具：
+
+```bash
+python -m pip install -e '.[test,tooling]' -e tools/performance
+```
+
+SDK、PostgreSQL 和部署集成测试需要对应环境。已执行的验证范围、结果和已知问题见
+[验证报告](docs/VALIDATION.md)，基准原始数据见 [性能记录](docs/benchmarks)。
+
+## 项目结构
+
+```text
+XunTradeOMSEMS/
+├── native/                 # C++20 内核、Python 绑定与 C 回调队列
+├── xuntrade_omsems/         # 计算接口、后端选择与离线 CLI
+├── xuanling_tradecore/      # 订单领域、OMS/EMS、运行时与券商适配
+├── emt_gateway/             # EMT 网关接口、journal 与会话支持
+├── contracts/               # 协议、schema 与校验资产
+├── deploy/                  # 部署配置与运行脚本
+├── tests/                   # 功能与回归测试
+├── tools/                   # 性能、验收与质量工具
+└── docs/                    # 架构、运维与验证文档
+```
+
+## 文档与运行范围
+
+- [混合架构与语言边界](docs/HYBRID_ARCHITECTURE.md)
+- [验证报告与已知问题](docs/VALIDATION.md)
+- [Consumer 协议](contracts/consumer/v2/framing.md)
+- [性能原始记录](docs/benchmarks)
+
+C++ 计算层和离线 journal 支持 Windows x64 与 Linux x64。
+EMT 交易接入采用 Linux x86_64 与官方 CPython 3.10 SDK；供应商 SDK、账户配置与凭据由部署环境提供。
+实盘可用性需要结合目标环境、交易账户和现场验收确认。
