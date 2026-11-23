@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "manifest_id": "f0-example-quality-baseline",
+  "package_id": "F0",
+  "candidate_commit_sha": "0123456789abcdef0123456789abcdef01234567",
+  "environment_hash": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "profile": "quality-only",
+  "acceptance_status": "passed",
+  "test_commands": [
+    {
+      "name": "strict-pyright",
+      "command": "python -m pyright",
+      "exit_code": 0,
+      "result": "passed"
+    }
+  ],
+  "result_summary": {
+    "passed_checks": 5,
+    "failed_checks": 0,
+    "skipped_checks": 0,
+    "summary": "Example only; use a real candidate commit and reproducible environment hash."
+  },
+  "known_limitations": [
+    "An evidence manifest indexes results; it is not an authorization to change an account from DISARMED."
+  ],
+  "evidence_references": [
+    {
+      "kind": "document",
+      "reference": "docs/01-架构与定档/06-当前版本完善与统一验收路线.md",
+      "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+    }
+  ]
+}

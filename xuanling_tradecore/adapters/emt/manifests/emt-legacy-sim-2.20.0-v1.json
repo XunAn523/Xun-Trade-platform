@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "manifest_id": "emt-legacy-sim-2.20.0",
+  "manifest_version": 1,
+  "venue_id": "EMT",
+  "fingerprint": {
+    "adapter_id": "emt-gateway-p0",
+    "adapter_version": "legacy-p0",
+    "sdk_version": "2.20.0",
+    "adapter_package_hash": "cf625bb7c87f42dc91e680171b259d9720d6f3d4ee61360448a5085803bfb7d5",
+    "sdk_binary_hash": "6eb8c354cea94bbde14074b891fe2c5979282fb72ceccf89bfe3f386126dd4c9",
+    "binding_package_hash": "d15c6343c45d844992212f987b2d63fd51fb27037991e89086cff367eebce9ee"
+  },
+  "effective_interval": {"not_before_unix_s": 0, "not_after_unix_s": null},
+  "owner": "tradecore-platform",
+  "evidence": [
+    {
+      "evidence_id": "emt-sdk-2.20.0-order-dictionary",
+      "source_reference": "EMT Python SDK 2.20.0 trading manual: EMT_MARKET_TYPE, EMT_PRICE_TYPE, EMT_SIDE_TYPE, EMT_BUSINESS_TYPE_EXT, EMTOrderInsertInfo",
+      "fixture_id": "vendor-manual-2.20.0",
+      "test_id": "tests.test_emt_mapping_registry.EmtMappingRegistryTests.test_builtin_manifest_maps_only_documented_codes",
+      "owner": "tradecore-platform"
+    },
+    {
+      "evidence_id": "emt-sim-cash-controlled-fixture",
+      "source_reference": "data/performance/fixtures/emt/emt-controlled-order-fixture.json",
+      "fixture_id": "emt-controlled-order-fixture:ordinary-order-and-cancel",
+      "test_id": "tests.test_emt_mapping_registry.EmtMappingRegistryTests.test_builtin_manifest_maps_only_documented_codes",
+      "owner": "tradecore-platform"
+    },
+    {
+      "evidence_id": "emt-sim-credit-controlled-fixture",
+      "source_reference": "tools/performance/NATIVE_MUTATION.md",
+      "fixture_id": "emt-mutation-fixture:credit-margin-buy-and-short-sell",
+      "test_id": "tests.test_emt_mapping_registry.EmtMappingRegistryTests.test_account_capability_and_unknown_values_fail_closed",
+      "owner": "tradecore-platform"
+    }
+  ],
+  "field_mappings": {
+    "market": [
+      {"domain_value": "SZ", "venue_value": 1, "evidence_ids": ["emt-sdk-2.20.0-order-dictionary", "emt-sim-cash-controlled-fixture"]},
+      {"domain_value": "SH", "venue_value": 2, "evidence_ids": ["emt-sdk-2.20.0-order-dictionary"]}
+    ],
+    "side": [
+      {"domain_value": "BUY", "venue_value": 1, "evidence_ids": ["emt-sdk-2.20.0-order-dictionary", "emt-sim-cash-controlled-fixture"]},
+      {"domain_value": "SELL", "venue_value": 2, "evidence_ids": ["emt-sdk-2.20.0-order-dictionary", "emt-sim-cash-controlled-fixture"]},
+      {"domain_value": "MARGIN_BUY", "venue_value": 21, "evidence_ids": ["emt-sdk-2.20.0-order-dictionary", "emt-sim-credit-controlled-fixture"]},
+      {"domain_value": "SHORT_SELL", "venue_value": 22, "evidence_ids": ["emt-sdk-2.20.0-order-dictionary", "emt-sim-credit-controlled-fixture"]}
+    ],
+    "price_type": [
+      {"domain_value": "LIMIT", "venue_value": 1, "evidence_ids": ["emt-sdk-2.20.0-order-dictionary", "emt-sim-cash-controlled-fixture"]}
+    ],
+    "business_type": [
+      {"domain_value": "CASH", "venue_value": 0, "evidence_ids": ["emt-sdk-2.20.0-order-dictionary", "emt-sim-cash-controlled-fixture"]},
+      {"domain_value": "MARGIN", "venue_value": 4, "evidence_ids": ["emt-sdk-2.20.0-order-dictionary", "emt-sim-credit-controlled-fixture"]}
+    ]
+  },
+  "order_routes": [
+    {"business_type": "CASH", "side": "BUY", "required_capabilities": ["CASH"], "evidence_ids": ["emt-sdk-2.20.0-order-dictionary", "emt-sim-cash-controlled-fixture"]},
+    {"business_type": "CASH", "side": "SELL", "required_capabilities": ["CASH"], "evidence_ids": ["emt-sdk-2.20.0-order-dictionary", "emt-sim-cash-controlled-fixture"]},
+    {"business_type": "MARGIN", "side": "MARGIN_BUY", "required_capabilities": ["MARGIN_BUY"], "evidence_ids": ["emt-sdk-2.20.0-order-dictionary", "emt-sim-credit-controlled-fixture"]},
+    {"business_type": "MARGIN", "side": "SHORT_SELL", "required_capabilities": ["SHORT_SELL"], "evidence_ids": ["emt-sdk-2.20.0-order-dictionary", "emt-sim-credit-controlled-fixture"]}
+  ],
+  "identity": {
+    "client_order_ref_field": "order_client_id",
+    "client_order_ref_format": "uint32-nonzero",
+    "venue_order_id_field": "order_emt_id",
+    "venue_order_id_format": "uint64",
+    "venue_cancel_id_field": "order_cancel_emt_id",
+    "venue_cancel_id_format": "uint64",
+    "adapter_client_scope_field": "client_id",
+    "adapter_client_scope_format": "uint8",
+    "evidence_ids": ["emt-sdk-2.20.0-order-dictionary"]
+  },
+  "capabilities": {
+    "capability_profile_id": "emt-legacy-sim-2.20.0",
+    "version": 1,
+    "venue_id": "EMT",
+    "supports_cash": true,
+    "supports_margin_buy": true,
+    "supports_short_sell": true,
+    "supports_pagination": true,
+    "supports_public_stream_replay": false,
+    "echoes_client_order_ref": true,
+    "has_stable_venue_order_id": true,
+    "has_stable_trade_id": true,
+    "supports_complete_recovery_queries": false,
+    "supports_negative_confirmation": false,
+    "supports_paper_matching": false
+  },
+  "recovery": {
+    "supports_order_query": true,
+    "supports_trade_query": true,
+    "supports_working_order_query": true,
+    "supports_asset_query": true,
+    "supports_position_query": true,
+    "automatic_recovery_eligible": false,
+    "evidence_ids": ["emt-sdk-2.20.0-order-dictionary"]
+  }
+}

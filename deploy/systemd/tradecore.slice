@@ -1,0 +1,7 @@
+[Unit]
+Description=TradeCore dedicated production CPU partition
+
+[Slice]
+AllowedCPUs=64-79,160-175
+CPUAccounting=yes
+MemoryAccounting=yes

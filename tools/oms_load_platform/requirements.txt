@@ -1,0 +1,5 @@
+# Tooling-only runtime.  These packages are intentionally absent from the
+# TradeCore execution package and its C0--C7 call graph.
+fastapi>=0.115,<1
+uvicorn[standard]>=0.32,<1
+hdrhistogram>=0.10,<1

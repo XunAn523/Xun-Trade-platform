@@ -1,0 +1,12 @@
+{
+  "schema": "event.schema.json",
+  "expected_error": "SCHEMA_VALIDATION_FAILED",
+  "payload": {
+    "message_type": "event",
+    "schema_version": 2,
+    "event_id": "event-1",
+    "event_kind": "ORDER",
+    "position": "9-10:0",
+    "payload": {}
+  }
+}

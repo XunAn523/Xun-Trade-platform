@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "profile": "EMT",
+  "binding_id": "emt-order-client-id-v1",
+  "vectors": [
+    {
+      "token": "rt1_ABEiM0RVZneImaq7zN3u_w",
+      "allocated_client_order_ref": "42",
+      "encoded": "42",
+      "extract_paths": [
+        "EMTOrderInfo.order_client_id",
+        "EMTTradeReport.order_client_id",
+        "EMTCancelOrderError.order_client_id",
+        "QueryOrdersByPage[].order_client_id",
+        "QueryTradesByPage[].order_client_id",
+        "recovery_query.orders[].order_client_id",
+        "recovery_query.trades[].order_client_id"
+      ]
+    }
+  ],
+  "negative_native_values": ["0", "4294967296", "0042", "42x", "策略-1"]
+}

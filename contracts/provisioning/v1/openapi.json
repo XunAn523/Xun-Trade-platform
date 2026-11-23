@@ -1,0 +1,77 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "TradeCore Adapter Provisioning Control API",
+    "version": "1.0.0",
+    "description": "Non-hot-path configuration API. HTTPS HTTP/2 with TLS 1.3 mTLS is mandatory. Consumer UDS and this API are separate trust domains."
+  },
+  "servers": [
+    {"url": "https://control.tradecore.internal", "description": "Approved control-plane ingress only"}
+  ],
+  "paths": {
+    "/control/v1/credential-recipients/{adapter_kind}": {
+      "get": {
+        "operationId": "getCredentialRecipient",
+        "security": [{"mutualTLS": []}],
+        "parameters": [{"name": "adapter_kind", "in": "path", "required": true, "schema": {"enum": ["EMT", "QMT"]}}],
+        "responses": {"200": {"description": "Public recipient only", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/CredentialRecipient"}}}}, "401": {"$ref": "#/components/responses/ControlFailure"}}
+      }
+    },
+    "/control/v1/adapter-profiles:prepare": {
+      "post": {
+        "operationId": "prepareAdapterProfile",
+        "security": [{"mutualTLS": []}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/PrepareProfileRequest"}}}},
+        "responses": {"200": {"description": "Idempotent PREPARED receipt", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/ProfileReceipt"}}}}, "400": {"$ref": "#/components/responses/ControlFailure"}, "401": {"$ref": "#/components/responses/ControlFailure"}, "409": {"$ref": "#/components/responses/ControlFailure"}}
+      }
+    },
+    "/control/v1/approvals": {
+      "post": {
+        "operationId": "recordProvisioningApproval",
+        "security": [{"mutualTLS": []}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/ApprovalRequest"}}}},
+        "responses": {"200": {"description": "Independent approval recorded", "content": {"application/json": {"schema": {"type": "object", "additionalProperties": false, "required": ["approval_id"], "properties": {"approval_id": {"type": "string"}}}}}}, "401": {"$ref": "#/components/responses/ControlFailure"}, "409": {"$ref": "#/components/responses/ControlFailure"}}
+      }
+    },
+    "/control/v1/adapter-profiles/{profile_id}/{revision}:validate": {
+      "post": {
+        "operationId": "validateAdapterProfile",
+        "security": [{"mutualTLS": []}],
+        "parameters": [{"name": "profile_id", "in": "path", "required": true, "schema": {"type": "string"}}, {"name": "revision", "in": "path", "required": true, "schema": {"type": "integer", "minimum": 1}}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/ProfileActionRequest"}}}},
+        "responses": {"200": {"description": "VALIDATED or REJECTED receipt", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/ProfileReceipt"}}}}, "401": {"$ref": "#/components/responses/ControlFailure"}, "409": {"$ref": "#/components/responses/ControlFailure"}}
+      }
+    },
+    "/control/v1/consumer-bindings:activate": {
+      "post": {
+        "operationId": "activateConsumerBinding",
+        "security": [{"mutualTLS": []}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/ActivationRequest"}}}},
+        "responses": {"200": {"description": "ACTIVE_DISARMED receipt", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/ProfileReceipt"}}}}, "401": {"$ref": "#/components/responses/ControlFailure"}, "409": {"$ref": "#/components/responses/ControlFailure"}}
+      }
+    },
+    "/control/v1/adapter-profiles/{profile_id}/{revision}:retire": {
+      "post": {
+        "operationId": "retireAdapterProfile",
+        "security": [{"mutualTLS": []}],
+        "parameters": [{"name": "profile_id", "in": "path", "required": true, "schema": {"type": "string"}}, {"name": "revision", "in": "path", "required": true, "schema": {"type": "integer", "minimum": 1}}],
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/ProfileActionRequest"}}}},
+        "responses": {"200": {"description": "RETIRED receipt", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/ProfileReceipt"}}}}, "401": {"$ref": "#/components/responses/ControlFailure"}, "409": {"$ref": "#/components/responses/ControlFailure"}}
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {"mutualTLS": {"type": "mutualTLS", "description": "TLS 1.3, ALPN h2, approved client certificate and role mapping required."}},
+    "responses": {"ControlFailure": {"description": "Redacted stable error", "content": {"application/json": {"schema": {"$ref": "#/components/schemas/ControlFailure"}}}}},
+    "schemas": {
+      "CredentialRecipient": {"type": "object", "additionalProperties": false, "required": ["target", "kid", "alg", "enc", "not_after"], "properties": {"target": {"type": "string"}, "kid": {"type": "string"}, "alg": {"const": "RSA-OAEP-256"}, "enc": {"const": "A256GCM"}, "not_after": {"type": "string", "format": "date-time"}}},
+      "PrepareProfileRequest": {"type": "object", "additionalProperties": false, "required": ["request_id", "profile_id", "adapter_kind", "adapter_instance_id", "account_alias", "credential_envelope", "expected_credential_kid", "not_after", "approval_reference", "attributes"], "properties": {"request_id": {"type": "string", "format": "uuid"}, "profile_id": {"type": "string"}, "adapter_kind": {"enum": ["EMT", "QMT"]}, "adapter_instance_id": {"type": "string"}, "account_alias": {"type": "string"}, "credential_envelope": {"type": "string", "description": "RFC 7516 compact JWE; it is the only credential/endpoint carrier."}, "expected_credential_kid": {"type": "string"}, "not_after": {"type": "string", "format": "date-time"}, "approval_reference": {"type": "string"}, "attributes": {"type": "object", "additionalProperties": false, "required": ["mapping_manifest_hash", "capability_manifest_hash", "release_manifest_hash"], "properties": {"mapping_manifest_hash": {"$ref": "#/components/schemas/Sha256"}, "capability_manifest_hash": {"$ref": "#/components/schemas/Sha256"}, "release_manifest_hash": {"$ref": "#/components/schemas/Sha256"}}}}},
+      "ProfileActionRequest": {"type": "object", "additionalProperties": false, "required": ["request_id", "approval_id"], "properties": {"request_id": {"type": "string", "format": "uuid"}, "approval_id": {"type": "string"}, "reason_code": {"type": "string"}}},
+      "ApprovalRequest": {"type": "object", "additionalProperties": false, "required": ["approval_id", "action", "profile_id", "revision", "issued_at", "expires_at"], "properties": {"approval_id": {"type": "string"}, "action": {"enum": ["VALIDATE", "ACTIVATE", "RETIRE"]}, "profile_id": {"type": "string"}, "revision": {"type": "integer", "minimum": 1}, "issued_at": {"type": "string", "format": "date-time"}, "expires_at": {"type": "string", "format": "date-time"}}},
+      "ActivationRequest": {"type": "object", "additionalProperties": false, "required": ["request_id", "approval_id", "profile_id", "revision", "account_id", "consumer_id", "consumer_account_id", "account_display_name", "strategy_ids"], "properties": {"request_id": {"type": "string", "format": "uuid"}, "approval_id": {"type": "string"}, "profile_id": {"type": "string"}, "revision": {"type": "integer", "minimum": 1}, "account_id": {"type": "string"}, "consumer_id": {"type": "string"}, "consumer_account_id": {"type": "string"}, "account_display_name": {"type": "string"}, "strategy_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}}},
+      "ProfileReceipt": {"type": "object", "additionalProperties": false, "required": ["request_id", "profile_id", "profile_revision", "adapter_kind", "state", "credential_digest", "endpoint_digest", "approval_required"], "properties": {"request_id": {"type": "string"}, "profile_id": {"type": "string"}, "profile_revision": {"type": "integer"}, "adapter_kind": {"enum": ["EMT", "QMT"]}, "state": {"enum": ["PREPARED", "VALIDATED", "ACTIVE_DISARMED", "RETIRING", "RETIRED", "REJECTED"]}, "credential_digest": {"$ref": "#/components/schemas/Sha256"}, "endpoint_digest": {"$ref": "#/components/schemas/Sha256"}, "approval_required": {"type": "boolean"}, "authorization_epoch": {"type": "integer", "minimum": 1}}},
+      "ControlFailure": {"type": "object", "additionalProperties": false, "required": ["request_id", "code", "retryable"], "properties": {"request_id": {"type": "string"}, "code": {"type": "string"}, "retryable": {"type": "boolean"}}},
+      "Sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "schema": "error.schema.json",
+  "expected_error": "SCHEMA_VALIDATION_FAILED",
+  "payload": {
+    "message_type": "error",
+    "schema_version": 2,
+    "request_id": "request-0001",
+    "code": "VENDOR_RAW_ERROR",
+    "retryable": true
+  }
+}

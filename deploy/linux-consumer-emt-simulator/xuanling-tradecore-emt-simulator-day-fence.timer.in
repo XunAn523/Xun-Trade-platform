@@ -1,0 +1,11 @@
+[Unit]
+Description=Fence the EMT simulator at the configured trading-day boundary
+
+[Timer]
+OnCalendar=@NEXT_DAY@ 00:00:00 Asia/Shanghai
+AccuracySec=1s
+Persistent=true
+Unit=xuanling-tradecore-emt-simulator-day-fence.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,1 @@
+{"schema_version":1,"fixture_id":"codec-fixture-1","environment":"external-adapter-fixture","armed":false,"symbol":"000001","market":"SZ","side":"BUY","quantity":100,"price_band":{"minimum_price_ticks":1000,"maximum_price_ticks":1020,"tick_size":1}}

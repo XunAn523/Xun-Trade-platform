@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:xuanling:consumer:v2:event",
+  "title": "ConsumerGateway V2 event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["message_type", "schema_version", "event_id", "event_kind", "position", "payload"],
+  "properties": {
+    "message_type": {"const": "event"},
+    "schema_version": {"const": 2},
+    "event_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "event_kind": {"enum": ["ORDER", "ACCOUNT_STATUS", "ACCOUNT_RISK"]},
+    "position": {"type": "string", "pattern": "^ce2_[A-Za-z0-9_-]{27}$"},
+    "payload": {"type": "object"}
+  }
+}

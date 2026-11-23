@@ -1,0 +1,8 @@
+{
+  "message_type": "event",
+  "schema_version": 2,
+  "event_id": "event-1",
+  "event_kind": "ORDER",
+  "position": "ce2_AAAAAAAAAAkAAAAAAAAACgAAAAA",
+  "payload": {"oms_order_id": "oms-order-1", "state": "ACCEPTED"}
+}

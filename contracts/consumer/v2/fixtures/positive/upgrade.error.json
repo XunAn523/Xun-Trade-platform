@@ -1,0 +1,8 @@
+{
+  "message_type": "error",
+  "schema_version": 2,
+  "request_id": "request-0001",
+  "code": "UPGRADE_REQUIRED",
+  "retryable": false,
+  "detail": "Consumer API major version is not compatible"
+}

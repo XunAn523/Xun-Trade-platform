@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "purpose": "tradecore-tight-499-order-plan",
+  "environment": "simulated",
+  "selection_mode": "external-read-only-market-preflight",
+  "expires_at_unix_s": 0,
+  "ticker": "000000",
+  "market": 2,
+  "side": 1,
+  "price_type": 1,
+  "price": "0.00",
+  "quantity": 100,
+  "price_tick": "0.01",
+  "best_bid_price": "0.00",
+  "last_price": "0.00",
+  "lower_limit_price": "0.00",
+  "upper_limit_price": "0.00",
+  "max_total_buy_notional": "0.00"
+}

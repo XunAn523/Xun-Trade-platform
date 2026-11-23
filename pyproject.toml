@@ -1,0 +1,103 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xuntrade-omsems"
+version = "0.1.0"
+description = "XunTradeOMSEMS C++20 and Python hybrid OMS/EMS trading platform"
+requires-python = ">=3.10,<3.11"
+dependencies = [
+    "cryptography>=50,<51",
+    "h2>=4.1,<5",
+    "jsonschema>=4.23,<5",
+    "msgspec>=0.21.1,<0.22",
+    "opentelemetry-api>=1.27,<2",
+    "opentelemetry-exporter-otlp-proto-grpc>=1.27,<2",
+    "opentelemetry-sdk>=1.27,<2",
+    "psycopg[binary]>=3.2,<4",
+]
+
+[project.scripts]
+xuntrade-omsems = "xuntrade_omsems.cli:main"
+xuanling-tradecore = "xuanling_tradecore.cli:main"
+
+[project.optional-dependencies]
+tooling = [
+    "fastapi>=0.115,<1",
+    "uvicorn[standard]>=0.32,<1",
+    "hdrhistogram>=0.10,<1",
+]
+test = [
+    "pytest>=8,<10",
+    "cyclonedx-bom>=4.6,<6",
+    "hypothesis>=6.100,<7",
+    "pip-audit>=2.7,<3",
+    "pre-commit>=4,<5",
+    # Bundle a lock-pinned Node runtime so Pyright never downloads one during CI.
+    "pyright[nodejs]>=1.1.400,<2",
+    "ruff>=0.14,<1",
+    "schemathesis>=4.25,<5",
+    "testcontainers[postgres]>=4.14,<5",
+]
+
+[tool.uv]
+# EMT vendor bindings run only in this project's managed CPython 3.10 virtual
+# environment.  Do not couple acceptance to the host's system Python.
+python-preference = "managed"
+required-environments = [
+    "sys_platform == 'linux' and platform_machine == 'x86_64'",
+]
+
+[tool.setuptools.packages.find]
+include = ["xuntrade_omsems*", "xuanling_tradecore*", "emt_gateway*"]
+
+[tool.setuptools.package-data]
+xuntrade_omsems = ["*.pyi"]
+emt_gateway = ["schemas/v1/*.json"]
+xuanling_tradecore = [
+    "adapters/emt/manifests/*.json",
+    "adapters/paper/manifests/*.json",
+    "adapters/qmt/manifests/*.json",
+    "adapters/schemas/*.json",
+    "read_model/migrations/*.sql",
+]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+src = ["xuntrade_omsems", "xuanling_tradecore", "emt_gateway", "tests", "tools"]
+extend-exclude = ["EMT_python_SDK", "artifacts"]
+force-exclude = true
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "I", "PGH003", "PGH004"]
+
+[tool.ruff.lint.per-file-ignores]
+# These compatibility tests intentionally extend sys.path before importing the
+# separately packaged performance catalog.
+"tests/test_capabilities.py" = ["E402"]
+"tests/test_facade.py" = ["E402"]
+"tests/test_spi_bridge.py" = ["E402"]
+"tools/performance/official_sdk_login_probe.py" = ["E402"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.pyright]
+include = ["xuanling_tradecore", "emt_gateway/operational_telemetry.py"]
+exclude = ["EMT_python_SDK", "artifacts", ".venv"]
+strict = ["xuanling_tradecore", "emt_gateway/operational_telemetry.py"]
+pythonVersion = "3.10"
+pythonPlatform = "Linux"
+venvPath = "."
+venv = ".venv"
+reportMissingTypeStubs = "none"
+
+[tool.pytest.ini_options]
+pythonpath = ["tools/performance"]
+# Repository-root collection must not treat historical acceptance logs as
+# doctests.  These are the only maintained Python test suites.
+testpaths = ["tests", "tools/performance/tests"]

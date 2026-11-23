@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "core_package": "xuanling_tradecore",
+  "legacy_package": "emt_gateway",
+  "legacy_import_allowed_prefixes": [
+    "xuanling_tradecore.compatibility"
+  ],
+  "generic_layer_prefixes": [
+    "xuanling_tradecore.domain",
+    "xuanling_tradecore.consumer",
+    "xuanling_tradecore.oms",
+    "xuanling_tradecore.ems",
+    "xuanling_tradecore.persistence",
+    "xuanling_tradecore.runtime"
+  ],
+  "peer_adapter_prefixes": [
+    "xuanling_tradecore.adapters.emt",
+    "xuanling_tradecore.adapters.qmt",
+    "xuanling_tradecore.adapters.paper"
+  ],
+  "vendor_import_roots": [
+    "vnemttrader",
+    "qmt",
+    "xtquant",
+    "paperbroker",
+    "paper_broker"
+  ],
+  "required_distribution": "xuntrade-omsems",
+  "required_cli_name": "xuntrade-omsems",
+  "required_cli_target": "xuntrade_omsems.cli:main",
+  "required_package_patterns": [
+    "xuntrade_omsems*",
+    "xuanling_tradecore*",
+    "emt_gateway*"
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "schema_version": 2,
+  "manifest_id": "paperbroker-isolated-contract-fixture",
+  "manifest_version": 1,
+  "venue_id": "PAPER",
+  "fingerprint": {
+    "adapter_id": "paperbroker-adapter-v1",
+    "adapter_version": "contract-fixture-v1",
+    "sdk_version": "EXTERNAL_PAPERBROKER_CONTRACT_FIXTURE",
+    "adapter_package_hash": "a4d008718e13ec45f92cbe9f9ee4e122a623a97b952676298d89a739a2b4ca49",
+    "sdk_binary_hash": "d8197c1c9ef3d1b1d6f4b49822d0b948b80d0d1df76d7695d18e46e75879d71b",
+    "binding_package_hash": "e1ab47e86b545a0e531e6af13be6ca4e7a75f4cec07a11339cfe265ff05fb3d5"
+  },
+  "effective_interval": {"not_before_unix_s": 0, "not_after_unix_s": null},
+  "owner": "tradecore-platform",
+  "evidence": [{
+    "evidence_id": "paperbroker-isolated-contract-fixture-v1",
+    "source_reference": "contracts/adapters/paperbroker/v1/isolated-fixture.json",
+    "fixture_id": "paperbroker-isolated-contract-fixture-v1",
+    "test_id": "tests.test_paperbroker_adapter.PaperBrokerAdapterTests",
+    "owner": "tradecore-platform"
+  }],
+  "field_mappings": {
+    "market": [{"domain_value": "SZ", "venue_value": 1, "evidence_ids": ["paperbroker-isolated-contract-fixture-v1"]}],
+    "side": [
+      {"domain_value": "BUY", "venue_value": 1, "evidence_ids": ["paperbroker-isolated-contract-fixture-v1"]},
+      {"domain_value": "SELL", "venue_value": 2, "evidence_ids": ["paperbroker-isolated-contract-fixture-v1"]}
+    ],
+    "price_type": [{"domain_value": "LIMIT", "venue_value": 1, "evidence_ids": ["paperbroker-isolated-contract-fixture-v1"]}],
+    "business_type": [{"domain_value": "CASH", "venue_value": 1, "evidence_ids": ["paperbroker-isolated-contract-fixture-v1"]}]
+  },
+  "order_routes": [
+    {"business_type": "CASH", "side": "BUY", "required_capabilities": ["CASH"], "evidence_ids": ["paperbroker-isolated-contract-fixture-v1"]},
+    {"business_type": "CASH", "side": "SELL", "required_capabilities": ["CASH"], "evidence_ids": ["paperbroker-isolated-contract-fixture-v1"]}
+  ],
+  "identity": {
+    "client_order_ref_field": "client_ref",
+    "client_order_ref_format": "paperbroker-fixture-route-token-v1",
+    "venue_order_id_field": "order_id",
+    "venue_order_id_format": "opaque-text",
+    "venue_cancel_id_field": "cancel_id",
+    "venue_cancel_id_format": "opaque-text",
+    "adapter_client_scope_field": "client_scope",
+    "adapter_client_scope_format": "opaque-text",
+    "evidence_ids": ["paperbroker-isolated-contract-fixture-v1"]
+  },
+  "capabilities": {
+    "capability_profile_id": "paperbroker-isolated-contract-fixture-v1",
+    "version": 1,
+    "venue_id": "PAPER",
+    "supports_cash": true,
+    "supports_margin_buy": false,
+    "supports_short_sell": false,
+    "supports_pagination": true,
+    "supports_public_stream_replay": true,
+    "echoes_client_order_ref": true,
+    "has_stable_venue_order_id": true,
+    "has_stable_trade_id": true,
+    "supports_complete_recovery_queries": true,
+    "supports_negative_confirmation": true,
+    "supports_paper_matching": true
+  },
+  "recovery": {
+    "supports_order_query": true,
+    "supports_trade_query": true,
+    "supports_working_order_query": true,
+    "supports_asset_query": true,
+    "supports_position_query": true,
+    "automatic_recovery_eligible": true,
+    "evidence_ids": ["paperbroker-isolated-contract-fixture-v1"]
+  },
+  "scope_ownership": {
+    "ownership_id": "paperbroker-isolated-fixture-account-1-scope-v1",
+    "version": 1,
+    "venue_id": "PAPER",
+    "account_id": "paperbroker-fixture-account-1",
+    "adapter_instance_id": "paperbroker-fixture-v1",
+    "adapter_client_scope": "paperbroker-fixture-scope-1",
+    "owner_instance_id": "tradecore-isolated-test-host",
+    "config_source_hash": "a4d008718e13ec45f92cbe9f9ee4e122a623a97b952676298d89a739a2b4ca49",
+    "signer_id": "tradecore-release-signer-1",
+    "valid_from_wall_ns": 0,
+    "valid_until_wall_ns": 4102444800000000000,
+    "uniqueness_probe_hash": "d8197c1c9ef3d1b1d6f4b49822d0b948b80d0d1df76d7695d18e46e75879d71b",
+    "uniqueness_probe_succeeded": true,
+    "revoked_at_wall_ns": null
+  },
+  "route_token_binding": {
+    "binding_id": "paperbroker-client-ref-v1",
+    "version": 1,
+    "manifest_hash": "e1ab47e86b545a0e531e6af13be6ca4e7a75f4cec07a11339cfe265ff05fb3d5",
+    "venue_id": "PAPER",
+    "native_field_name": "client_ref",
+    "native_field_type": "ascii",
+    "max_encoded_bytes": 10,
+    "allowed_characters": "^P1[A-Z0-9]{8}$",
+    "write_path": "PaperBrokerOrder.client_ref",
+    "order_callback_paths": ["PaperBrokerOrderEvent.client_ref"],
+    "trade_callback_paths": ["PaperBrokerTradeEvent.client_ref"],
+    "cancel_error_paths": ["PaperBrokerCancelError.client_ref"],
+    "query_paths": ["PaperBrokerOrderQuery[].client_ref", "PaperBrokerTradeQuery[].client_ref"],
+    "replay_paths": ["PaperBrokerRecovery.orders[].client_ref", "PaperBrokerRecovery.trades[].client_ref"],
+    "normalization_version": 1
+  }
+}

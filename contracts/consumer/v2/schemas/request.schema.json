@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:xuanling:consumer:v2:request",
+  "title": "ConsumerGateway V2 request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["message_type", "schema_version", "operation", "request_id", "payload"],
+  "properties": {
+    "message_type": {"const": "request"},
+    "schema_version": {"const": 2},
+    "operation": {
+      "enum": ["ListAccounts", "SubmitSignal", "CancelOrder", "GetOrder", "GetOrderAuditTrail", "GetAccountOrderSnapshot", "CreateOrderSnapshot", "ReadOrderSnapshotPage", "PollEvents", "SubscribeOrderEvents", "CreateReplayPartitions"]
+    },
+    "request_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "payload": {"type": "object"}
+  },
+  "$defs": {
+    "emptyPayload": {"type": "object", "additionalProperties": false},
+    "submitSignalPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["consumer_account_id", "strategy_id", "strategy_order_id", "trading_day", "symbol", "market", "side", "price_type", "business_type", "quantity", "protection_price_ticks"],
+      "properties": {
+        "consumer_account_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "strategy_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "strategy_order_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "trading_day": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"},
+        "symbol": {"type": "string", "minLength": 1, "maxLength": 64},
+        "market": {"type": "string", "minLength": 1, "maxLength": 64},
+        "side": {"type": "string", "minLength": 1, "maxLength": 64},
+        "price_type": {"type": "string", "minLength": 1, "maxLength": 64},
+        "business_type": {"type": "string", "minLength": 1, "maxLength": 64},
+        "quantity": {"type": "integer", "minimum": 1},
+        "protection_price_ticks": {"type": "integer", "minimum": 0},
+        "limit_price_ticks": {"type": ["integer", "null"], "minimum": 0},
+        "execution_parameters": {
+          "type": "object",
+          "propertyNames": {"minLength": 1, "maxLength": 128},
+          "additionalProperties": {"type": "string", "maxLength": 512},
+          "maxProperties": 32
+        }
+      }
+    },
+    "cancelPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["oms_order_id", "reason"],
+      "properties": {
+        "oms_order_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "reason": {"type": "string", "minLength": 1, "maxLength": 256}
+      }
+    },
+    "orderLookupPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["oms_order_id"],
+      "properties": {"oms_order_id": {"type": "string", "minLength": 1, "maxLength": 128}}
+    },
+    "accountSnapshotPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["consumer_account_id"],
+      "properties": {
+        "consumer_account_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "reset_context": {"type": "string", "minLength": 1, "maxLength": 128}
+      }
+    },
+    "createOrderSnapshotPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["consumer_account_id", "page_size"],
+      "properties": {
+        "consumer_account_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "page_size": {"type": "integer", "minimum": 1, "maximum": 200}
+      }
+    },
+    "readOrderSnapshotPagePayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["page_cursor"],
+      "properties": {
+        "page_cursor": {"type": "string", "minLength": 1, "maxLength": 4096}
+      }
+    },
+    "replayPartitionsPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["consumer_account_id", "partition_count"],
+      "properties": {
+        "consumer_account_id": {"type": "string", "minLength": 1, "maxLength": 128},
+        "partition_count": {"type": "integer", "minimum": 1, "maximum": 64},
+        "after_cursor": {"type": "string", "minLength": 1, "maxLength": 4096}
+      }
+    },
+    "pollPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cursor", "limit"],
+      "properties": {
+        "cursor": {"type": "string", "minLength": 1, "maxLength": 4096},
+        "limit": {"type": "integer", "minimum": 1, "maximum": 10000}
+      }
+    },
+    "subscribePayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cursor"],
+      "properties": {"cursor": {"type": "string", "minLength": 1, "maxLength": 4096}}
+    }
+  },
+  "allOf": [
+    {"if": {"properties": {"operation": {"const": "ListAccounts"}}}, "then": {"properties": {"payload": {"$ref": "#/$defs/emptyPayload"}}}},
+    {"if": {"properties": {"operation": {"const": "SubmitSignal"}}}, "then": {"properties": {"payload": {"$ref": "#/$defs/submitSignalPayload"}}}},
+    {"if": {"properties": {"operation": {"const": "CancelOrder"}}}, "then": {"properties": {"payload": {"$ref": "#/$defs/cancelPayload"}}}},
+    {"if": {"properties": {"operation": {"enum": ["GetOrder", "GetOrderAuditTrail"]}}}, "then": {"properties": {"payload": {"$ref": "#/$defs/orderLookupPayload"}}}},
+    {"if": {"properties": {"operation": {"const": "GetAccountOrderSnapshot"}}}, "then": {"properties": {"payload": {"$ref": "#/$defs/accountSnapshotPayload"}}}},
+    {"if": {"properties": {"operation": {"const": "CreateOrderSnapshot"}}}, "then": {"properties": {"payload": {"$ref": "#/$defs/createOrderSnapshotPayload"}}}},
+    {"if": {"properties": {"operation": {"const": "ReadOrderSnapshotPage"}}}, "then": {"properties": {"payload": {"$ref": "#/$defs/readOrderSnapshotPagePayload"}}}},
+    {"if": {"properties": {"operation": {"const": "PollEvents"}}}, "then": {"properties": {"payload": {"$ref": "#/$defs/pollPayload"}}}},
+    {"if": {"properties": {"operation": {"const": "CreateReplayPartitions"}}}, "then": {"properties": {"payload": {"$ref": "#/$defs/replayPartitionsPayload"}}}},
+    {"if": {"properties": {"operation": {"const": "SubscribeOrderEvents"}}}, "then": {"properties": {"payload": {"$ref": "#/$defs/subscribePayload"}}}}
+  ]
+}

@@ -1,0 +1,31 @@
+[Unit]
+Description=Xuanling TradeCore runtime (DISARMED by default)
+After=network.target
+
+[Service]
+Type=notify
+NotifyAccess=main
+WatchdogSec=10s
+User=xuanling-tradecore
+Group=xuanling-tradecore
+RuntimeDirectory=xuanling-tradecore
+RuntimeDirectoryMode=0750
+RuntimeDirectoryPreserve=restart
+WorkingDirectory=/opt/xuanling-tradecore
+ExecStart=/opt/xuanling-tradecore/.venv/bin/xuanling-tradecore runtime --disarmed --fault-gap-page /run/xuanling-tradecore/fault-gap-page.v1
+Restart=on-failure
+RestartSec=5
+KillSignal=SIGTERM
+TimeoutStopSec=45
+LimitNOFILE=65536
+LimitCORE=0
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/xuanling-tradecore /run/xuanling-tradecore
+MemoryMax=2G
+TasksMax=512
+
+[Install]
+WantedBy=multi-user.target

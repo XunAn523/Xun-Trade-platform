@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:xuanling:venue-mapping-manifest:v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "manifest_id", "manifest_version", "venue_id", "fingerprint", "effective_interval", "owner", "evidence", "field_mappings", "order_routes", "identity", "capabilities", "recovery", "scope_ownership", "route_token_binding"],
+  "properties": {
+    "schema_version": {"const": 2},
+    "manifest_id": {"type": "string", "minLength": 1},
+    "manifest_version": {"type": "integer", "minimum": 1},
+    "venue_id": {"type": "string", "minLength": 1},
+    "fingerprint": {"$ref": "#/$defs/fingerprint"},
+    "effective_interval": {"$ref": "#/$defs/effectiveInterval"},
+    "owner": {"type": "string", "minLength": 1},
+    "evidence": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/evidence"}},
+    "field_mappings": {"$ref": "#/$defs/fieldMappings"},
+    "order_routes": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/orderRoute"}},
+    "identity": {"$ref": "#/$defs/identity"},
+    "capabilities": {"$ref": "#/$defs/capabilities"},
+    "recovery": {"$ref": "#/$defs/recovery"},
+    "scope_ownership": {"$ref": "#/$defs/scopeOwnership"},
+    "route_token_binding": {"$ref": "#/$defs/routeTokenBinding"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "nonEmptyTextArray": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "fingerprint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapter_id", "adapter_version", "sdk_version", "adapter_package_hash", "sdk_binary_hash", "binding_package_hash"],
+      "properties": {
+        "adapter_id": {"type": "string", "minLength": 1},
+        "adapter_version": {"type": "string", "minLength": 1},
+        "sdk_version": {"type": "string", "minLength": 1},
+        "adapter_package_hash": {"$ref": "#/$defs/sha256"},
+        "sdk_binary_hash": {"$ref": "#/$defs/sha256"},
+        "binding_package_hash": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "effectiveInterval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["not_before_unix_s"],
+      "properties": {
+        "not_before_unix_s": {"type": "integer", "minimum": 0},
+        "not_after_unix_s": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_id", "source_reference", "fixture_id", "test_id", "owner"],
+      "properties": {
+        "evidence_id": {"type": "string", "minLength": 1},
+        "source_reference": {"type": "string", "minLength": 1},
+        "fixture_id": {"type": "string", "minLength": 1},
+        "test_id": {"type": "string", "minLength": 1},
+        "owner": {"type": "string", "minLength": 1}
+      }
+    },
+    "enumMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain_value", "venue_value", "evidence_ids"],
+      "properties": {
+        "domain_value": {"type": "string", "minLength": 1},
+        "venue_value": {"type": "integer", "minimum": 0},
+        "evidence_ids": {"$ref": "#/$defs/nonEmptyTextArray"}
+      }
+    },
+    "fieldMappings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["market", "side", "price_type", "business_type"],
+      "properties": {
+        "market": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/enumMapping"}},
+        "side": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/enumMapping"}},
+        "price_type": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/enumMapping"}},
+        "business_type": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/enumMapping"}}
+      }
+    },
+    "orderRoute": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["business_type", "side", "required_capabilities", "evidence_ids"],
+      "properties": {
+        "business_type": {"type": "string", "minLength": 1},
+        "side": {"type": "string", "minLength": 1},
+        "required_capabilities": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["CASH", "MARGIN_BUY", "SHORT_SELL"]}},
+        "evidence_ids": {"$ref": "#/$defs/nonEmptyTextArray"}
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["client_order_ref_field", "client_order_ref_format", "venue_order_id_field", "venue_order_id_format", "venue_cancel_id_field", "venue_cancel_id_format", "adapter_client_scope_field", "adapter_client_scope_format", "evidence_ids"],
+      "properties": {
+        "client_order_ref_field": {"type": "string", "minLength": 1},
+        "client_order_ref_format": {"type": "string", "minLength": 1},
+        "venue_order_id_field": {"type": "string", "minLength": 1},
+        "venue_order_id_format": {"type": "string", "minLength": 1},
+        "venue_cancel_id_field": {"type": "string", "minLength": 1},
+        "venue_cancel_id_format": {"type": "string", "minLength": 1},
+        "adapter_client_scope_field": {"type": "string", "minLength": 1},
+        "adapter_client_scope_format": {"type": "string", "minLength": 1},
+        "evidence_ids": {"$ref": "#/$defs/nonEmptyTextArray"}
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capability_profile_id", "version", "venue_id", "supports_cash", "supports_margin_buy", "supports_short_sell", "supports_pagination", "supports_public_stream_replay", "echoes_client_order_ref", "has_stable_venue_order_id", "has_stable_trade_id", "supports_complete_recovery_queries", "supports_negative_confirmation"],
+      "properties": {
+        "capability_profile_id": {"type": "string", "minLength": 1},
+        "version": {"type": "integer", "minimum": 1},
+        "venue_id": {"type": "string", "minLength": 1},
+        "supports_cash": {"type": "boolean"},
+        "supports_margin_buy": {"type": "boolean"},
+        "supports_short_sell": {"type": "boolean"},
+        "supports_pagination": {"type": "boolean"},
+        "supports_public_stream_replay": {"type": "boolean"},
+        "echoes_client_order_ref": {"type": "boolean"},
+        "has_stable_venue_order_id": {"type": "boolean"},
+        "has_stable_trade_id": {"type": "boolean"},
+        "supports_complete_recovery_queries": {"type": "boolean"},
+        "supports_negative_confirmation": {"type": "boolean"},
+        "supports_paper_matching": {"type": "boolean"}
+      }
+    },
+    "recovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["supports_order_query", "supports_trade_query", "supports_working_order_query", "supports_asset_query", "supports_position_query", "automatic_recovery_eligible", "evidence_ids"],
+      "properties": {
+        "supports_order_query": {"type": "boolean"},
+        "supports_trade_query": {"type": "boolean"},
+        "supports_working_order_query": {"type": "boolean"},
+        "supports_asset_query": {"type": "boolean"},
+        "supports_position_query": {"type": "boolean"},
+        "automatic_recovery_eligible": {"type": "boolean"},
+        "evidence_ids": {"$ref": "#/$defs/nonEmptyTextArray"}
+      }
+    },
+    "scopeOwnership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ownership_id", "version", "venue_id", "account_id", "adapter_instance_id", "adapter_client_scope", "owner_instance_id", "config_source_hash", "signer_id", "valid_from_wall_ns", "valid_until_wall_ns", "uniqueness_probe_hash", "uniqueness_probe_succeeded"],
+      "properties": {
+        "ownership_id": {"type": "string", "minLength": 1},
+        "version": {"type": "integer", "minimum": 1},
+        "venue_id": {"type": "string", "minLength": 1},
+        "account_id": {"type": "string", "minLength": 1},
+        "adapter_instance_id": {"type": "string", "minLength": 1},
+        "adapter_client_scope": {"type": "string", "minLength": 1},
+        "owner_instance_id": {"type": "string", "minLength": 1},
+        "config_source_hash": {"$ref": "#/$defs/sha256"},
+        "signer_id": {"type": "string", "minLength": 1},
+        "valid_from_wall_ns": {"type": "integer", "minimum": 0},
+        "valid_until_wall_ns": {"type": "integer", "minimum": 1},
+        "uniqueness_probe_hash": {"$ref": "#/$defs/sha256"},
+        "uniqueness_probe_succeeded": {"type": "boolean"},
+        "revoked_at_wall_ns": {"type": ["integer", "null"], "minimum": 0}
+      }
+    },
+    "routeTokenBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["binding_id", "version", "manifest_hash", "venue_id", "native_field_name", "native_field_type", "max_encoded_bytes", "allowed_characters", "write_path", "order_callback_paths", "trade_callback_paths", "cancel_error_paths", "query_paths", "replay_paths", "normalization_version"],
+      "properties": {
+        "binding_id": {"type": "string", "minLength": 1},
+        "version": {"type": "integer", "minimum": 1},
+        "manifest_hash": {"$ref": "#/$defs/sha256"},
+        "venue_id": {"type": "string", "minLength": 1},
+        "native_field_name": {"type": "string", "minLength": 1},
+        "native_field_type": {"type": "string", "minLength": 1},
+        "max_encoded_bytes": {"type": "integer", "minimum": 1},
+        "allowed_characters": {"type": "string", "minLength": 1},
+        "write_path": {"type": "string", "minLength": 1},
+        "order_callback_paths": {"$ref": "#/$defs/nonEmptyTextArray"},
+        "trade_callback_paths": {"$ref": "#/$defs/nonEmptyTextArray"},
+        "cancel_error_paths": {"$ref": "#/$defs/nonEmptyTextArray"},
+        "query_paths": {"$ref": "#/$defs/nonEmptyTextArray"},
+        "replay_paths": {"$ref": "#/$defs/nonEmptyTextArray"},
+        "normalization_version": {"type": "integer", "minimum": 1}
+      }
+    }
+  }
+}

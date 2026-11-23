@@ -1,0 +1,13 @@
+[Unit]
+Description=Verify and establish TradeCore exclusive CPU partition
+Requires=tradecore.slice
+After=tradecore.slice
+Before=xuanling-tradecore-consumer-uds.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/python3 -I /usr/local/libexec/tradecore-cpu-partition.py apply
+ExecStartPost=/usr/bin/python3 -I /usr/local/libexec/tradecore-cpu-partition.py check
+TimeoutStartSec=30
+UMask=0077

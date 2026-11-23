@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:xuanling:consumer:v2:trace",
+  "title": "TradeCore redacted execution trace",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "trace_id",
+    "execution_id",
+    "binding_id",
+    "binding_generation",
+    "adapter_id",
+    "scope_id_hash",
+    "event_cursor",
+    "stage",
+    "monotonic_ns",
+    "result_code"
+  ],
+  "properties": {
+    "trace_id": {"type": "string", "minLength": 1, "maxLength": 256},
+    "execution_id": {"type": "string", "minLength": 1, "maxLength": 256},
+    "binding_id": {"type": "string", "minLength": 1, "maxLength": 256},
+    "binding_generation": {"type": "integer", "minimum": 1},
+    "adapter_id": {"type": "string", "minLength": 1, "maxLength": 256},
+    "scope_id_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "event_cursor": {"type": "string", "minLength": 1, "maxLength": 256},
+    "stage": {"type": "string", "minLength": 1, "maxLength": 256},
+    "monotonic_ns": {"type": "integer", "minimum": 0},
+    "result_code": {"type": "string", "minLength": 1, "maxLength": 256}
+  }
+}

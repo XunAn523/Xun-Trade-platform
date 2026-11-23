@@ -1,0 +1,60 @@
+# Per-host Python environment; recreate from requirements.lock on each platform.
+.venv/
+.venv-linux/
+.venv-wheel/
+.venv-py310/
+
+# Per-host credentials; never commit private keys or SSH host state.
+.local-secrets/
+
+# Local third-party reference checkout. It is maintained in its own Git
+# repository and must not be vendored or tracked by TradeCore.
+/参考/
+
+# Python runtime and test artifacts
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+*.pyd
+*.so
+*.dll
+*.lib
+*.exp
+*.obj
+*.o
+*.a
+.ruff_cache/
+.hypothesis/
+benchmark-results.local.json
+.env
+.env.*
+!.env.example
+emt_gateway/_fastspi*.so
+# Linux FastSPI v2 is compiled locally when the optional native backend is
+# imported; it is a per-host artifact, not source controlled by this repo.
+xuanling_tradecore/_fastspi*.so
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local runtime state and capability evidence (release copies belong in controlled archives)
+data/
+run/
+logs/
+capability-report.json
+artifacts/performance/
+artifacts/quality/
+# Raw k6/JMeter summaries and local service logs are reproducible test outputs.
+artifacts/oms-load/
+
+# Ephemeral local state and payload-free raw outputs created by the controlled
+# EMT acceptance drivers. The reviewed, redacted acceptance summary is the
+# versioned evidence; these per-run files must not leave a dirty worktree.
+artifacts/acceptance/m5/*-runtime/
+artifacts/acceptance/m5/2026-09-04-emt-server-one-cycle.json
+artifacts/acceptance/m5/2026-09-04-emt-server-one-cycle.traces.jsonl
+artifacts/acceptance/m5/2026-09-04-emt-server-readonly-preflight.json
+artifacts/acceptance/m5/2026-09-04-emt-server-unfinished-reconciliation.json
+artifacts/acceptance/m5/2026-09-04-emt-server-unfinished-reconciliation.traces.jsonl

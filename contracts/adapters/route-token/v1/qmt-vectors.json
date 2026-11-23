@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "profile": "QMT_CONTRACT_FAKE",
+  "production_adapter_implemented": false,
+  "binding": {
+    "binding_id": "qmt-order-remark-v1",
+    "version": 1,
+    "manifest_hash": "8b381c1ab5a796ceb5e3f099be11b197195981e5d0614a22926a05d24b161e5a",
+    "venue_id": "QMT",
+    "native_field_name": "order_remark",
+    "native_field_type": "utf8",
+    "max_encoded_bytes": 32,
+    "allowed_characters": "^Q1[A-Z2-7]{26}[0-9A-F]{4}$",
+    "write_path": "QmtOrder.order_remark",
+    "order_callback_paths": ["QmtOrderCallback.order_remark"],
+    "trade_callback_paths": ["QmtTradeCallback.order_remark"],
+    "cancel_error_paths": ["QmtCancelError.order_remark"],
+    "query_paths": ["QmtOrderQuery[].order_remark", "QmtTradeQuery[].order_remark"],
+    "replay_paths": ["QmtRecovery.orders[].order_remark", "QmtRecovery.trades[].order_remark"],
+    "normalization_version": 1
+  },
+  "vectors": [
+    {
+      "token": "rt1_ABEiM0RVZneImaq7zN3u_w",
+      "encoded": "Q1AAISEM2EKVTHPCEZVK54ZXPO74759B"
+    }
+  ],
+  "negative_native_values": [
+    "Q1AAISEM2EKVTHPCEZVK54ZXPO74759A",
+    "q1AAISEM2EKVTHPCEZVK54ZXPO74759B",
+    "Q1策略订单备注",
+    "Q1AAISEM2EKVTHPCEZVK54ZXPO74759B0"
+  ]
+}

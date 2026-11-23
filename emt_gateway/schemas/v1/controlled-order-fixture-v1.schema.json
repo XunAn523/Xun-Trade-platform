@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:emt-gateway:schema:controlled-order-fixture:1",
+  "title": "Controlled EMT simulated order fixture v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "purpose", "safety", "scenarios"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "purpose": {"const": "controlled simulated 000010 order latency experiment"},
+    "safety": {"$ref": "#/$defs/safety"},
+    "scenarios": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "items": {"$ref": "#/$defs/scenario"}
+    }
+  },
+  "$defs": {
+    "money": {
+      "oneOf": [
+        {"type": "number"},
+        {"type": "string", "pattern": "^[0-9]+(?:\\.[0-9]{1,2})?$"}
+      ]
+    },
+    "safety": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "armed",
+        "environment",
+        "account_profile",
+        "allowed_tickers",
+        "random_seed",
+        "min_command_interval_seconds",
+        "cancel_timeout_seconds",
+        "max_order_quantity",
+        "max_total_submissions",
+        "max_total_commands",
+        "max_total_buy_notional",
+        "max_total_sell_quantity",
+        "instructions"
+      ],
+      "properties": {
+        "armed": {"type": "boolean"},
+        "environment": {"const": "simulated"},
+        "account_profile": {"const": "ordinary"},
+        "allowed_tickers": {"const": ["000010"]},
+        "random_seed": {"type": "integer"},
+        "min_command_interval_seconds": {"type": "number", "minimum": 1},
+        "cancel_timeout_seconds": {"type": "number", "minimum": 3, "maximum": 30},
+        "max_order_quantity": {"const": 100},
+        "max_total_submissions": {"type": "integer", "minimum": 1, "maximum": 40},
+        "max_total_commands": {"type": "integer", "minimum": 1, "maximum": 80},
+        "max_total_buy_notional": {"$ref": "#/$defs/money"},
+        "max_total_sell_quantity": {"type": "integer", "minimum": 0, "maximum": 2000},
+        "instructions": {"type": "string", "minLength": 1, "maxLength": 4096}
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "objective",
+        "ticker",
+        "market",
+        "side",
+        "price_type",
+        "quantity",
+        "cycles",
+        "rate_limit_per_second",
+        "price_policy",
+        "reconciliation",
+        "notes"
+      ],
+      "properties": {
+        "id": {"enum": ["fill_sell", "fill_buy", "cancel_buy", "cancel_sell"]},
+        "objective": {"enum": ["fill", "cancel"]},
+        "ticker": {"const": "000010"},
+        "market": {"const": 1},
+        "side": {"enum": [1, 2]},
+        "price_type": {"const": 1},
+        "quantity": {"const": 100},
+        "cycles": {"type": "integer", "minimum": 1, "maximum": 10},
+        "rate_limit_per_second": {"const": 1},
+        "price_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["min", "max", "tick"],
+          "properties": {
+            "min": {"$ref": "#/$defs/money"},
+            "max": {"$ref": "#/$defs/money"},
+            "tick": {"$ref": "#/$defs/money"}
+          }
+        },
+        "reconciliation": {"enum": ["OnTradeEvent", "QueryOrderByEMTID"]},
+        "notes": {"type": "string", "minLength": 1, "maxLength": 4096}
+      }
+    }
+  }
+}

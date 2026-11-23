@@ -1,0 +1,16 @@
+{
+  "schema": "TradeCoreQmtTransportProbeConfigV1",
+  "role": "WINDOWS_EDGE",
+  "mode": "DISARMED",
+  "local_host": "192.168.251.2",
+  "peer_host": "192.168.251.1",
+  "port": 19443,
+  "scope_digest": "REPLACE_WITH_SHARED_64_HEX_PROBE_SCOPE",
+  "outbox_epoch": "REPLACE_WITH_SHARED_64_HEX_PROBE_EPOCH",
+  "event_count": 8,
+  "database_path": "../data/transport-probe.sqlite",
+  "ca_certificate_path": "../certs/bridge-ca.pem",
+  "certificate_path": "../certs/windows-edge.pem",
+  "private_key_path": "../certs/windows-edge-key.pem",
+  "expected_peer_certificate_sha256": "REPLACE_WITH_LINUX_LEAF_DER_SHA256"
+}

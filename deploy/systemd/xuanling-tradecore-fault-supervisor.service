@@ -1,0 +1,29 @@
+[Unit]
+Description=Xuanling TradeCore fault supervisor
+After=xuanling-tradecore.service
+PartOf=xuanling-tradecore.service
+
+[Service]
+Type=exec
+User=xuanling-tradecore
+Group=xuanling-tradecore
+RuntimeDirectory=xuanling-tradecore-supervisor
+RuntimeDirectoryMode=0750
+WorkingDirectory=/opt/xuanling-tradecore
+ExecStart=/opt/xuanling-tradecore/.venv/bin/xuanling-tradecore fault-supervisor --gap-page /run/xuanling-tradecore/fault-gap-page.v1 --evidence-root /var/lib/xuanling-tradecore/control/fault-evidence
+Restart=on-failure
+RestartSec=2
+KillSignal=SIGTERM
+TimeoutStopSec=15
+LimitNOFILE=4096
+LimitCORE=0
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/xuanling-tradecore/control /run/xuanling-tradecore
+MemoryMax=256M
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target

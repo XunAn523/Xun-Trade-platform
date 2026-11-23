@@ -1,0 +1,44 @@
+[Unit]
+Description=Xuanling TradeCore Consumer V2 UDS (no Adapter dispatch)
+After=network.target
+Requires=xuanling-tradecore-cpu-partition.service
+After=xuanling-tradecore-cpu-partition.service
+
+[Service]
+Type=simple
+Slice=tradecore.slice
+User=xuanling
+Group=xuanling
+RuntimeDirectory=tradecore-consumer-uds
+RuntimeDirectoryMode=0700
+StateDirectory=tradecore-consumer-uds
+StateDirectoryMode=0700
+WorkingDirectory=/opt/xuanling-tradecore
+Environment=TRADECORE_UDS_TRACE=1
+ExecStartPre=+/usr/bin/python3 -I /usr/local/libexec/tradecore-cpu-partition.py check
+ExecStart=/opt/xuanling-tradecore/.venv/bin/xuanling-tradecore consumer-uds --config /etc/xuanling-tradecore/consumer-uds.json --contract-root /opt/xuanling-tradecore/contracts/consumer/v2
+ExecStartPost=/bin/sh /opt/xuanling-tradecore/deploy/consumer-uds/wait-ready.sh /run/tradecore-consumer-uds/consumer-v2.sock
+Restart=on-failure
+RestartSec=5
+KillSignal=SIGTERM
+KillMode=mixed
+TimeoutStopSec=75
+LimitNOFILE=65536
+LimitCORE=0
+# AllowedCPUs alone is not exclusive. The required partition service verifies
+# kernel exclusivity before this service starts. Reserve complete SMT pairs;
+# other ordinary cgroups retain the host's remaining eighty physical cores.
+AllowedCPUs=64-79,160-175
+CPUWeight=10000
+Nice=-5
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/tradecore-consumer-uds /run/tradecore-consumer-uds
+MemoryHigh=4831838208
+MemoryMax=6G
+TasksMax=256
+
+[Install]
+WantedBy=multi-user.target

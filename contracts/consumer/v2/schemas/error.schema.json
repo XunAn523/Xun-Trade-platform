@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:xuanling:consumer:v2:error",
+  "title": "ConsumerGateway V2 error",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["message_type", "schema_version", "request_id", "code", "retryable"],
+  "properties": {
+    "message_type": {"const": "error"},
+    "schema_version": {"const": 2},
+    "request_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "code": {
+      "enum": ["FRAME_INCOMPLETE", "BAD_MAGIC", "UNSUPPORTED_HEADER_VERSION", "UNSUPPORTED_API_VERSION", "FRAME_TOO_LARGE", "INVALID_FLAGS", "PAYLOAD_CRC_MISMATCH", "INVALID_UTF8", "INVALID_JSON", "SCHEMA_VALIDATION_FAILED", "UNKNOWN_CRITICAL_FIELD", "EVENT_SCHEMA_INCOMPATIBLE", "UPGRADE_REQUIRED", "CURSOR_INVALID", "CURSOR_EXPIRED", "JOURNAL_GAP", "CURSOR_RECOVERY_UNAVAILABLE", "STREAM_RESET_MISMATCH", "AUDIT_EVIDENCE_UNAVAILABLE", "SNAPSHOT_REQUIRES_PAGINATION", "SNAPSHOT_NOT_READY", "SNAPSHOT_EXPIRED", "SNAPSHOT_GENERATION_MISMATCH", "UNAUTHORIZED", "NOT_FOUND", "RATE_LIMITED", "INTERNAL_ERROR"]
+    },
+    "retryable": {"type": "boolean"},
+    "detail": {"type": "string", "maxLength": 512}
+  }
+}

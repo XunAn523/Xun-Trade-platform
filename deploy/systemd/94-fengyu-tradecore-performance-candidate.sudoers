@@ -1,0 +1,6 @@
+Cmnd_Alias TRADECORE_PERFORMANCE_CANDIDATE = \
+    /usr/local/sbin/tradecore-performance-candidate create, \
+    /usr/local/sbin/tradecore-performance-candidate stop, \
+    /usr/local/sbin/tradecore-performance-candidate status
+
+fengyu ALL=(root) NOSETENV: NOPASSWD: TRADECORE_PERFORMANCE_CANDIDATE

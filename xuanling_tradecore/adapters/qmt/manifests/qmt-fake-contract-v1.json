@@ -1,0 +1,112 @@
+{
+  "schema_version": 2,
+  "manifest_id": "qmt-fake-contract",
+  "manifest_version": 1,
+  "venue_id": "QMT",
+  "fingerprint": {
+    "adapter_id": "qmt-contract-fake-v1",
+    "adapter_version": "fake-contract-v1",
+    "sdk_version": "NO_QMT_SDK",
+    "adapter_package_hash": "8b381c1ab5a796ceb5e3f099be11b197195981e5d0614a22926a05d24b161e5a",
+    "sdk_binary_hash": "d15c6343c45d844992212f987b2d63fd51fb27037991e89086cff367eebce9ee",
+    "binding_package_hash": "cf625bb7c87f42dc91e680171b259d9720d6f3d4ee61360448a5085803bfb7d5"
+  },
+  "effective_interval": {"not_before_unix_s": 0, "not_after_unix_s": null},
+  "owner": "tradecore-platform",
+  "evidence": [{
+    "evidence_id": "qmt-fake-contract-fixture-v1",
+    "source_reference": "contracts/adapters/route-token/v1/qmt-vectors.json",
+    "fixture_id": "qmt-fake-contract-no-sdk",
+    "test_id": "tests.test_qmt_fake_profile.QmtFakeProfileTests",
+    "owner": "tradecore-platform"
+  }],
+  "field_mappings": {
+    "market": [
+      {"domain_value": "SZ", "venue_value": 1, "evidence_ids": ["qmt-fake-contract-fixture-v1"]},
+      {"domain_value": "SH", "venue_value": 2, "evidence_ids": ["qmt-fake-contract-fixture-v1"]}
+    ],
+    "side": [
+      {"domain_value": "BUY", "venue_value": 1, "evidence_ids": ["qmt-fake-contract-fixture-v1"]},
+      {"domain_value": "SELL", "venue_value": 2, "evidence_ids": ["qmt-fake-contract-fixture-v1"]}
+    ],
+    "price_type": [
+      {"domain_value": "LIMIT", "venue_value": 1, "evidence_ids": ["qmt-fake-contract-fixture-v1"]}
+    ],
+    "business_type": [
+      {"domain_value": "CASH", "venue_value": 1, "evidence_ids": ["qmt-fake-contract-fixture-v1"]}
+    ]
+  },
+  "order_routes": [
+    {"business_type": "CASH", "side": "BUY", "required_capabilities": ["CASH"], "evidence_ids": ["qmt-fake-contract-fixture-v1"]},
+    {"business_type": "CASH", "side": "SELL", "required_capabilities": ["CASH"], "evidence_ids": ["qmt-fake-contract-fixture-v1"]}
+  ],
+  "identity": {
+    "client_order_ref_field": "order_remark",
+    "client_order_ref_format": "qmt-route-token-v1-ascii",
+    "venue_order_id_field": "qmt_order_id",
+    "venue_order_id_format": "fake-opaque-text",
+    "venue_cancel_id_field": "qmt_cancel_id",
+    "venue_cancel_id_format": "fake-opaque-text",
+    "adapter_client_scope_field": "qmt_client_scope",
+    "adapter_client_scope_format": "fake-opaque-text",
+    "evidence_ids": ["qmt-fake-contract-fixture-v1"]
+  },
+  "capabilities": {
+    "capability_profile_id": "qmt-fake-contract-v1",
+    "version": 1,
+    "venue_id": "QMT",
+    "supports_cash": true,
+    "supports_margin_buy": false,
+    "supports_short_sell": false,
+    "supports_pagination": true,
+    "supports_public_stream_replay": false,
+    "echoes_client_order_ref": true,
+    "has_stable_venue_order_id": false,
+    "has_stable_trade_id": false,
+    "supports_complete_recovery_queries": false,
+    "supports_negative_confirmation": false,
+    "supports_paper_matching": false
+  },
+  "recovery": {
+    "supports_order_query": true,
+    "supports_trade_query": true,
+    "supports_working_order_query": true,
+    "supports_asset_query": true,
+    "supports_position_query": true,
+    "automatic_recovery_eligible": false,
+    "evidence_ids": ["qmt-fake-contract-fixture-v1"]
+  },
+  "scope_ownership": {
+    "ownership_id": "qmt-fake-account-1-scope-v1",
+    "version": 1,
+    "venue_id": "QMT",
+    "account_id": "qmt-fake-account-1",
+    "adapter_instance_id": "qmt-fake-v1",
+    "adapter_client_scope": "qmt-fake-scope-1",
+    "owner_instance_id": "tradecore-single-host-1",
+    "config_source_hash": "8b381c1ab5a796ceb5e3f099be11b197195981e5d0614a22926a05d24b161e5a",
+    "signer_id": "tradecore-release-signer-1",
+    "valid_from_wall_ns": 0,
+    "valid_until_wall_ns": 4102444800000000000,
+    "uniqueness_probe_hash": "d15c6343c45d844992212f987b2d63fd51fb27037991e89086cff367eebce9ee",
+    "uniqueness_probe_succeeded": true,
+    "revoked_at_wall_ns": null
+  },
+  "route_token_binding": {
+    "binding_id": "qmt-order-remark-v1",
+    "version": 1,
+    "manifest_hash": "8b381c1ab5a796ceb5e3f099be11b197195981e5d0614a22926a05d24b161e5a",
+    "venue_id": "QMT",
+    "native_field_name": "order_remark",
+    "native_field_type": "utf8",
+    "max_encoded_bytes": 32,
+    "allowed_characters": "^Q1[A-Z2-7]{26}[0-9A-F]{4}$",
+    "write_path": "QmtOrder.order_remark",
+    "order_callback_paths": ["QmtOrderCallback.order_remark"],
+    "trade_callback_paths": ["QmtTradeCallback.order_remark"],
+    "cancel_error_paths": ["QmtCancelError.order_remark"],
+    "query_paths": ["QmtOrderQuery[].order_remark", "QmtTradeQuery[].order_remark"],
+    "replay_paths": ["QmtRecovery.orders[].order_remark", "QmtRecovery.trades[].order_remark"],
+    "normalization_version": 1
+  }
+}

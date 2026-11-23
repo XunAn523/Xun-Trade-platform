@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:xuanling-tradecore:contract:functional-package-evidence-manifest:1",
+  "title": "TradeCore functional package evidence manifest v1",
+  "description": "Payload-free evidence index for one completed functional package. It records reproducibility metadata and outcomes, never credentials, account identifiers, raw orders, broker responses, host addresses, or secret material.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "manifest_id",
+    "package_id",
+    "candidate_commit_sha",
+    "environment_hash",
+    "profile",
+    "acceptance_status",
+    "test_commands",
+    "result_summary",
+    "known_limitations",
+    "evidence_references"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "manifest_id": {"type": "string", "pattern": "^f[0-6]-[a-z0-9][a-z0-9-]{2,63}$"},
+    "package_id": {"enum": ["F0", "F1", "F2", "F3", "F4", "F5", "F6"]},
+    "candidate_commit_sha": {"$ref": "#/$defs/sha256_or_git_sha"},
+    "environment_hash": {"$ref": "#/$defs/sha256"},
+    "profile": {
+      "type": "string",
+      "enum": ["quality-only", "MmapJournalProfileV1", "PaperBroker-contract", "QMT-contract"]
+    },
+    "acceptance_status": {"enum": ["passed", "failed", "blocked"]},
+    "test_commands": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/test_command"}
+    },
+    "result_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["passed_checks", "failed_checks", "skipped_checks", "summary"],
+      "properties": {
+        "passed_checks": {"type": "integer", "minimum": 0},
+        "failed_checks": {"type": "integer", "minimum": 0},
+        "skipped_checks": {"type": "integer", "minimum": 0},
+        "summary": {"$ref": "#/$defs/safe_text"}
+      }
+    },
+    "known_limitations": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/safe_text"}
+    },
+    "evidence_references": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/evidence_reference"}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "sha256_or_git_sha": {"type": "string", "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"},
+    "safe_text": {"type": "string", "minLength": 1, "maxLength": 1024},
+    "test_command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "command", "exit_code", "result"],
+      "properties": {
+        "name": {"$ref": "#/$defs/safe_text"},
+        "command": {"$ref": "#/$defs/safe_text"},
+        "exit_code": {"type": "integer", "minimum": 0, "maximum": 255},
+        "result": {"enum": ["passed", "failed", "skipped"]}
+      }
+    },
+    "evidence_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "reference", "sha256"],
+      "properties": {
+        "kind": {"enum": ["document", "test-report", "release-manifest", "performance-report", "fault-report"]},
+        "reference": {"type": "string", "pattern": "^(?:docs|artifacts|contracts)/[^\\x00-\\x1f\\\\:]+$", "maxLength": 512},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

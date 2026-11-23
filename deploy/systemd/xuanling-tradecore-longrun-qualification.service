@@ -1,0 +1,32 @@
+[Unit]
+Description=TradeCore formal-location no-Adapter long-runtime qualification (NOT READY)
+Requires=xuanling-tradecore-cpu-partition.service
+After=xuanling-tradecore-cpu-partition.service
+Conflicts=xuanling-tradecore-consumer-uds.service
+
+[Service]
+Type=simple
+User=xuanling
+Group=xuanling
+Slice=tradecore.slice
+WorkingDirectory=/opt/xuanling-tradecore
+StateDirectory=tradecore-longrun-qualification
+StateDirectoryMode=0700
+UMask=0077
+ExecStartPre=+/usr/bin/python3 -I /usr/local/libexec/tradecore-cpu-partition.py check
+ExecStart=/opt/xuanling-tradecore/.venv/bin/python -I -m xuanling_tradecore.consumer.long_running_candidate --config /etc/xuanling-tradecore/consumer-longrun-qualification.json --contract-root /opt/xuanling-tradecore/contracts/consumer/v2 --cgroup-root /sys/fs/cgroup/tradecore.slice/xuanling-tradecore-longrun-qualification.service --initialize-if-new --role-cpus 64,65,66,67 --projection-read-cpus 68,69
+# This is a finite manual diagnostic, never an automatically enabled release.
+Restart=no
+RuntimeMaxSec=300
+KillMode=mixed
+TimeoutStopSec=75
+LimitNOFILE=65536
+LimitCORE=0
+AllowedCPUs=64-79,160-175
+MemoryMax=6G
+TasksMax=256
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/tradecore-longrun-qualification

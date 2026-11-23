@@ -1,0 +1,75 @@
+{
+  "$defs": {
+    "FixtureOrderConfig": {
+      "additionalProperties": false,
+      "description": "One controlled codec fixture configuration, never a live order request.",
+      "properties": {
+        "armed": {
+          "type": "boolean"
+        },
+        "environment": {
+          "type": "string"
+        },
+        "fixture_id": {
+          "type": "string"
+        },
+        "market": {
+          "type": "string"
+        },
+        "price_band": {
+          "$ref": "#/$defs/FixturePriceBand"
+        },
+        "quantity": {
+          "type": "integer"
+        },
+        "schema_version": {
+          "type": "integer"
+        },
+        "side": {
+          "type": "string"
+        },
+        "symbol": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "fixture_id",
+        "environment",
+        "armed",
+        "symbol",
+        "market",
+        "side",
+        "quantity",
+        "price_band"
+      ],
+      "title": "FixtureOrderConfig",
+      "type": "object"
+    },
+    "FixturePriceBand": {
+      "additionalProperties": false,
+      "description": "Fixed-point limit-price band used only by typed controlled-fixture loading.",
+      "properties": {
+        "maximum_price_ticks": {
+          "type": "integer"
+        },
+        "minimum_price_ticks": {
+          "type": "integer"
+        },
+        "tick_size": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "minimum_price_ticks",
+        "maximum_price_ticks",
+        "tick_size"
+      ],
+      "title": "FixturePriceBand",
+      "type": "object"
+    }
+  },
+  "$ref": "#/$defs/FixtureOrderConfig",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-runtime-semantic-validation": "Required after structural decode; see xuanling_tradecore.codec.typed_payloads."
+}

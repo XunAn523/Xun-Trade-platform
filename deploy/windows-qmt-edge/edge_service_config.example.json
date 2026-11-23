@@ -1,0 +1,10 @@
+{
+  "schema": "TradeCoreQmtEdgeServiceConfigV1",
+  "edge_config_path": "C:\\TradeCore\\qmt-edge\\config\\edge.json",
+  "listen_host": "192.168.251.2",
+  "listen_port": 19443,
+  "ca_certificate_path": "C:\\TradeCore\\qmt-edge\\certs\\bridge-ca.pem",
+  "certificate_path": "C:\\TradeCore\\qmt-edge\\certs\\windows-edge.pem",
+  "private_key_path": "C:\\TradeCore\\qmt-edge\\certs\\windows-edge-key.pem",
+  "expected_client_certificate_sha256": "REPLACE_WITH_64_HEX_LINUX_CLIENT_CERTIFICATE_DIGEST"
+}

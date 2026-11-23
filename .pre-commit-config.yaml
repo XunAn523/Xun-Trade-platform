@@ -1,0 +1,40 @@
+default_stages: [pre-commit]
+fail_fast: false
+
+repos:
+  - repo: local
+    hooks:
+      - id: tradecore-package-boundary
+        name: TradeCore M0-01 package boundary
+        entry: python tools/quality/check_tradecore_boundary.py
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: ruff-check
+        name: ruff check
+        entry: ruff check --force-exclude
+        language: system
+        types: [python]
+      - id: ruff-format
+        name: ruff format
+        entry: ruff format --check --force-exclude
+        language: system
+        types: [python]
+      - id: pyright
+        name: pyright (strict boundary)
+        entry: python -m pyright
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: type-ignore-reasons
+        name: type ignore code and reason
+        entry: python tools/quality/check_type_ignore_reasons.py
+        language: system
+        pass_filenames: false
+        always_run: true
+      - id: sensitive-content
+        name: sensitive content scan
+        entry: python tools/quality/check_sensitive_content.py
+        language: system
+        pass_filenames: false
+        always_run: true

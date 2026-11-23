@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:emt-gateway:schema:performance-report:1",
+  "title": "EMT Gateway performance report envelope v1",
+  "type": "object",
+  "required": ["driver", "report_contract"],
+  "properties": {
+    "driver": {"type": "string", "minLength": 1},
+    "report_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "schema_version",
+        "requested_driver",
+        "boundary_completeness",
+        "evidence_classification",
+        "execution_boundaries"
+      ],
+      "properties": {
+        "name": {"const": "emt-gateway-performance-report"},
+        "schema_version": {"const": 1},
+        "requested_driver": {"type": "string", "minLength": 1},
+        "boundary_completeness": {"enum": ["complete", "incomplete"]},
+        "evidence_classification": {"type": "string", "minLength": 1},
+        "execution_boundaries": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sdk_loaded",
+            "login",
+            "network",
+            "real_order_entry",
+            "native_fastspi_required",
+            "native_fastspi_available"
+          ],
+          "properties": {
+            "sdk_loaded": {"$ref": "#/$defs/observation"},
+            "login": {"$ref": "#/$defs/observation"},
+            "network": {"$ref": "#/$defs/observation"},
+            "real_order_entry": {"$ref": "#/$defs/observation"},
+            "native_fastspi_required": {"$ref": "#/$defs/observation"},
+            "native_fastspi_available": {"$ref": "#/$defs/observation"}
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observed", "value"],
+      "properties": {
+        "observed": {"type": "boolean"},
+        "value": {"type": ["boolean", "null"]}
+      }
+    }
+  }
+}

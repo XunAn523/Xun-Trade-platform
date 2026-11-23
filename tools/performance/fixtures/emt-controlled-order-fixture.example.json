@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "purpose": "controlled simulated 000010 order latency experiment",
+  "safety": {
+    "armed": false,
+    "environment": "simulated",
+    "account_profile": "ordinary",
+    "allowed_tickers": ["000010"],
+    "random_seed": 20260827,
+    "min_command_interval_seconds": 1.0,
+    "cancel_timeout_seconds": 8.0,
+    "max_order_quantity": 100,
+    "max_total_submissions": 40,
+    "max_total_commands": 80,
+    "max_total_buy_notional": 32600.00,
+    "max_total_sell_quantity": 2000,
+    "instructions": "Example only. Copy to the ignored local data directory, retain armed=false for preflight, and review every cap before any simulated execution. Each scenario is sequential, has no automatic retry, and stops the whole batch on any command, callback, cleanup, or reconciliation failure."
+  },
+  "scenarios": [
+    {
+      "id": "fill_sell",
+      "objective": "fill",
+      "ticker": "000010",
+      "market": 1,
+      "side": 2,
+      "price_type": 1,
+      "quantity": 100,
+      "cycles": 10,
+      "rate_limit_per_second": 1,
+      "price_policy": { "min": 1.57, "max": 1.59, "tick": 0.01 },
+      "reconciliation": "OnTradeEvent",
+      "notes": "A trade callback proves at least one fill. A cleanup cancel is attempted for every order to prevent an unfilled remainder."
+    },
+    {
+      "id": "fill_buy",
+      "objective": "fill",
+      "ticker": "000010",
+      "market": 1,
+      "side": 1,
+      "price_type": 1,
+      "quantity": 100,
+      "cycles": 10,
+      "rate_limit_per_second": 1,
+      "price_policy": { "min": 1.61, "max": 1.63, "tick": 0.01 },
+      "reconciliation": "OnTradeEvent",
+      "notes": "A trade callback proves at least one fill. A cleanup cancel is attempted for every order to prevent an unfilled remainder."
+    },
+    {
+      "id": "cancel_buy",
+      "objective": "cancel",
+      "ticker": "000010",
+      "market": 1,
+      "side": 1,
+      "price_type": 1,
+      "quantity": 100,
+      "cycles": 10,
+      "rate_limit_per_second": 1,
+      "price_policy": { "min": 1.57, "max": 1.59, "tick": 0.01 },
+      "reconciliation": "QueryOrderByEMTID",
+      "notes": "Stop immediately if a trade callback is observed before or during the cancel sequence."
+    },
+    {
+      "id": "cancel_sell",
+      "objective": "cancel",
+      "ticker": "000010",
+      "market": 1,
+      "side": 2,
+      "price_type": 1,
+      "quantity": 100,
+      "cycles": 10,
+      "rate_limit_per_second": 1,
+      "price_policy": { "min": 1.61, "max": 1.63, "tick": 0.01 },
+      "reconciliation": "QueryOrderByEMTID",
+      "notes": "Stop immediately if a trade callback is observed before or during the cancel sequence."
+    }
+  ]
+}

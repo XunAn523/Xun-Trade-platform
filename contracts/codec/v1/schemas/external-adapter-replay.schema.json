@@ -1,0 +1,61 @@
+{
+  "$defs": {
+    "ExternalAdapterReplayPayload": {
+      "additionalProperties": false,
+      "description": "A normalized replay fixture; it does not model an external venue's internals.",
+      "properties": {
+        "account_id": {
+          "type": "string"
+        },
+        "event_kind": {
+          "type": "string"
+        },
+        "price_ticks": {
+          "type": "integer"
+        },
+        "quantity": {
+          "type": "integer"
+        },
+        "replay_id": {
+          "type": "string"
+        },
+        "replay_sequence": {
+          "type": "integer"
+        },
+        "schema_version": {
+          "type": "integer"
+        },
+        "side": {
+          "type": "string"
+        },
+        "source_key": {
+          "type": "string"
+        },
+        "symbol": {
+          "type": "string"
+        },
+        "trading_day": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "replay_id",
+        "replay_sequence",
+        "event_kind",
+        "account_id",
+        "trading_day",
+        "symbol",
+        "side",
+        "price_ticks",
+        "quantity",
+        "source_key"
+      ],
+      "title": "ExternalAdapterReplayPayload",
+      "type": "object"
+    }
+  },
+  "$ref": "#/$defs/ExternalAdapterReplayPayload",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-runtime-semantic-validation": "Required after structural decode; see xuanling_tradecore.codec.typed_payloads."
+}

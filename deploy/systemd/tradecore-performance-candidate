@@ -1,0 +1,233 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+readonly UNIT='tradecore-performance-candidate.service'
+readonly REPO='/opt/xuanling-tradecore'
+readonly PYTHON='/opt/xuanling-tradecore/.venv/bin/python'
+readonly TEMPLATE='/etc/xuanling-tradecore/performance-candidate-template.json'
+readonly ROOT_PARENT='/var/lib/tradecore-performance-candidates'
+readonly STATE='/run/tradecore-performance-candidate-admin.state'
+readonly RUNTIME_DIRECTORY='tradecore-performance-candidate'
+readonly SOCKET="/run/${RUNTIME_DIRECTORY}/consumer-v2.sock"
+
+fail() {
+  printf 'tradecore performance candidate: %s\n' "$1" >&2
+  exit "${2:-1}"
+}
+
+require_root() {
+  [ "$(id -u)" -eq 0 ] || fail 'root execution required' 77
+  [ "$#" -eq 1 ] || fail 'exactly one approved operation is required' 64
+  case "$1" in
+    create|create-baseline|create-experimental|create-isolated|create-gil1|create-diagnostic|create-cpu-profile|create-fact-keys|create-fact-keys-profile|create-handoff-trace|create-handoff32|create-handoff32-trace|create-mock32|create-yield|create-yield1|create-nice|stop|status) ;;
+    *) fail 'operation is not approved' 64 ;;
+  esac
+}
+
+unit_property() {
+  /usr/bin/systemctl show "$UNIT" --property="$1" --value 2>/dev/null || true
+}
+
+status() {
+  local active result pid revision root
+  active="$(unit_property ActiveState)"
+  result="$(unit_property Result)"
+  pid="$(unit_property MainPID)"
+  revision=''
+  root=''
+  if [ -r "$STATE" ]; then
+    IFS='|' read -r revision root < "$STATE" || true
+  fi
+  printf 'unit=%s\nactive_state=%s\nresult=%s\nmain_pid=%s\nrevision=%s\nrun_root=%s\nsocket=%s\n' \
+    "$UNIT" "${active:-not-loaded}" "${result:-unknown}" "${pid:-0}" \
+    "$revision" "$root" "$SOCKET"
+}
+
+stop() {
+  if /usr/bin/systemctl cat "$UNIT" >/dev/null 2>&1; then
+    /usr/bin/systemctl stop "$UNIT"
+    if ! /usr/bin/systemctl is-active --quiet "$UNIT"; then
+      /usr/bin/systemctl reset-failed "$UNIT" >/dev/null 2>&1 || true
+    fi
+  fi
+  status
+}
+
+create_config() {
+  local config="$1" run_root="$2"
+  /usr/bin/python3 -I - "$TEMPLATE" "$config" "$run_root" "$SOCKET" <<'PY'
+import json
+import os
+import sys
+from pathlib import Path
+
+template, target, run_root, socket_path = map(Path, sys.argv[1:])
+if template.is_symlink() or target.exists() or target.is_symlink():
+    raise SystemExit("unsafe performance candidate config path")
+data = json.loads(template.read_text(encoding="utf-8"))
+data["journal_root"] = str(run_root / "runtime")
+data["socket_path"] = str(socket_path)
+temporary = target.with_suffix(".tmp")
+fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o640)
+with os.fdopen(fd, "w", encoding="utf-8") as stream:
+    json.dump(data, stream, sort_keys=True, separators=(",", ":"))
+    stream.write("\n")
+    stream.flush()
+    os.fsync(stream.fileno())
+temporary.replace(target)
+PY
+  /usr/bin/chown root:xuanling "$config"
+  /usr/bin/chmod 0640 "$config"
+}
+
+create() {
+  local revision short stamp run_root config private_socket current
+  local -a background_args=()
+  local -a gil_args=()
+  local -a diagnostic_env=()
+  local frontend_cpus=70,71,72,73,74,75,76,78
+  if [ "${1:-}" = 'experimental' ]; then
+    background_args=(--background-cpus 171,172)
+  fi
+  if [ "${1:-}" = 'isolated' ]; then
+    # Reserve physical cores 75 and 76 for owner background work. Their SMT
+    # siblings 171/172 are also kept out of frontend roles. This is a no-Adapter
+    # candidate-only experiment, not a production CPU allocation change.
+    background_args=(--background-cpus 75,76)
+    # The direct READ contract requires eight frontend slots. 167/168 are
+    # SMT siblings of 71/72, so frontend contention must be measured in A/B.
+    frontend_cpus=70,71,72,73,74,78,167,168
+  fi
+  if [ "${1:-}" = 'diagnostic' ]; then
+    diagnostic_env=(--setenv=TRADECORE_DIAGNOSTIC_OWNER_CPU=1)
+  fi
+  if [ "${1:-}" = 'cpu-profile' ]; then
+    diagnostic_env=(--setenv=TRADECORE_DIAGNOSTIC_OWNER_PROFILE=1)
+  fi
+  if [ "${1:-}" = 'fact-keys' ]; then
+    diagnostic_env=(--setenv=TRADECORE_DIAGNOSTIC_KNOWN_FACT_KEYS=1)
+  fi
+  if [ "${1:-}" = 'fact-keys-profile' ]; then
+    diagnostic_env=(--setenv=TRADECORE_DIAGNOSTIC_KNOWN_FACT_KEYS=1
+                    --setenv=TRADECORE_DIAGNOSTIC_OWNER_PROFILE=1)
+  fi
+  if [ "${1:-}" = 'gil1' ]; then
+    gil_args=(--gil-switch-us 1000)
+  fi
+  if [ "${1:-}" = 'yield' ]; then
+    diagnostic_env=(--setenv=TRADECORE_DIAGNOSTIC_MOCK_YIELD=1)
+  fi
+  if [ "${1:-}" = 'yield1' ]; then
+    diagnostic_env=(--setenv=TRADECORE_DIAGNOSTIC_MOCK_YIELD=single)
+  fi
+  if [ "${1:-}" = 'nice' ]; then
+    diagnostic_env=(--setenv=TRADECORE_DIAGNOSTIC_MOCK_NICE=1)
+  fi
+  if [ "${1:-}" = 'mock32' ]; then
+    diagnostic_env=(--setenv=TRADECORE_DIAGNOSTIC_MOCK_BATCH=32)
+  fi
+  if [ "${1:-}" = 'handoff32' ] || [ "${1:-}" = 'handoff32-trace' ]; then
+    diagnostic_env=(--setenv=TRADECORE_DIAGNOSTIC_WRITE_HANDOFF_LIMIT=32)
+  fi
+  [ -x "$PYTHON" ] || fail 'project CPython is unavailable' 65
+  [ -d "$REPO/.git" ] || fail 'approved Git checkout is unavailable' 65
+  [ -f "$TEMPLATE" ] && [ ! -L "$TEMPLATE" ] || fail 'root template is unavailable' 65
+  [ "$(/usr/bin/stat -c '%U:%G' "$TEMPLATE")" = 'root:root' ] \
+    || fail 'template ownership changed' 65
+  /usr/sbin/runuser -u xuanling -- /usr/bin/git -C "$REPO" diff-index --quiet HEAD -- \
+    || fail 'approved checkout has tracked modifications' 65
+  revision="$(/usr/sbin/runuser -u xuanling -- \
+    /usr/bin/git -C "$REPO" rev-parse --verify HEAD)"
+  [[ "$revision" =~ ^[0-9a-f]{40}$ ]] || fail 'Git revision is invalid' 65
+  short="${revision:0:12}"
+  if [ "$(unit_property ActiveState)" = 'active' ]; then
+    fail 'candidate is already active; stop it explicitly first' 69
+  fi
+  current="$(/usr/bin/systemctl list-units --state=active --plain --no-legend \
+    'tradecore-*-procperf*.service' 2>/dev/null | /usr/bin/awk 'NR==1 {print $1}')"
+  [ -z "$current" ] || fail "legacy performance candidate is active: $current" 69
+  /usr/bin/systemctl reset-failed "$UNIT" >/dev/null 2>&1 || true
+  stamp="$(/usr/bin/date -u +%Y%m%dT%H%M%SZ)"
+  run_root="${ROOT_PARENT}/${stamp}-${short}"
+  config="${run_root}/config.json"
+  private_socket="${run_root}/runtime/private-owner.sock"
+  [ "${#private_socket}" -le 100 ] || fail 'private socket path exceeds safe budget' 65
+  /usr/bin/install -d -o root -g root -m 0755 "$ROOT_PARENT"
+  /usr/bin/install -d -o xuanling -g xuanling -m 0700 "$run_root"
+  /usr/bin/install -d -o xuanling -g xuanling -m 0700 "${run_root}/runtime"
+  create_config "$config" "$run_root"
+  if [ "${1:-}" = 'handoff-trace' ] || [ "${1:-}" = 'handoff32-trace' ]; then
+    diagnostic_env+=(
+      --setenv=TRADECORE_DIAGNOSTIC_FRONTEND_TRACE=1
+      "--setenv=TRADECORE_DIAGNOSTIC_BROKER_TRACE_DIR=${run_root}/runtime/traces"
+    )
+  fi
+  printf '%s|%s\n' "$revision" "$run_root" > "$STATE"
+  /usr/bin/chown root:root "$STATE"
+  /usr/bin/chmod 0600 "$STATE"
+
+  /usr/bin/systemd-run --collect --unit="$UNIT" \
+    --description="TradeCore fixed no-Adapter performance candidate ${short}" \
+    --property=Slice=tradecore.slice \
+    --property=User=xuanling --property=Group=xuanling \
+    --property=WorkingDirectory="$REPO" \
+    --property=RuntimeDirectory="$RUNTIME_DIRECTORY" \
+    --property=RuntimeDirectoryMode=0700 \
+    --property=UMask=0077 --property=Restart=no --property=KillMode=mixed \
+    --property=TimeoutStopSec=75 --property=LimitNOFILE=65536 \
+    --property=LimitCORE=0 --property=TasksMax=512 \
+    --property=AllowedCPUs=64-79,160-175 \
+    --property=MemoryHigh=4831838208 --property=MemoryMax=6442450944 \
+    --property=NoNewPrivileges=yes --property=PrivateTmp=yes \
+    --property=ProtectSystem=strict --property=ProtectHome=yes \
+    --property="ReadWritePaths=${run_root}" \
+    --setenv="PYTHONPATH=${REPO}" \
+    --setenv=TRADECORE_DIAGNOSTIC_DISPATCH_ERRORS=1 \
+    "${diagnostic_env[@]}" \
+    "$PYTHON" -m xuanling_tradecore.consumer.multi_frontend_candidate \
+      --config "$config" --contract-root "${REPO}/contracts/consumer/v2" \
+      --cgroup-root "/sys/fs/cgroup/tradecore.slice/${UNIT}" \
+      --private-socket "$private_socket" \
+      --role-cpus 64,65,66,77 --projection-read-cpus 67,68,79,173 \
+      "${background_args[@]}" \
+      "${gil_args[@]}" \
+      --broker-cpu 69 --frontend-cpus "$frontend_cpus" \
+      --acceptor-cpu 166 --read-broker-cpu 175 \
+      --projection-transaction-batches 256 --initialize-if-new >/dev/null
+
+  for _ in $(/usr/bin/seq 1 300); do
+    if [ -S "$SOCKET" ] && [ "$(unit_property ActiveState)" = 'active' ]; then
+      status
+      return 0
+    fi
+    if [ "$(unit_property ActiveState)" = 'failed' ]; then
+      status
+      fail 'candidate failed before readiness' 70
+    fi
+    /usr/bin/sleep 0.1
+  done
+  status
+  fail 'candidate readiness timed out' 70
+}
+
+require_root "$@"
+case "$1" in
+  create) create ;;
+  create-baseline) create baseline ;;
+  create-experimental) create experimental ;;
+  create-isolated) create isolated ;;
+  create-gil1) create gil1 ;;
+  create-diagnostic) create diagnostic ;;
+  create-cpu-profile) create cpu-profile ;;
+  create-fact-keys) create fact-keys ;;
+  create-fact-keys-profile) create fact-keys-profile ;;
+  create-handoff-trace) create handoff-trace ;;
+  create-handoff32) create handoff32 ;;
+  create-handoff32-trace) create handoff32-trace ;;
+  create-mock32) create mock32 ;;
+  create-yield) create yield ;;
+  create-yield1) create yield1 ;;
+  create-nice) create nice ;;
+  stop) stop ;;
+  status) status ;;
+esac

@@ -1,0 +1,43 @@
+{
+  "schema": "BenchmarkProfileV11",
+  "system_id": "TradeCore-EMS-Strategy-Load-Platform",
+  "profile_id": "TC-EMS-STR-E0-S5-v11",
+  "measurement_schema_version": "V1.1",
+  "external_callback_required": false,
+  "g_boundaries": {
+    "G0": "EMS plan or strategy signal request received",
+    "G1": "gateway authorization and bounded admission completed",
+    "G2": "isolated plan/control record admitted",
+    "G3": "executor-router child preparation boundary",
+    "G4": "child instruction or control result ready",
+    "G5": "not applicable: no venue callback",
+    "G6": "strategy checkpoint/snapshot watermark recorded",
+    "G7": "strategy consumer or query response returned"
+  },
+  "topology": {
+    "maximum_release_skew_ns": 1000000,
+    "scope_and_lane_contract": "loopback EMS/strategy sidecar; bounded plan queues and isolated strategy-consumer checkpoints"
+  },
+  "load_shape": {
+    "warmup": "server health, benchmark reset, and metrics reset before each workload",
+    "burst": "k6 constant-arrival E1/E3/E5 and S1/S5 with query/control workloads"
+  },
+  "data_distribution": {
+    "seed": "k6 deterministic integer index",
+    "schema_version": "1",
+    "payload_classes": "bounded synthetic plan, signal, event, snapshot and control requests",
+    "uniform_key_contract": "uniform deterministic scope/key selection",
+    "hot_key_contract": "fixed hot key at configured percentage",
+    "idempotency_contract": "contract-specific duplicate plan/event handling",
+    "invalid_input_contract": "contract-specific bounded invalid inputs"
+  },
+  "durable_fence": {
+    "G2": "isolated sidecar admission record only; not a production TradeCore Journal durability claim",
+    "G6": "test-only strategy checkpoint/HDR observation"
+  },
+  "acceptance": {
+    "three_independent_runs": true,
+    "raw_pairs_retained": false,
+    "status_scope": "isolated EMS and strategy-consumer performance platform only"
+  }
+}

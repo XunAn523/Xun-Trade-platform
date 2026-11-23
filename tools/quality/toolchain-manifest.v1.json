@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "platform": {
+    "system": "Linux",
+    "machine": "x86_64",
+    "python_implementation": "CPython",
+    "python_minor": "3.10"
+  },
+  "tools": {
+    "uv": {
+      "version": "0.12.7",
+      "source": "https://files.pythonhosted.org/packages/8a/01/616cc5f80952eef6fa48c5dbd6ea8aeed04a494e7dfbe9f5f65cfcf85ad9/uv-0.12.7-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl",
+      "sha256": "4545e87c7ac64af317d8daffd279e23e93b0e05035662363033d3525923339d2"
+    },
+    "git": {
+      "required": true,
+      "source": "approved_linux_system_package"
+    },
+    "perf": {
+      "required_for_performance_evidence": true,
+      "source": "approved_linux_system_package",
+      "version_is_captured_in": "linux_attribution_evidence"
+    },
+    "buf": {
+      "status": "not_enabled_before_m4"
+    },
+    "asyncapi": {
+      "status": "not_enabled_before_m4"
+    }
+  }
+}

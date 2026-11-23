@@ -1,0 +1,13 @@
+{
+  "assets": {
+    "golden/domain-event.json": "eef48d87ed8e91631589dafaf0ca875737bf2afa7927308cbfa32d657eaecc98",
+    "golden/external-adapter-replay.msgpack": "9b0308202b29271ea4925e81c46cb004b61fcde8c22ded2a69a826a407f20066",
+    "golden/fixture-config.json": "5d306109fe5cb8f8995c654e69f69463856228d1b46fda076a277791dea9261d",
+    "schemas/domain-event.schema.json": "7aced8ed9a1806e0886a5a9f166b6adef8c9bf6721f865cff1683b516b92d87d",
+    "schemas/external-adapter-replay.schema.json": "fcce0b101a67cdc56b2454fc75d9958fac41c3f03808946dc758db84895b4257",
+    "schemas/fixture-config.schema.json": "9fbcf1fbdd42eaf07c62eba1eabb6e9e38a5bb532221015c4f0ac4f3afa01b2b"
+  },
+  "codec_library": "msgspec",
+  "codec_library_version": "0.21.1",
+  "schema_version": 1
+}

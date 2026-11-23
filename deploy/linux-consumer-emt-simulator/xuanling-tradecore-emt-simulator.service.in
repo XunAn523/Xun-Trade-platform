@@ -1,0 +1,36 @@
+[Unit]
+Description=TradeCore EMT simulator Consumer submit-only
+After=network-online.target xuanling-tradecore-cpu-partition.service
+Wants=network-online.target
+
+[Service]
+Type=exec
+User=xuanling
+Group=tradecore-testers
+Slice=tradecore.slice
+AllowedCPUs=76-79
+CPUAffinity=76 77 78 79
+MemoryMax=2G
+TasksMax=128
+LimitNOFILE=65536
+LimitCORE=0
+UMask=0077
+RuntimeDirectory=tradecore-emt-simulator
+RuntimeDirectoryMode=0750
+WorkingDirectory=@RUNTIME_ROOT@
+Environment=LD_LIBRARY_PATH=@SDK_LIBRARY@
+LoadCredential=emt-simulator-account:@CONFIG_ROOT@/credentials/emt-simulator-account.json
+ExecStart=@INSTALL_ROOT@/.venv/bin/xuanling-tradecore consumer-emt-simulator --config @CONFIG_ROOT@/runtime.json
+Restart=no
+TimeoutStartSec=45
+TimeoutStopSec=20
+KillMode=control-group
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=@RUNTIME_ROOT@ /run/tradecore-emt-simulator
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+[Install]
+WantedBy=multi-user.target

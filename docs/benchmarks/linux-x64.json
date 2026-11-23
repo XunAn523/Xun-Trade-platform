@@ -1,0 +1,103 @@
+{
+  "measured_at_utc": "2026-11-23T03:48:09.469906+00:00",
+  "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+  "processor": "x86_64",
+  "python": "3.10.18",
+  "logical_cpus": 20,
+  "batch_size": 50000,
+  "crc_calls_per_sample": 1000,
+  "runs": {
+    "python-1": {
+      "backend": {
+        "engine": "python",
+        "crc32c": "python-table",
+        "api_version": 1,
+        "maximum_workers": 1,
+        "mode": "python",
+        "native_import_error": null
+      },
+      "workers": 1,
+      "samples": {
+        "crc32c_1024_bytes": {
+          "median_ns": 54875763,
+          "minimum_ns": 53607030,
+          "repeats": 7,
+          "speedup_vs_python": 1.0
+        },
+        "session_shards": {
+          "median_ns": 23387003,
+          "minimum_ns": 21355934,
+          "repeats": 7,
+          "speedup_vs_python": 1.0
+        },
+        "assess_orders": {
+          "median_ns": 30734407,
+          "minimum_ns": 30213009,
+          "repeats": 7,
+          "speedup_vs_python": 1.0
+        }
+      }
+    },
+    "native-1": {
+      "backend": {
+        "engine": "cpp20",
+        "crc32c": "x86-sse4.2",
+        "api_version": 1,
+        "maximum_workers": 32,
+        "mode": "native"
+      },
+      "workers": 1,
+      "samples": {
+        "crc32c_1024_bytes": {
+          "median_ns": 150614,
+          "minimum_ns": 146866,
+          "repeats": 7,
+          "speedup_vs_python": 364.347
+        },
+        "session_shards": {
+          "median_ns": 10805745,
+          "minimum_ns": 10366787,
+          "repeats": 7,
+          "speedup_vs_python": 2.164
+        },
+        "assess_orders": {
+          "median_ns": 3708116,
+          "minimum_ns": 3364812,
+          "repeats": 7,
+          "speedup_vs_python": 8.288
+        }
+      }
+    },
+    "native-4": {
+      "backend": {
+        "engine": "cpp20",
+        "crc32c": "x86-sse4.2",
+        "api_version": 1,
+        "maximum_workers": 32,
+        "mode": "native"
+      },
+      "workers": 4,
+      "samples": {
+        "crc32c_1024_bytes": {
+          "median_ns": 149594,
+          "minimum_ns": 147393,
+          "repeats": 7,
+          "speedup_vs_python": 366.831
+        },
+        "session_shards": {
+          "median_ns": 3836426,
+          "minimum_ns": 3692662,
+          "repeats": 7,
+          "speedup_vs_python": 6.096
+        },
+        "assess_orders": {
+          "median_ns": 3325592,
+          "minimum_ns": 3065892,
+          "repeats": 7,
+          "speedup_vs_python": 9.242
+        }
+      }
+    }
+  },
+  "scope": "offline compute only; includes CPython conversion; excludes journal fsync and broker"
+}

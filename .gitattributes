@@ -1,0 +1,15 @@
+* text=auto eol=lf
+*.sh text eol=lf
+*.lua text eol=lf
+# Markdown source uses two trailing spaces for intentional hard line breaks.
+*.md whitespace=-blank-at-eol
+# Frozen codec assets are verified byte-for-byte by SHA-256 on Linux and
+# Windows, so their checkout encoding must not depend on core.autocrlf.
+contracts/codec/v1/**/*.json text eol=lf
+# Consumer contract hashes are also verified from exact checkout bytes on
+# both Windows development hosts and Linux deployment hosts.
+contracts/consumer/v2/**/*.json text eol=lf
+# Cross-host probe evidence has archived SHA-256 digests of its exact bytes.
+artifacts/qmt-bridge-acceptance/**/*.json text eol=lf
+# The QMT loader hashes the exact engine bytes before executing them.
+deploy/windows-qmt-edge/qmt_native_engine.py text eol=lf

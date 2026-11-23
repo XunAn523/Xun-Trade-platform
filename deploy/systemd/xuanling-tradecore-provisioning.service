@@ -1,0 +1,39 @@
+[Unit]
+Description=TradeCore Adapter Provisioning Control API (TLS 1.3 mTLS HTTP/2)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=exec
+User=tradecore-control
+Group=tradecore-control
+WorkingDirectory=/opt/projects/tradecore-python/current
+# The factory path is non-secret.  It must construct only a
+# ProvisioningHttp2ServerV1 from root-owned credentials/trust/allow-list paths.
+Environment=TRADECORE_PROVISIONING_FACTORY=tradecore_site.provisioning:create_server
+ExecStart=/opt/projects/tradecore-python/current/.venv/bin/python -m xuanling_tradecore.control_plane.provisioning_main_v1
+Restart=on-failure
+RestartSec=2
+UMask=0077
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+MemoryDenyWriteExecute=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+SystemCallArchitectures=native
+RestrictNamespaces=yes
+RestrictRealtime=yes
+ReadWritePaths=/var/lib/tradecore-control
+ReadOnlyPaths=/etc/tradecore-control
+
+[Install]
+WantedBy=multi-user.target

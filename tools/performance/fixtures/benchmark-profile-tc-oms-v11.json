@@ -1,0 +1,43 @@
+{
+  "schema": "BenchmarkProfileV11",
+  "system_id": "TradeCore-OMS-Load-Platform",
+  "profile_id": "TC-OMS-W0-W5-v11",
+  "measurement_schema_version": "V1.1",
+  "external_callback_required": false,
+  "g_boundaries": {
+    "G0": "HTTP fact request received",
+    "G1": "schema validation and bounded admission completed",
+    "G2": "isolated sidecar fact append completed",
+    "G3": "not applicable: no broker adapter",
+    "G4": "projected immutable snapshot generation completed",
+    "G5": "not applicable: no external callback",
+    "G6": "projector watermark and HDR sample recorded",
+    "G7": "snapshot/query response returned"
+  },
+  "topology": {
+    "maximum_release_skew_ns": 1000000,
+    "scope_and_lane_contract": "loopback OMS sidecar; four declared logical scopes and bounded per-scope projector queues"
+  },
+  "load_shape": {
+    "warmup": "server health, benchmark reset, and metrics reset before each workload",
+    "burst": "k6 constant-arrival W1/W3 plus snapshot query W2/W3"
+  },
+  "data_distribution": {
+    "seed": "k6 deterministic integer index",
+    "schema_version": "1",
+    "payload_classes": "bounded synthetic OMS facts and snapshot queries",
+    "uniform_key_contract": "uniform deterministic scope/key selection",
+    "hot_key_contract": "fixed hot key at configured percentage",
+    "idempotency_contract": "W0/W5 contract-specific duplicate handling",
+    "invalid_input_contract": "W0/W5 contract-specific bounded invalid inputs"
+  },
+  "durable_fence": {
+    "G2": "isolated load-platform fact append only; not a TradeCore production Journal durability claim",
+    "G6": "test-only projector watermark/HDR observation"
+  },
+  "acceptance": {
+    "three_independent_runs": true,
+    "raw_pairs_retained": false,
+    "status_scope": "isolated OMS sidecar performance platform only"
+  }
+}

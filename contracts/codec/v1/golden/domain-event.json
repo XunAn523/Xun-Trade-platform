@@ -1,0 +1,1 @@
+{"schema_version":1,"event_id":"event-golden-1","event_kind":"ORDER","account_id":"account-fixture","trading_day":"2026-09-01","journal_id":"journal-fixture","journal_lsn":42,"execution_id":"execution-fixture-1","source_key":"order:fixture:42"}

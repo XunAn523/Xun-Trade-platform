@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:xuanling:consumer:v2:response",
+  "title": "ConsumerGateway V2 response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["message_type", "schema_version", "request_id", "status", "payload"],
+  "properties": {
+    "message_type": {"const": "response"},
+    "schema_version": {"const": 2},
+    "request_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "status": {"enum": ["ACCEPTED", "COMPLETED"]},
+    "payload": {"type": "object"}
+  }
+}

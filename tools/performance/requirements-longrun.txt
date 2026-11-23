@@ -1,0 +1,2 @@
+# Installed only in the isolated load-generator/test dependency directory.
+hdrhistogram>=0.10,<1

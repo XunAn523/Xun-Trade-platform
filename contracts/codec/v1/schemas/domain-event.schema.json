@@ -1,0 +1,67 @@
+{
+  "$defs": {
+    "DomainEventEnvelope": {
+      "additionalProperties": false,
+      "description": "A compact, payload-free view of a durable domain event for exchange only.",
+      "properties": {
+        "account_id": {
+          "type": "string"
+        },
+        "event_id": {
+          "type": "string"
+        },
+        "event_kind": {
+          "type": "string"
+        },
+        "execution_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "journal_id": {
+          "type": "string"
+        },
+        "journal_lsn": {
+          "type": "integer"
+        },
+        "schema_version": {
+          "type": "integer"
+        },
+        "source_key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "trading_day": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schema_version",
+        "event_id",
+        "event_kind",
+        "account_id",
+        "trading_day",
+        "journal_id",
+        "journal_lsn"
+      ],
+      "title": "DomainEventEnvelope",
+      "type": "object"
+    }
+  },
+  "$ref": "#/$defs/DomainEventEnvelope",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-runtime-semantic-validation": "Required after structural decode; see xuanling_tradecore.codec.typed_payloads."
+}

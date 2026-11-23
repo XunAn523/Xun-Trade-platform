@@ -1,0 +1,20 @@
+{
+  "message_type": "request",
+  "schema_version": 2,
+  "operation": "SubmitSignal",
+  "request_id": "request-0001",
+  "payload": {
+    "consumer_account_id": "consumer-account-1",
+    "strategy_id": "strategy-1",
+    "strategy_order_id": "strategy-order-1",
+    "trading_day": "2026-09-01",
+    "symbol": "000001",
+    "market": "SZ",
+    "side": "BUY",
+    "price_type": "LIMIT",
+    "business_type": "CASH",
+    "quantity": 100,
+    "protection_price_ticks": 1020,
+    "limit_price_ticks": 1010
+  }
+}

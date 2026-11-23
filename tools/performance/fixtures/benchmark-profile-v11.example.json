@@ -1,0 +1,42 @@
+{
+  "schema": "BenchmarkProfileV11",
+  "system_id": "replace-with-system-id",
+  "profile_id": "replace-with-immutable-profile-id",
+  "measurement_schema_version": "V1.1",
+  "external_callback_required": false,
+  "g_boundaries": {
+    "G0": "real request enters system",
+    "G1": "admission completed",
+    "G2": "local durable fence completed",
+    "G3": "adapter call boundary",
+    "G4": "local accepted mapping completed",
+    "G5": "N/A: no external callback",
+    "G6": "local outcome fence completed",
+    "G7": "downstream consumer receipt completed"
+  },
+  "topology": {
+    "maximum_release_skew_ns": 1000000,
+    "scope_and_lane_contract": "declare actual owner topology"
+  },
+  "load_shape": {
+    "warmup": "declare warmup and reset",
+    "burst": "declare common release or sustained arrival rate"
+  },
+  "data_distribution": {
+    "seed": "fixed-and-recorded",
+    "schema_version": "1",
+    "payload_classes": "minimum,typical,maximum",
+    "uniform_key_contract": "uniform across declared keys/scopes",
+    "hot_key_contract": "fixed hot-key ratio and scope",
+    "idempotency_contract": "fixed duplicate ratio",
+    "invalid_input_contract": "fixed invalid ratio"
+  },
+  "durable_fence": {
+    "G2": "declare commit and recovery semantics",
+    "G6": "declare outcome commit and recovery semantics"
+  },
+  "acceptance": {
+    "three_independent_runs": true,
+    "raw_pairs_retained": true
+  }
+}

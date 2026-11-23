@@ -1,0 +1,41 @@
+{
+  "openapi": "3.2.0",
+  "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "info": {"title": "TradeCore Internal Control Plane", "version": "1.0.0"},
+  "servers": [{"url": "http://127.0.0.1", "description": "Internal/loopback deployment only"}],
+  "paths": {
+    "/v1/accounts/{account_id}/status": {
+      "get": {
+        "operationId": "getAccountStatus",
+        "responses": {"200": {"description": "Restricted account status"}}
+      }
+    },
+    "/v1/accounts/{account_id}/external-orders:attach": {
+      "post": {
+        "operationId": "attachExternalOrder",
+        "description": "Read-verified, maker-checker attachment; no broker submit/cancel endpoint exists here.",
+        "requestBody": {"required": true, "content": {"application/json": {"schema": {"$ref": "#/components/schemas/ControlMutation"}}}},
+        "responses": {"200": {"description": "Durable attachment receipt"}, "403": {"description": "OPA/policy/approval failure"}, "409": {"description": "Precondition, nonce or verification failure"}}
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ControlMutation": {
+        "type": "object",
+        "required": ["command_id", "maker_id", "checker_id", "reason_code", "nonce", "policy_epoch", "policy_hash", "expected_control_version"],
+        "properties": {
+          "command_id": {"type": "string", "minLength": 1},
+          "maker_id": {"type": "string", "minLength": 1},
+          "checker_id": {"type": "string", "minLength": 1},
+          "reason_code": {"type": "string", "minLength": 1},
+          "nonce": {"type": "string", "minLength": 1},
+          "policy_epoch": {"type": "integer", "minimum": 1},
+          "policy_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "expected_control_version": {"type": "integer", "minimum": 0}
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

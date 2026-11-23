@@ -1,0 +1,7 @@
+[Unit]
+Description=Stop the day-bound EMT simulator without canceling orders
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl stop xuanling-tradecore-emt-simulator.service
+TimeoutStartSec=30

@@ -1,0 +1,25 @@
+{
+  "matrix_version": 1,
+  "server_api": "2.0",
+  "entries": [
+    {
+      "reader": "2.0",
+      "writer": "2.0",
+      "result": "COMPATIBLE",
+      "conditions": "Exact fixed header and payload schema version; optional fields only."
+    },
+    {
+      "reader": "1.x",
+      "writer": "2.0",
+      "result": "UPGRADE_REQUIRED",
+      "conditions": "V1 LSN/colon cursors and V1 framing cannot represent V2 positions."
+    },
+    {
+      "reader": "2.0",
+      "writer": "3.x",
+      "result": "EVENT_SCHEMA_INCOMPATIBLE",
+      "conditions": "No silent skip and no cursor advancement."
+    }
+  ],
+  "breaking_change_rule": "Increase api_major and retain the old reader through its replay and audit window."
+}

@@ -1,0 +1,18 @@
+{
+  "gateway": {
+    "host": "<simulated-trader-host>",
+    "port": 19088
+  },
+  "ordinary": {
+    "account": "<ordinary-account>",
+    "password": "<ordinary-password>"
+  },
+  "credit": {
+    "account": "<credit-account>",
+    "password": "<credit-password>"
+  },
+  "option": {
+    "account": "<option-account>",
+    "password": "<option-password>"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schema": "TradeCoreQmtEdgeConfigV1",
+  "scope_digest_hex": "REPLACE_WITH_64_HEX_SCOPE_DIGEST",
+  "generation_hex": "REPLACE_WITH_32_HEX_GENERATION",
+  "command_ring_path": "C:\\TradeCore\\qmt-edge\\runtime\\command.ring",
+  "event_ring_path": "C:\\TradeCore\\qmt-edge\\runtime\\event.ring",
+  "atomic_dll_path": "C:\\TradeCore\\qmt-edge\\bin\\tradecore_qmt_atomic.dll",
+  "database_path": "C:\\TradeCore\\qmt-edge\\state\\qmt-edge.sqlite3",
+  "ring_capacity": 1024,
+  "sqlite_synchronous": "NORMAL",
+  "account_id": "REPLACE_AFTER_P0",
+  "adapter_instance_id": "REPLACE_AFTER_P0",
+  "adapter_client_scope": "REPLACE_AFTER_P0",
+  "qmt_timer_period": "REPLACE_AFTER_P0",
+  "qmt_timer_start_time": "2019-10-14 13:20:00",
+  "max_drain": 1,
+  "mode": "PROBE",
+  "allow_mutation": false,
+  "native_policy": null,
+  "callback_attributes": {
+    "event_key": "REPLACE_AFTER_P0",
+    "client_order_ref": "REPLACE_AFTER_P0",
+    "venue_order_id": "REPLACE_AFTER_P0",
+    "trade_key": "REPLACE_AFTER_P0",
+    "filled_qty": "REPLACE_AFTER_P0",
+    "leaves_qty": "REPLACE_AFTER_P0",
+    "error_code": "REPLACE_AFTER_P0"
+  }
+}

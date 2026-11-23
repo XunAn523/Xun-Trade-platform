@@ -1,0 +1,12 @@
+{
+  "schema": "StabilityPlanV11",
+  "profile_id": "replace-with-immutable-profile-id",
+  "workloads": [
+    {"name": "OMS-W3", "command": ["replace-with-oms-w3-command"]},
+    {"name": "EMS-E5", "command": ["replace-with-ems-e5-command"]},
+    {"name": "STR-S5", "command": ["replace-with-str-s5-command"]}
+  ],
+  "faults": [
+    {"name": "projector-pause", "command": ["replace-with-active-load-fault-command"]}
+  ]
+}

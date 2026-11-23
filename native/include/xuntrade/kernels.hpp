@@ -1,0 +1,45 @@
+#pragma once
+
+#include <cstddef>
+#include <cstdint>
+#include <span>
+#include <string>
+#include <string_view>
+#include <vector>
+
+namespace xuntrade {
+
+// Stable wire algorithms. Changing these changes persisted checksums/routes.
+std::uint32_t crc32c(std::span<const std::uint8_t> data) noexcept;
+std::uint32_t crc32c_portable(std::span<const std::uint8_t> data) noexcept;
+const char* crc32c_implementation() noexcept;
+std::uint32_t session_shard(std::string_view execution_id, std::uint32_t shards);
+std::vector<std::uint32_t> session_shards(
+    const std::vector<std::string>& execution_ids, std::uint32_t shards, unsigned workers);
+
+enum class AssessmentCode : std::uint8_t {
+    accepted = 0, invalid = 1, overflow = 2, order_limit = 3, cash_limit = 4
+};
+
+// Values use one caller-selected currency minor unit. No binary floating point.
+struct OrderInput {
+    std::int64_t quantity;
+    std::int64_t price_minor;
+    std::int64_t available_minor;
+    std::int64_t order_limit_minor;
+};
+
+struct Assessment {
+    std::int64_t notional_minor;
+    AssessmentCode code;
+    bool operator==(const Assessment&) const = default;
+};
+
+Assessment assess_order(const OrderInput& input) noexcept;
+// Independent snapshots only: this is not a shared cash reservation ledger.
+std::vector<Assessment> assess_orders(std::span<const OrderInput> inputs, unsigned workers);
+
+inline constexpr std::size_t maximum_batch_size = 1'000'000;
+inline constexpr unsigned maximum_workers = 32;
+
+}  // namespace xuntrade

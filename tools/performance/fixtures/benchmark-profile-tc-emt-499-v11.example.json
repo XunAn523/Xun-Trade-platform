@@ -1,0 +1,43 @@
+{
+  "schema": "BenchmarkProfileV11",
+  "system_id": "TradeCore",
+  "profile_id": "TC-EMT-499-v11-EXAMPLE",
+  "measurement_schema_version": "V1.1",
+  "external_callback_required": true,
+  "g_boundaries": {
+    "G0": "C0 ingress",
+    "G1": "C0A admission",
+    "G2": "C2 PRE_NATIVE mmap commit",
+    "G3": "C3 EMT InsertOrder call",
+    "G4": "C4A accepted mapping journal commit",
+    "G5": "C5 native callback ingress",
+    "G6": "C6 callback mmap commit",
+    "G7": "C7 downstream receipt"
+  },
+  "topology": {
+    "maximum_release_skew_ns": 1000000,
+    "scope_and_lane_contract": "process-isolated EMT sessions; one serial caller and one callback writer per scope"
+  },
+  "load_shape": {
+    "warmup": "prewarmed session, route, mmap and CPU plan",
+    "burst": "499 logical signals at one shared C0"
+  },
+  "data_distribution": {
+    "seed": "reviewed private order-plan seed",
+    "schema_version": "1",
+    "payload_classes": "reviewed valid passive orders only",
+    "uniform_key_contract": "stable execution-key affinity across declared scopes",
+    "hot_key_contract": "not applicable to a venue order burst",
+    "idempotency_contract": "unique canonical client reference per signal",
+    "invalid_input_contract": "not part of the controlled venue profile"
+  },
+  "durable_fence": {
+    "G2": "committed PRE_NATIVE mmap frame before EMT SDK call",
+    "G6": "committed callback mmap frame before C7 delivery"
+  },
+  "acceptance": {
+    "three_independent_runs": true,
+    "raw_pairs_retained": true,
+    "cleanup_terminal_and_authority_zero_unfinished": true
+  }
+}

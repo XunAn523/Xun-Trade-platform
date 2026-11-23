@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "socket_path": "/run/tradecore-consumer-uds/consumer-v2.sock",
+  "journal_root": "/var/lib/tradecore-consumer-uds",
+  "journal_capacity": 1000000,
+  "peer_uid": 1000,
+  "peer_gid": 1000,
+  "additional_peer_credentials": [],
+  "socket_mode": 384,
+  "consumer_id": "server-local-uds-benchmark",
+  "login_name": "server-local-uds-benchmark",
+  "legal_name": "server-local-uds-benchmark",
+  "consumer_account_id": "server-local-uds-benchmark",
+  "account_id": "server-local-uds-benchmark",
+  "account_display_name": "Server-local UDS benchmark",
+  "venue_id": "NO_ADAPTER_BENCHMARK",
+  "adapter_instance_id": "disabled-no-dispatch",
+  "strategy_id": "uds-benchmark",
+  "listen_backlog": 8192,
+  "pending_capacity": 2048,
+  "preframe_capacity": 8192,
+  "max_requests_per_connection": 1
+}
