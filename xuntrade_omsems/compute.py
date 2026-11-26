@@ -7,10 +7,17 @@ The backend is selected once at process start; native runtime failures propagate
 from __future__ import annotations
 
 import os
+from contextlib import contextmanager
 from hashlib import blake2s
+from threading import Lock
 from typing import Sequence
 
 MAX_BATCH_SIZE = 1_000_000
+MAX_BATCH_BYTES = 64 * 1024 * 1024
+MAX_COMPUTE_BYTES = 256 * 1024 * 1024
+MAX_COMPUTE_CALLS = 4
+_BUDGET_LOCK = Lock()
+_ACTIVE = [0, 0, 0]  # calls, requested workers, accounted bytes
 MAX_INT64 = (1 << 63) - 1
 MIN_INT64 = -(1 << 63)
 _MODE = os.environ.get("XUNTRADE_BACKEND", "native")
@@ -33,6 +40,8 @@ if _MODE != "python":
 def backend_info() -> dict[str, object]:
     if _native is not None:
         return {**_native.backend_info(), "mode": _MODE}
+    with _BUDGET_LOCK:
+        calls, workers, used_bytes = _ACTIVE
     return {
         "engine": "python",
         "crc32c": "python-table",
@@ -40,7 +49,36 @@ def backend_info() -> dict[str, object]:
         "maximum_workers": 1,
         "mode": _MODE,
         "native_import_error": _native_import_error,
+        "maximum_batch_bytes": MAX_BATCH_BYTES,
+        "maximum_compute_bytes": MAX_COMPUTE_BYTES,
+        "maximum_compute_calls": MAX_COMPUTE_CALLS,
+        "active_calls": calls,
+        "active_workers": workers,
+        "active_bytes": used_bytes,
     }
+
+
+@contextmanager
+def _reservation(estimated_bytes: int, workers: int):
+    if estimated_bytes > MAX_BATCH_BYTES:
+        raise ValueError("batch memory budget exceeds 64 MiB")
+    with _BUDGET_LOCK:
+        if (
+            _ACTIVE[0] >= MAX_COMPUTE_CALLS
+            or _ACTIVE[1] + workers > 32
+            or _ACTIVE[2] + estimated_bytes > MAX_COMPUTE_BYTES
+        ):
+            raise RuntimeError("compute capacity exhausted; no computation was admitted")
+        _ACTIVE[0] += 1
+        _ACTIVE[1] += workers
+        _ACTIVE[2] += estimated_bytes
+    try:
+        yield
+    finally:
+        with _BUDGET_LOCK:
+            _ACTIVE[0] -= 1
+            _ACTIVE[1] -= workers
+            _ACTIVE[2] -= estimated_bytes
 
 
 def require_native() -> None:
@@ -99,15 +137,19 @@ def session_shards(
     if _native is not None:
         return _native.session_shards(execution_ids, shard_count, workers)
     ids = _batch(execution_ids)
-    result = []
+    estimated_bytes = len(ids) * 96
     for value in ids:
         if type(value) is not str:
             raise TypeError("execution IDs must be builtin str")
         if not 1 <= len(value) <= 256:
             raise ValueError("execution ID length must be in [1, 256]")
-        digest = blake2s(value.encode("utf-8"), digest_size=16, person=b"tcshard1").digest()
-        result.append(int.from_bytes(digest, "big") % shard_count)
-    return tuple(result)
+        estimated_bytes += len(value) * 8
+    with _reservation(estimated_bytes, workers):
+        result = []
+        for value in ids:
+            digest = blake2s(value.encode("utf-8"), digest_size=16, person=b"tcshard1").digest()
+            result.append(int.from_bytes(digest, "big") % shard_count)
+        return tuple(result)
 
 
 def assess_orders(
@@ -124,20 +166,23 @@ def assess_orders(
     if _native is not None:
         return _native.assess_orders(orders, workers)
     rows = _batch(orders)
-    result = []
-    for row in rows:
-        if type(row) is not tuple or len(row) != 4:
-            raise TypeError("each order must be a tuple of four int64 values")
-        if any(type(value) is not int for value in row):
-            raise TypeError("values must be builtin int (bool is forbidden)")
-        if any(value < MIN_INT64 or value > MAX_INT64 for value in row):
-            raise OverflowError("int value does not fit int64")
-        quantity, price, available, limit = row
-        if quantity <= 0 or price <= 0 or available < 0 or limit < 0:
-            result.append((0, 1))
-        elif quantity > MAX_INT64 // price:
-            result.append((0, 2))
-        else:
-            notional = quantity * price
-            result.append((notional, 3 if notional > limit else 4 if notional > available else 0))
-    return tuple(result)
+    with _reservation(len(rows) * 160, workers):
+        result = []
+        for row in rows:
+            if type(row) is not tuple or len(row) != 4:
+                raise TypeError("each order must be a tuple of four int64 values")
+            if any(type(value) is not int for value in row):
+                raise TypeError("values must be builtin int (bool is forbidden)")
+            if any(value < MIN_INT64 or value > MAX_INT64 for value in row):
+                raise OverflowError("int value does not fit int64")
+            quantity, price, available, limit = row
+            if quantity <= 0 or price <= 0 or available < 0 or limit < 0:
+                result.append((0, 1))
+            elif quantity > MAX_INT64 // price:
+                result.append((0, 2))
+            else:
+                notional = quantity * price
+                result.append(
+                    (notional, 3 if notional > limit else 4 if notional > available else 0)
+                )
+        return tuple(result)

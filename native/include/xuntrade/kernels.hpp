@@ -49,5 +49,26 @@ std::vector<Assessment> assess_orders(std::span<const OrderInput> inputs, unsign
 
 inline constexpr std::size_t maximum_batch_size = 1'000'000;
 inline constexpr unsigned maximum_workers = 32;
+inline constexpr std::size_t maximum_batch_bytes = 64 * 1024 * 1024;
+inline constexpr std::size_t maximum_compute_bytes = 256 * 1024 * 1024;
+inline constexpr unsigned maximum_compute_calls = 4;
+
+struct ComputeCapacity {
+    std::size_t bytes;
+    unsigned calls;
+    unsigned workers;
+};
+ComputeCapacity compute_capacity();
+
+// Binding-owned lease spans validation, copied inputs, calculation and outputs.
+class ComputeLease {
+    std::size_t bytes_;
+    unsigned workers_;
+public:
+    ComputeLease(std::size_t bytes, unsigned workers);
+    ~ComputeLease();
+    ComputeLease(const ComputeLease&) = delete;
+    ComputeLease& operator=(const ComputeLease&) = delete;
+};
 
 }  // namespace xuntrade

@@ -14,7 +14,7 @@ if(MSVC)
 endif()
 
 find_package(Threads REQUIRED)
-add_library(xuntrade_kernels STATIC native/src/kernels.cpp)
+add_library(xuntrade_kernels STATIC native/src/kernels.cpp native/src/compute_budget.cpp)
 target_include_directories(xuntrade_kernels PUBLIC native/include)
 target_compile_features(xuntrade_kernels PUBLIC cxx_std_20)
 set_target_properties(xuntrade_kernels PROPERTIES CXX_EXTENSIONS OFF POSITION_INDEPENDENT_CODE ON)

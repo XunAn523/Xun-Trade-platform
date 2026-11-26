@@ -220,6 +220,17 @@ def test_explicit_native_requirement_matches_reported_backend():
             compute.require_native()
 
 
+def test_accounted_memory_budget_rejects_before_computing_and_releases_on_errors():
+    with pytest.raises(ValueError, match="memory budget"):
+        compute.session_shards(("😀" * 256,) * 40000, 3)
+    with pytest.raises(ValueError, match="memory budget"):
+        compute.assess_orders(((1, 1, 1, 1),) * 500000)
+    with pytest.raises(TypeError):
+        compute.assess_orders(((True, 1, 1, 1),))
+    assert compute.backend_info()["active_calls"] == 0
+    assert compute.backend_info()["active_bytes"] == 0
+
+
 def test_native_error_does_not_silently_fall_back(monkeypatch):
     class Broken:
         @staticmethod

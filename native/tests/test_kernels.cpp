@@ -14,6 +14,25 @@ void require(bool condition, const char* message) {
 
 int main() {
     using namespace xuntrade;
+    {
+        ComputeLease lease(1024, maximum_workers);
+        require(compute_capacity().workers == maximum_workers, "worker reservation mismatch");
+        bool rejected = false;
+        try { ComputeLease excess(1, 1); }
+        catch (const std::runtime_error&) { rejected = true; }
+        require(rejected, "overcommitted worker budget");
+    }
+    require(compute_capacity().calls == 0, "compute lease leaked on failure");
+    try { ComputeLease excess(maximum_batch_bytes + 1, 1); require(false, "oversized memory"); }
+    catch (const std::invalid_argument&) {}
+    {
+        ComputeLease a(1, 1), b(1, 1), c(1, 1), d(1, 1);
+        bool rejected = false;
+        try { ComputeLease excess(1, 1); }
+        catch (const std::runtime_error&) { rejected = true; }
+        require(rejected, "overcommitted call budget");
+    }
+    require(compute_capacity().bytes == 0, "compute memory reservation leaked");
     const std::array<std::uint8_t, 9> reference{'1','2','3','4','5','6','7','8','9'};
     require(crc32c(reference) == 0xe3069283U, "CRC32C reference mismatch");
     require(crc32c_portable(reference) == 0xe3069283U, "portable CRC mismatch");

@@ -14,7 +14,7 @@ cpp_flags = (
 extensions = [
     Extension(
         "xuntrade_omsems._native",
-        ["native/src/kernels.cpp", "native/src/python_module.cpp"],
+        ["native/src/kernels.cpp", "native/src/compute_budget.cpp", "native/src/python_module.cpp"],
         include_dirs=["native/include"],
         language="c++",
         extra_compile_args=cpp_flags,

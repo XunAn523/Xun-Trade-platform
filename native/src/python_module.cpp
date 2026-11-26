@@ -89,6 +89,23 @@ PyObject* shards(PyObject*, PyObject* args) {
         Owned snapshot{PySequence_Tuple(ids)};
         if (!snapshot.value) return nullptr;
         const auto size = PyTuple_GET_SIZE(snapshot.value);
+        // Conservative peak estimate includes UTF-8 cache, string copies,
+        // vector storage, owned references and Python output containers.
+        std::size_t estimated_bytes = static_cast<std::size_t>(size) * 96;
+        for (Py_ssize_t i = 0; i < size; ++i) {
+            auto* item = PyTuple_GET_ITEM(snapshot.value, i);
+            if (!PyUnicode_CheckExact(item)) {
+                PyErr_SetString(PyExc_TypeError, "execution IDs must be builtin str");
+                return nullptr;
+            }
+            auto length = PyUnicode_GET_LENGTH(item);
+            if (length == 0 || length > 256) {
+                PyErr_SetString(PyExc_ValueError, "execution ID length must be in [1, 256]");
+                return nullptr;
+            }
+            estimated_bytes += static_cast<std::size_t>(length) * 8;
+        }
+        xuntrade::ComputeLease lease(estimated_bytes, workers);
         std::vector<std::string> input;
         input.reserve(size);
         for (Py_ssize_t i = 0; i < size; ++i) {
@@ -135,6 +152,7 @@ PyObject* assessments(PyObject*, PyObject* args) {
         Owned snapshot{PySequence_Tuple(rows)};
         if (!snapshot.value) return nullptr;
         const auto size = PyTuple_GET_SIZE(snapshot.value);
+        xuntrade::ComputeLease lease(static_cast<std::size_t>(size) * 160, workers);
         std::vector<xuntrade::OrderInput> input;
         input.reserve(size);
         for (Py_ssize_t i = 0; i < size; ++i) {
@@ -170,10 +188,16 @@ PyObject* assessments(PyObject*, PyObject* args) {
 }
 
 PyObject* backend_info(PyObject*, PyObject*) {
-    return Py_BuildValue("{s:s,s:s,s:i,s:i,s:l}", "engine", "cpp20", "crc32c",
+    const auto capacity = xuntrade::compute_capacity();
+    return Py_BuildValue("{s:s,s:s,s:i,s:i,s:l,s:K,s:K,s:I,s:I,s:I,s:K}", "engine", "cpp20", "crc32c",
                         xuntrade::crc32c_implementation(), "api_version", 1,
                         "maximum_workers", xuntrade::maximum_workers,
-                        "cxx_standard", static_cast<long>(__cplusplus));
+                        "cxx_standard", static_cast<long>(__cplusplus),
+                        "maximum_batch_bytes", static_cast<unsigned long long>(xuntrade::maximum_batch_bytes),
+                        "maximum_compute_bytes", static_cast<unsigned long long>(xuntrade::maximum_compute_bytes),
+                        "maximum_compute_calls", xuntrade::maximum_compute_calls,
+                        "active_calls", capacity.calls, "active_workers", capacity.workers,
+                        "active_bytes", static_cast<unsigned long long>(capacity.bytes));
 }
 
 PyMethodDef methods[]{
