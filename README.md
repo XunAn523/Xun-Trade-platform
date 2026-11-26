@@ -209,6 +209,18 @@ python -m tools.benchmarks.offline_pipeline --orders 200 --capacity 256 --output
 该工具报告完成/拒绝数量、吞吐、P50/P95/P99、排队时间和日志同步时间；
 `--capacity 4 --broker-delay-us 1000` 可观察背压。模拟链路不装载 SDK，不代表实盘风控与执行权部署验收。
 
+在干净提交上执行固定速率阶梯及突发基线，每个负载点独立启动进程、重复三次：
+
+```bash
+uv run --locked --extra ci python -m tools.benchmarks.capacity_baseline --rates 25 50 100 200 --orders 500 --repeats 3 --deadline-ms 100 --output-dir build/capacity
+```
+
+`--journal-root` 指定目标磁盘上的已有目录，默认使用系统临时目录。
+报告记录源码提交、依赖锁、原生扩展哈希、平台和存储信息，并区分请求到达、完成、拒绝和排空吞吐。
+匀速请求按独立时钟发出，延迟从计划到达时刻计起，另报发压迟到；完成延迟分位数只覆盖完成请求，
+拒绝单独计数，期限内完成比例以全部发出请求为分母。多轮 P99 按每轮的最小/中位/最大值展示，不称为合并 P99。
+示例的 100 ms 是测量阈值，正式 SLA 需结合目标主机及业务要求确定；这类有界采样不替代长时间稳定性验收。
+
 基准比较 Python、C++ 单线程与 C++ 多线程，包含 Python 调用和数据转换成本。
 测量范围不含磁盘 fsync、网络、OMS 领域校验或券商延迟，不能外推为完整交易链路的性能保证。
 
@@ -238,7 +250,7 @@ XunTradeOMSEMS/
 
 EMT 专用 Consumer 组合位于 `xuanling_tradecore.compatibility.emt_consumer`，
 通用 Consumer 层保持与券商实现隔离。内部调用方应使用该命名空间导入 `emt_*_v1` 组合模块。
-CI 对全仓库执行 Ruff、模块边界和敏感内容扫描，并验证原生构建、协议与核心回归。
+CI 对全仓库执行 Ruff、模块边界、type-ignore 原因和敏感内容扫描，并验证原生构建、协议与核心回归。
 
 ## 日志归档
 

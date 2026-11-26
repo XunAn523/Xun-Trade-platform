@@ -7,17 +7,23 @@ local composition, not a production OMS risk/fence deployment or real C0-C7 SLA.
 from __future__ import annotations
 
 import argparse
+import hashlib
+import importlib.util
 import json
 import math
+import os
 import platform
+import shutil
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from threading import Event, Thread
-from time import perf_counter_ns, sleep
+from time import perf_counter_ns, process_time_ns, sleep
 
 from emt_gateway.gateway import CommandState, OrderGateway, OrderIntent
 from emt_gateway.journal import FileJournal
+from tools.quality.run_acceptance import revision
 from xuanling_tradecore.domain import (
     CancelDeadlinePolicy,
     ConsumerTrace,
@@ -47,6 +53,73 @@ def distribution(values: list[int]) -> dict[str, int]:
         **{f"p{p}_ns": ordered[math.ceil(len(values) * p / 100) - 1] for p in (50, 95, 99)},
         "max_ns": ordered[-1],
     }
+
+
+def arrival_ns(started: int, index: int, rate: float) -> int:
+    """Fixed open-loop schedule: completions never move the next arrival."""
+    return started + round(index * 10**9 / rate)
+
+
+def storage_info(directory: Path) -> dict:
+    info = {"path": str(directory), "free_bytes": shutil.disk_usage(directory).free}
+    if platform.system() == "Linux":
+        try:
+            result = subprocess.run(
+                [
+                    "findmnt",
+                    "--json",
+                    "--target",
+                    str(directory),
+                    "--output",
+                    "TARGET,FSTYPE,SOURCE",
+                ],
+                capture_output=True,
+                text=True,
+                timeout=5,
+                check=False,
+            )
+            if result.returncode == 0:
+                info["mount"] = json.loads(result.stdout)
+        except (OSError, ValueError, subprocess.TimeoutExpired):
+            info["mount"] = "unavailable"
+    return info
+
+
+def peak_rss_bytes() -> int | None:
+    """Process lifetime peak, including imports/measurement storage; not a live OMS RSS limit."""
+    if platform.system() == "Linux":
+        import resource
+
+        return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+    if os.name == "nt":
+        import ctypes
+        from ctypes import wintypes
+
+        class Counters(ctypes.Structure):
+            _fields_ = [("cb", wintypes.DWORD), ("PageFaultCount", wintypes.DWORD)] + [
+                (name, ctypes.c_size_t)
+                for name in (
+                    "PeakWorkingSetSize",
+                    "WorkingSetSize",
+                    "QuotaPeakPagedPoolUsage",
+                    "QuotaPagedPoolUsage",
+                    "QuotaPeakNonPagedPoolUsage",
+                    "QuotaNonPagedPoolUsage",
+                    "PagefileUsage",
+                    "PeakPagefileUsage",
+                )
+            ]
+
+        counters = Counters()
+        counters.cb = ctypes.sizeof(counters)
+        process = ctypes.windll.kernel32.GetCurrentProcess
+        process.restype = wintypes.HANDLE
+        memory = ctypes.windll.psapi.GetProcessMemoryInfo
+        memory.argtypes = [wintypes.HANDLE, ctypes.POINTER(Counters), wintypes.DWORD]
+        memory.restype = wintypes.BOOL
+        if memory(process(), ctypes.byref(counters), counters.cb):
+            return counters.PeakWorkingSetSize
+    return None
 
 
 def make_router(capacity: int) -> AccountSessionShardRouter:
@@ -157,11 +230,34 @@ class _Broker:
         return 0
 
 
-def run_pipeline(*, orders=200, batch_size=32, capacity=128, broker_delay_us=0, workers=1):
+def run_pipeline(
+    *,
+    orders=200,
+    batch_size=32,
+    capacity=128,
+    broker_delay_us=0,
+    workers=1,
+    target_rate=0.0,
+    deadline_ms=None,
+    journal_root=None,
+):
     if not 1 <= orders <= 100000 or not 1 <= batch_size <= 4096 or not 1 <= capacity <= 100000:
         raise ValueError("invalid offline workload bounds")
     if not 0 <= broker_delay_us <= 1000000 or type(workers) is not int or not 1 <= workers <= 32:
         raise ValueError("invalid broker delay or workers")
+    if not math.isfinite(target_rate) or not 0 <= target_rate <= 10**6:
+        raise ValueError("target rate must be finite and between zero and 1000000")
+    if deadline_ms is not None and (not math.isfinite(deadline_ms) or deadline_ms <= 0):
+        raise ValueError("deadline must be finite and positive")
+    if target_rate and (orders - 1) / target_rate > 1800:
+        raise ValueError("paced offer window exceeds 30 minutes")
+    source = revision()
+    native = importlib.util.find_spec("xuntrade_omsems._native")
+    native_sha256 = (
+        hashlib.sha256(Path(native.origin).read_bytes()).hexdigest()
+        if native and native.origin
+        else None
+    )
     router = make_router(capacity)
     lanes = router.route_execution_ids(
         account_id="offline-account", execution_ids=tuple(f"lane-{i}" for i in range(32))
@@ -173,8 +269,10 @@ def run_pipeline(*, orders=200, batch_size=32, capacity=128, broker_delay_us=0, 
     errors: list[BaseException] = []
     starts: dict[str, int] = {}
     latency, queue_wait, routing = [], [], []
+    lateness, rejection_latency, completions = [], [], []
     completed = rejected = 0
-    with TemporaryDirectory(prefix="xuntrade-offline-") as directory:
+    with TemporaryDirectory(prefix="xuntrade-offline-", dir=journal_root) as directory:
+        storage = storage_info(Path(directory))
         with (
             FileJournal(Path(directory) / "commands.emtj") as command_file,
             FileJournal(Path(directory) / "events.emtj") as event_file,
@@ -217,7 +315,9 @@ def run_pipeline(*, orders=200, batch_size=32, capacity=128, broker_delay_us=0, 
                             if delivery is None:
                                 raise RuntimeError("offline callback missing")
                             gateway.callbacks.ack(delivery.delivery_id)
-                            latency.append(perf_counter_ns() - starts[item.execution_id])
+                            finished = perf_counter_ns()
+                            latency.append(finished - starts[item.execution_id])
+                            completions.append(finished)
                             scheduler.release_new_order_inflight(item.execution_id)
                             completed += 1
                         if not progress:
@@ -228,6 +328,7 @@ def run_pipeline(*, orders=200, batch_size=32, capacity=128, broker_delay_us=0, 
                     errors.append(exc)
 
             started = perf_counter_ns()
+            cpu_started = process_time_ns()
             worker = Thread(target=drain, name="offline-dispatch")
             worker.start()
             try:
@@ -238,9 +339,19 @@ def run_pipeline(*, orders=200, batch_size=32, capacity=128, broker_delay_us=0, 
                     )
                     selected = router.route_executions(batch, workers=workers)
                     routing.append(perf_counter_ns() - batch_started)
-                    for item, lane in zip(batch, selected, strict=True):
-                        starts[item.execution_id] = batch_started
+                    for index, (item, lane) in enumerate(zip(batch, selected, strict=True), offset):
+                        scheduled = (
+                            arrival_ns(started, index, target_rate)
+                            if target_rate
+                            else batch_started
+                        )
+                        if target_rate:
+                            remaining = scheduled - perf_counter_ns()
+                            if remaining > 0:
+                                sleep(remaining / 10**9)
+                        starts[item.execution_id] = scheduled
                         now = perf_counter_ns()
+                        lateness.append(max(0, now - scheduled))
                         decision = lane.scheduler.admit_and_commit_new_order(
                             request_id=item.consumer_trace.strategy_order_id,
                             serialized_size_bytes=256,
@@ -248,10 +359,13 @@ def run_pipeline(*, orders=200, batch_size=32, capacity=128, broker_delay_us=0, 
                             checked_monotonic_ns=now,
                             instruction=item,
                         )
-                        rejected += isinstance(decision, IngressRejection)
-                    wake.set()
+                        if isinstance(decision, IngressRejection):
+                            rejected += 1
+                            rejection_latency.append(perf_counter_ns() - scheduled)
+                        wake.set()
                     if errors:
                         raise RuntimeError("offline worker failed") from errors[0]
+                offered_until = perf_counter_ns()
             finally:
                 done.set()
                 wake.set()
@@ -259,6 +373,7 @@ def run_pipeline(*, orders=200, batch_size=32, capacity=128, broker_delay_us=0, 
             if errors:
                 raise RuntimeError("offline worker failed") from errors[0]
             elapsed = perf_counter_ns() - started
+            cpu_elapsed = process_time_ns() - cpu_started
             if completed + rejected != orders or broker.calls != completed:
                 raise RuntimeError("offline workload accounting mismatch")
             c0_c7 = [
@@ -270,10 +385,34 @@ def run_pipeline(*, orders=200, batch_size=32, capacity=128, broker_delay_us=0, 
                 "measured_at_utc": datetime.now(timezone.utc).isoformat(),
                 "platform": platform.platform(),
                 "python": platform.python_version(),
+                "processor": platform.processor(),
+                "logical_cpus": os.cpu_count(),
+                "cpu_affinity": sorted(os.sched_getaffinity(0))
+                if hasattr(os, "sched_getaffinity")
+                else None,
+                "source": source,
+                "native_binary_sha256": native_sha256,
+                "environment_kind": "wsl"
+                if "microsoft" in platform.release().lower()
+                else platform.system().lower(),
+                "storage": storage,
                 "batch_size": batch_size,
                 "capacity_per_lane": capacity,
                 "routing_workers": workers,
-                "arrival_profile": "unpaced bounded burst",
+                "arrival_profile": "open-loop fixed rate"
+                if target_rate
+                else "unpaced bounded burst",
+                "target_rate_per_second": target_rate,
+                "scheduled_offer_window_ns": round(orders * 10**9 / target_rate)
+                if target_rate
+                else None,
+                "last_scheduled_arrival_ns": round((orders - 1) * 10**9 / target_rate)
+                if target_rate
+                else None,
+                "actual_offer_window_ns": offered_until - started,
+                "actual_offered_per_second": (orders - 1) * 10**9 / (offered_until - started)
+                if orders > 1
+                else None,
                 "scope": "offline components only; simulated broker; no live risk/fence/SDK/network",
                 "backend": backend_info(),
                 "offered": orders,
@@ -281,8 +420,31 @@ def run_pipeline(*, orders=200, batch_size=32, capacity=128, broker_delay_us=0, 
                 "rejected": rejected,
                 "fake_broker_calls": broker.calls,
                 "elapsed_ns": elapsed,
+                "process_cpu_ns": cpu_elapsed,
+                "process_lifetime_peak_rss_bytes": peak_rss_bytes(),
+                "rss_scope": "whole process, including imports and bounded benchmark history; not steady-state OMS memory",
+                "completion_ratio": completed / orders,
+                "rejection_ratio": rejected / orders,
                 "throughput_per_second": completed * 10**9 / elapsed,
+                "completed_during_offer": sum(t <= offered_until for t in completions),
+                "completed_during_offer_per_second": sum(t <= offered_until for t in completions)
+                * 10**9
+                / (offered_until - started),
+                "drain_ns": max(
+                    0, (max(completions) if completions else offered_until) - offered_until
+                ),
+                "deadline_ms": deadline_ms,
+                "within_deadline": sum(t <= deadline_ms * 10**6 for t in latency)
+                if deadline_ms is not None
+                else None,
+                "within_deadline_ratio_of_offered": sum(t <= deadline_ms * 10**6 for t in latency)
+                / orders
+                if deadline_ms is not None
+                else None,
+                "latency_population": "completed only; scheduled arrival through durable callback ACK; rejected requests excluded",
                 "latency": distribution(latency),
+                "generator_lateness": distribution(lateness),
+                "rejection_latency": distribution(rejection_latency),
                 "queue_wait": distribution(queue_wait),
                 "routing_and_domain_batch": distribution(routing),
                 "journal_flush": distribution(commands.flush + events.flush),
@@ -298,6 +460,15 @@ def main():
     parser.add_argument("--capacity", type=int, default=128)
     parser.add_argument("--broker-delay-us", type=int, default=0)
     parser.add_argument("--workers", type=int, default=1)
+    parser.add_argument(
+        "--target-rate", type=float, default=0, help="orders/s; zero is unpaced burst"
+    )
+    parser.add_argument(
+        "--deadline-ms", type=float, help="experimental measurement threshold, not a production SLA"
+    )
+    parser.add_argument(
+        "--journal-root", type=Path, help="existing directory on the storage device to measure"
+    )
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     result = run_pipeline(
@@ -306,6 +477,9 @@ def main():
         capacity=args.capacity,
         broker_delay_us=args.broker_delay_us,
         workers=args.workers,
+        target_rate=args.target_rate,
+        deadline_ms=args.deadline_ms,
+        journal_root=args.journal_root,
     )
     payload = json.dumps(result, indent=2) + "\n"
     if args.output:

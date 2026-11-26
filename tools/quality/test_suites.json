@@ -8,6 +8,7 @@
         "tests/test_hybrid_compute.py",
         "tests/test_ems_batch_routing.py",
         "tests/test_offline_pipeline.py",
+        "tests/test_capacity_baseline.py",
         "tests/test_quality_scanner.py",
         "tests/test_tradecore_package_boundary.py",
         "tests/test_account_session_sharding.py",
