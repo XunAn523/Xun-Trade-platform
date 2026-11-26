@@ -56,7 +56,7 @@ class AcceptanceEvidenceV1Tests(unittest.TestCase):
         self.assertNotIn("password", repr(manifest))
         self.assertEqual("local", manifest.as_dict()["metadata"]["runner"])
         with self.assertRaises(AcceptanceEvidenceErrorV1):
-            AcceptanceEvidenceManifestV1(**arguments, metadata={"password": "do-not-store"})
+            AcceptanceEvidenceManifestV1(**arguments, metadata={"password": "synthetic-do-not-store"})
         with self.assertRaises(AcceptanceEvidenceErrorV1):
             AcceptanceEvidenceManifestV1(**{**arguments, "failed_cases": 6})
 

@@ -114,15 +114,25 @@ class FileJournal:
         max_record_bytes: int = 4096,
         exclusive: bool = True,
         timing_history_capacity: int = 0,
+        retained_records: int | None = None,
+        repair_tail: bool = True,
     ) -> None:
         if max_record_bytes < 1 or max_record_bytes > 0xFFFF * 3:
             raise ValueError("max_record_bytes must fit the binary frame")
         if not 0 <= timing_history_capacity <= 100_000:
             raise ValueError("timing_history_capacity must be in 0..100000")
+        if retained_records is not None and (
+            type(retained_records) is not int or retained_records < 0
+        ):
+            raise ValueError("retained_records must be a nonnegative integer or None")
+        if type(repair_tail) is not bool:
+            raise ValueError("repair_tail must be boolean")
+        self._retained_records = retained_records
+        self._repair_tail = repair_tail
         self.path = Path(path)
         self._max_record_bytes = max_record_bytes
         self._lock = Lock()
-        self._records: list[JournalRecord] = []
+        self._records: list[JournalRecord] | deque[JournalRecord] = self._record_buffer()
         self._next_lsn = 1
         self._closed = False
         self._failed = False
@@ -147,7 +157,7 @@ class FileJournal:
             self._file = self.path.open("a+b", buffering=0)
             with self._lock:
                 self._recover_locked()
-        except (OSError, LeaseError) as exc:
+        except (OSError, LeaseError, JournalFailure) as exc:
             opened_file = getattr(self, "_file", None)
             if opened_file is not None:
                 try:
@@ -157,6 +167,25 @@ class FileJournal:
             if self._lease is not None:
                 self._lease.close()
             raise JournalFailure(f"cannot open or recover journal {self.path}") from exc
+
+    def _record_buffer(self) -> list[JournalRecord] | deque[JournalRecord]:
+        return [] if self._retained_records is None else deque(maxlen=self._retained_records)
+
+    @property
+    def record_count(self) -> int:
+        """Count committed frames independently of the optional in-memory tail."""
+        with self._lock:
+            return self._next_lsn - 1
+
+    def frame_size(self, entry: JournalAppend) -> int:
+        """Validate one identity record and return its exact encoded frame size."""
+        fields = self._validate_fields(
+            kind=entry.kind,
+            command_id=entry.command_id,
+            correlation_id=entry.correlation_id,
+            payload_hash=entry.payload_hash,
+        )
+        return _HEADER.size + _COMMIT.size + sum(len(field) for field in fields[:3])
 
     @property
     def last_flush_ns(self) -> int | None:
@@ -326,7 +355,7 @@ class FileJournal:
         self._file.seek(0)
         valid_end = 0
         expected_lsn = 1
-        recovered: list[JournalRecord] = []
+        recovered: list[JournalRecord] | deque[JournalRecord] = self._record_buffer()
 
         while True:
             header = self._file.read(_HEADER.size)
@@ -389,6 +418,8 @@ class FileJournal:
 
         self._file.seek(0, os.SEEK_END)
         if self._file.tell() != valid_end:
+            if not self._repair_tail:
+                raise JournalFailure("sealed journal is corrupt or incomplete; no repair performed")
             self._file.seek(valid_end)
             self._file.truncate()
             self._file.flush()

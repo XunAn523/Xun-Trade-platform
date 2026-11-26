@@ -66,7 +66,7 @@ class QueryFixtureTests(unittest.TestCase):
             if item["api"] == "QueryOrders" and item["profile"] == "ordinary"
         )
         entry["enabled"] = True
-        entry["business_args"] = [{"password": "must-not-be-here"}]
+        entry["business_args"] = [{"password": "synthetic-must-not-be-here"}]
         with TemporaryDirectory() as directory:
             path = Path(directory) / "query-fixture.json"
             path.write_text(json.dumps(template), encoding="utf-8")

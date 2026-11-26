@@ -51,9 +51,9 @@ class VerifyEmtDisarmedProfileTests(unittest.TestCase):
             json.dumps(
                 {
                     "gateway": {"host": "127.0.0.1", "port": 19088},
-                    "ordinary": {"account": "ordinary-account", "password": "ordinary-password"},
-                    "credit": {"account": "credit-account", "password": "credit-password"},
-                    "option": {"account": "option-account", "password": "option-password"},
+                    "ordinary": {"account": "ordinary-account", "password": "synthetic-ordinary-password"},
+                    "credit": {"account": "credit-account", "password": "synthetic-credit-password"},
+                    "option": {"account": "option-account", "password": "synthetic-option-password"},
                 }
             ),
             encoding="utf-8",
@@ -107,7 +107,7 @@ class VerifyEmtDisarmedProfileTests(unittest.TestCase):
             self.assertNotIn("ordinary-account", rendered)
             self.assertNotIn("credit-account", rendered)
             self.assertNotIn("option-account", rendered)
-            self.assertNotIn("ordinary-password", rendered)
+            self.assertNotIn("synthetic-ordinary-password", rendered)
             self.assertNotIn("private", rendered.lower())
 
     def test_rekeyed_self_verified_profile_is_rejected_by_external_public_key(self) -> None:

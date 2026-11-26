@@ -24,7 +24,7 @@ def setup_provider(tmp_path):
     os.chmod(root, 0o700)
     path = root / "emt-simulator"
     path.write_text(json.dumps({
-        "broker_account": "sample-account", "password": "secret-sentinel",
+        "broker_account": "sample-account", "password": "synthetic-secret-sentinel",
         "client_id": "101", "host": "127.0.0.1", "port": 1234,
     }), encoding="utf-8")
     os.chmod(path, 0o600)
@@ -46,7 +46,7 @@ def test_systemd_secret_scope_one_shot_and_expiry(tmp_path):
         )
     lease = provider.lease(reference=reference, purpose=purpose, now_wall_ns=10, ttl_wall_ns=20)
     assert lease.borrow(now_wall_ns=11).credential_digest()
-    assert "secret-sentinel" not in repr(lease)
+    assert "synthetic-secret-sentinel" not in repr(lease)
     with pytest.raises(ProvisioningErrorV1):
         lease.borrow(now_wall_ns=30)
     with pytest.raises(ProvisioningErrorV1):
@@ -64,13 +64,13 @@ def test_systemd_secret_rejects_unsafe_or_ambiguous_input_without_leak(tmp_path,
         path.rename(target)
         path.symlink_to(target)
     elif problem == "duplicate":
-        path.write_text('{"password":"secret-sentinel","password":"x"}', encoding="utf-8")
+        path.write_text('{"password":"synthetic-secret-sentinel","password":"x"}', encoding="utf-8")
     else:
         data = json.loads(path.read_text(encoding="utf-8"))
-        path.write_text(json.dumps({**data, "extra": "secret-sentinel"}), encoding="utf-8")
+        path.write_text(json.dumps({**data, "extra": "synthetic-secret-sentinel"}), encoding="utf-8")
     with pytest.raises(ProvisioningErrorV1) as raised:
         provider.lease(reference=reference, purpose=purpose, now_wall_ns=10, ttl_wall_ns=20)
-    assert "secret-sentinel" not in str(raised.value)
+    assert "synthetic-secret-sentinel" not in str(raised.value)
     with pytest.raises(ProvisioningErrorV1):
         provider.lease(reference=reference, purpose=purpose, now_wall_ns=10, ttl_wall_ns=20)
 

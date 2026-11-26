@@ -133,7 +133,7 @@ class MutationFixtureTests(unittest.TestCase):
     def test_loader_rejects_sensitive_request(self) -> None:
         template = mutation_fixture_template()
         entry = template["cases"][0]
-        entry["request"] = {"password": "must-not-be-here"}
+        entry["request"] = {"password": "synthetic-must-not-be-here"}
         with TemporaryDirectory() as directory:
             path = Path(directory) / "mutation-fixture.json"
             path.write_text(json.dumps(template), encoding="utf-8")

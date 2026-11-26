@@ -39,9 +39,9 @@ class MaterializeEmtDisarmedProfileRequestTests(unittest.TestCase):
             json.dumps(
                 {
                     "gateway": {"host": "127.0.0.1", "port": 19088},
-                    "ordinary": {"account": values[0], "password": "ordinary-password"},
-                    "credit": {"account": values[1], "password": "credit-password"},
-                    "option": {"account": values[2], "password": "option-password"},
+                    "ordinary": {"account": values[0], "password": "synthetic-ordinary-password"},
+                    "credit": {"account": values[1], "password": "synthetic-credit-password"},
+                    "option": {"account": values[2], "password": "synthetic-option-password"},
                 }
             ),
             encoding="utf-8",
@@ -67,9 +67,9 @@ class MaterializeEmtDisarmedProfileRequestTests(unittest.TestCase):
             self.assertEqual(
                 account_values, tuple(item["account_id"] for item in raw["scope_ownerships"])
             )
-            self.assertNotIn("ordinary-password", rendered)
-            self.assertNotIn("credit-password", rendered)
-            self.assertNotIn("option-password", rendered)
+            self.assertNotIn("synthetic-ordinary-password", rendered)
+            self.assertNotIn("synthetic-credit-password", rendered)
+            self.assertNotIn("synthetic-option-password", rendered)
             self.assertTrue(
                 all(not item["uniqueness_probe_succeeded"] for item in raw["scope_ownerships"])
             )

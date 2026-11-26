@@ -14,7 +14,8 @@ from queue import Empty, Full, Queue
 from threading import Event, Lock, Thread
 from typing import Protocol
 
-from .journal import FileJournal, JournalAppend
+from .journal import JournalAppend
+from .segmented_archive import SegmentedArchiveStore
 
 
 class JournalArchiveSink(Protocol):
@@ -44,6 +45,9 @@ class JournalArchiveSnapshot:
     persisted: int
     failed: int
     last_error: str | None
+    sealed_segments: int = 0
+    retained_record_objects: int = 0
+    pruned_segments: int = 0
 
 
 class AsyncFileJournalArchive(JournalArchiveSink):
@@ -62,15 +66,24 @@ class AsyncFileJournalArchive(JournalArchiveSink):
         *,
         capacity: int = 16_384,
         maximum_batch_size: int = 128,
+        maximum_segment_records: int = 4096,
+        maximum_segment_bytes: int = 16 * 1024 * 1024,
+        maximum_segments: int | None = None,
     ) -> None:
         if capacity <= 0 or maximum_batch_size <= 0:
             raise ValueError("archive capacity and batch size must be positive")
-        self._queue: Queue[JournalAppend | object] = Queue(maxsize=capacity)
-        self._journal = FileJournal(path)
+        self._queue: Queue[JournalAppend] = Queue(maxsize=capacity)
+        self._journal = SegmentedArchiveStore(
+            path,
+            maximum_segment_records=maximum_segment_records,
+            maximum_segment_bytes=maximum_segment_bytes,
+            maximum_segments=maximum_segments,
+        )
         self._maximum_batch_size = maximum_batch_size
         self._stop = Event()
-        self._sentinel = object()
         self._lock = Lock()
+        self._close_lock = Lock()
+        self._closed = False
         self._accepting = True
         self._offered = 0
         self._rejected = 0
@@ -78,7 +91,11 @@ class AsyncFileJournalArchive(JournalArchiveSink):
         self._failed = 0
         self._last_error: str | None = None
         self._worker = Thread(target=self._run, name="emt-journal-archive", daemon=True)
-        self._worker.start()
+        try:
+            self._worker.start()
+        except BaseException:
+            self._journal.close()
+            raise
 
     def offer(
         self,
@@ -99,16 +116,16 @@ class AsyncFileJournalArchive(JournalArchiveSink):
                 self._rejected += 1
                 return False
             self._offered += 1
-        try:
-            self._queue.put_nowait(entry)
-        except Full:
-            with self._lock:
+            try:
+                self._queue.put_nowait(entry)
+            except Full:
                 self._rejected += 1
-            return False
-        return True
+                return False
+            return True
 
     def snapshot(self) -> JournalArchiveSnapshot:
         with self._lock:
+            storage = self._journal.snapshot()
             return JournalArchiveSnapshot(
                 accepting=self._accepting,
                 queued=self._queue.qsize(),
@@ -117,25 +134,26 @@ class AsyncFileJournalArchive(JournalArchiveSink):
                 persisted=self._persisted,
                 failed=self._failed,
                 last_error=self._last_error,
+                sealed_segments=storage.sealed_segments,
+                retained_record_objects=storage.retained_record_objects,
+                pruned_segments=storage.pruned_segments,
             )
 
     def close(self, *, timeout_seconds: float = 5.0) -> None:
         if timeout_seconds <= 0:
             raise ValueError("archive close timeout must be positive")
-        with self._lock:
-            if not self._accepting:
+        with self._close_lock:
+            if self._closed:
                 return
-            self._accepting = False
-        self._stop.set()
-        while True:
-            try:
-                self._queue.put(self._sentinel, timeout=timeout_seconds)
-                break
-            except Full:
-                if not self._worker.is_alive():
-                    break
-        self._worker.join(timeout=timeout_seconds)
-        self._journal.close()
+            with self._lock:
+                self._accepting = False
+            self._stop.set()
+            self._worker.join(timeout=timeout_seconds)
+            if self._worker.is_alive():
+                # Keep the journal open under the live writer. A later close may retry.
+                raise TimeoutError("archive worker did not stop; storage remains owned")
+            self._journal.close()
+            self._closed = True
 
     def __enter__(self) -> AsyncFileJournalArchive:
         return self
@@ -151,18 +169,12 @@ class AsyncFileJournalArchive(JournalArchiveSink):
                 if self._stop.is_set():
                     return
                 continue
-            if first is self._sentinel:
-                return
             assert isinstance(first, JournalAppend)
             batch = [first]
-            stop_after_batch = False
             while len(batch) < self._maximum_batch_size:
                 try:
                     candidate = self._queue.get_nowait()
                 except Empty:
-                    break
-                if candidate is self._sentinel:
-                    stop_after_batch = True
                     break
                 assert isinstance(candidate, JournalAppend)
                 batch.append(candidate)
@@ -172,8 +184,8 @@ class AsyncFileJournalArchive(JournalArchiveSink):
                 with self._lock:
                     self._failed += len(batch)
                     self._last_error = type(exc).__name__
+                    self._accepting = False
+                    self._stop.set()
             else:
                 with self._lock:
                     self._persisted += len(batch)
-            if stop_after_batch:
-                return

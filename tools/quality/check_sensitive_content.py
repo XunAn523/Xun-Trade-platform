@@ -16,7 +16,20 @@ from pathlib import Path
 from typing import Iterable, Sequence
 
 _TEXT_SUFFIXES = frozenset(
-    {".cfg", ".conf", ".ini", ".json", ".md", ".py", ".sh", ".toml", ".txt", ".yaml", ".yml"}
+    {
+        ".cfg",
+        ".conf",
+        ".ini",
+        ".json",
+        ".md",
+        ".py",
+        ".sh",
+        ".toml",
+        ".txt",
+        ".yaml",
+        ".yml",
+        ".env",
+    }
 )
 _MAX_TEXT_BYTES = 2 * 1024 * 1024
 _RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
@@ -25,7 +38,7 @@ _RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
         "SCS002",
         re.compile(
             r"(?i)\b(?:api[_-]?key|access[_-]?key|password|passwd|client[_-]?secret|"
-            r"bearer[_-]?token|auth(?:entication)?[_-]?token)\b"
+            r"bearer[_-]?token|auth(?:entication)?[_-]?token)\b[\"']?"
             r"\s*(?:=|:)\s*([\"'])(?!<[^>]+>|redacted\b|example\b|dummy\b|changeme\b|"
             r"none\b|null\b|synthetic[-_]|test[-_]|stub[-_]|sim[-_]|emt_gateway_test\b)"
             r"[a-z0-9+/=_-]{12,}\1"
@@ -33,6 +46,13 @@ _RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
     ),
     ("SCS003", re.compile(r"(?i)(?:https?|ssh)://[^\s/:@]+:[^\s@]+@")),
     ("SCS004", re.compile(r"(?i)\bauthorization\s*:\s*(?:bearer|basic)\s+\S{8,}")),
+)
+
+_UNQUOTED_SECRET = re.compile(
+    r"(?i)^\s*(?:export\s+)?(?:api[_-]?key|access[_-]?key|password|passwd|"
+    r"client[_-]?secret|bearer[_-]?token|auth(?:entication)?[_-]?token)\s*[:=]\s*"
+    r"(?!redacted\b|example\b|dummy\b|changeme\b|synthetic[-_]|test[-_]|stub[-_]|sim[-_])"
+    r"[a-z0-9+/=_-]{12,}\s*(?:[#;].*)?$"
 )
 
 
@@ -53,6 +73,8 @@ def scan_text(*, path: Path, text: str) -> tuple[SensitiveContentFinding, ...]:
         for rule_id, pattern in _RULES:
             if pattern.search(line):
                 findings.append(SensitiveContentFinding(path, line_number, rule_id))
+        if path.suffix != ".py" and _UNQUOTED_SECRET.search(line):
+            findings.append(SensitiveContentFinding(path, line_number, "SCS002"))
     return tuple(findings)
 
 
@@ -61,7 +83,9 @@ def scan_paths(paths: Iterable[Path]) -> tuple[SensitiveContentFinding, ...]:
 
     findings: list[SensitiveContentFinding] = []
     for path in paths:
-        if not path.is_file() or path.suffix.lower() not in _TEXT_SUFFIXES:
+        if not path.is_file() or (
+            path.suffix.lower() not in _TEXT_SUFFIXES and not path.name.startswith(".env")
+        ):
             continue
         try:
             if path.stat().st_size > _MAX_TEXT_BYTES:

@@ -57,7 +57,7 @@ class QuerySemanticFixtureTests(unittest.TestCase):
             and item["profile"] == "ordinary"
             and item["workload"] == "empty"
         )
-        entry["business_args"] = [{"password": "must-not-be-here"}]
+        entry["business_args"] = [{"password": "synthetic-must-not-be-here"}]
         with TemporaryDirectory() as directory:
             path = Path(directory) / "query-semantics.json"
             path.write_text(json.dumps(template), encoding="utf-8")
