@@ -51,7 +51,7 @@ class R1DualSystemCycleTests(unittest.TestCase):
             "bootstrap_approver_id": "r1-test-operator",
         }
         values.update(overrides)
-        return Settings(**values)  # type: ignore[arg-type]
+        return Settings(**values)
 
     def test_command_uses_distinct_process_roots_and_only_controlled_flags(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

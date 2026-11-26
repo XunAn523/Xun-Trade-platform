@@ -61,7 +61,7 @@ def _settings(**overrides: object) -> Settings:
         "execute_simulated": True,
     }
     values.update(overrides)
-    return Settings(**values)  # type: ignore[arg-type]
+    return Settings(**values)
 
 
 class TradeCoreMmapEmtBurstTests(unittest.TestCase):

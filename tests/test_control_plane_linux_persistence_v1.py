@@ -129,13 +129,13 @@ class LinuxServerFactoryGuardTests(unittest.TestCase):
     def test_rejects_in_memory_registry_before_touching_tls_files(self) -> None:
         with self.assertRaisesRegex(ProvisioningErrorV1, "requires PostgreSQL registry"):
             build_linux_provisioning_server_v1(
-                service=object(),  # type: ignore[arg-type]
-                peer_verifier=object(),  # type: ignore[arg-type]
+                service=object(),
+                peer_verifier=object(),
                 approvals=InMemoryProvisioningApprovalRegistryV1(),
                 registry=InMemoryProvisioningRegistryV1(),
                 secret_providers={"EMT": InMemorySecretProviderV1()},
-                listener=object(),  # type: ignore[arg-type]
-                tls_files=object(),  # type: ignore[arg-type]
+                listener=object(),
+                tls_files=object(),
             )
 
 

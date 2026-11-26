@@ -1704,6 +1704,11 @@ dependencies = [
 ]
 
 [package.optional-dependencies]
+ci = [
+    { name = "hypothesis" },
+    { name = "pytest" },
+    { name = "ruff" },
+]
 test = [
     { name = "cyclonedx-bom" },
     { name = "hypothesis" },
@@ -1728,6 +1733,7 @@ requires-dist = [
     { name = "fastapi", marker = "extra == 'tooling'", specifier = ">=0.115,<1" },
     { name = "h2", specifier = ">=4.1,<5" },
     { name = "hdrhistogram", marker = "extra == 'tooling'", specifier = ">=0.10,<1" },
+    { name = "hypothesis", marker = "extra == 'ci'", specifier = ">=6.100,<7" },
     { name = "hypothesis", marker = "extra == 'test'", specifier = ">=6.100,<7" },
     { name = "jsonschema", specifier = ">=4.23,<5" },
     { name = "msgspec", specifier = ">=0.21.1,<0.22" },
@@ -1738,10 +1744,12 @@ requires-dist = [
     { name = "pre-commit", marker = "extra == 'test'", specifier = ">=4,<5" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.2,<4" },
     { name = "pyright", extras = ["nodejs"], marker = "extra == 'test'", specifier = ">=1.1.400,<2" },
+    { name = "pytest", marker = "extra == 'ci'", specifier = ">=8,<10" },
     { name = "pytest", marker = "extra == 'test'", specifier = ">=8,<10" },
+    { name = "ruff", marker = "extra == 'ci'", specifier = ">=0.14,<1" },
     { name = "ruff", marker = "extra == 'test'", specifier = ">=0.14,<1" },
     { name = "schemathesis", marker = "extra == 'test'", specifier = ">=4.25,<5" },
     { name = "testcontainers", extras = ["postgres"], marker = "extra == 'test'", specifier = ">=4.14,<5" },
     { name = "uvicorn", extras = ["standard"], marker = "extra == 'tooling'", specifier = ">=0.32,<1" },
 ]
-provides-extras = ["tooling", "test"]
+provides-extras = ["ci", "tooling", "test"]

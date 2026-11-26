@@ -147,7 +147,7 @@ class ConsumerSnapshotGuardV2Tests(unittest.TestCase):
         )
         stream = CursorStreamRefV2("journal-1", 1)
         projection = _OrderBookProjectionV2(
-            order_book=book,  # type: ignore[arg-type]
+            order_book=book,
             binding=binding,
             stream=stream,
         )
@@ -201,16 +201,16 @@ class ConsumerSnapshotGuardV2Tests(unittest.TestCase):
         binding = SimpleNamespace(account_id="test-account")
         stream = object()
         projection = _OrderBookProjectionV2(
-            order_book=_Book(),  # type: ignore[arg-type]
-            binding=binding,  # type: ignore[arg-type]
-            stream=stream,  # type: ignore[arg-type]
+            order_book=_Book(),
+            binding=binding,
+            stream=stream,
         )
         trace: dict[str, object] = {}
         with request_trace_scope(trace):
             with self.assertRaisesRegex(
                 ConsumerSnapshotCapacityErrorV2, "bounded single-frame"
             ) as raised:
-                projection.read_snapshot(binding=binding, stream=stream)  # type: ignore[arg-type]
+                projection.read_snapshot(binding=binding, stream=stream)
         self.assertEqual("SNAPSHOT_REQUIRES_PAGINATION", raised.exception.code)
         self.assertEqual(1_025, trace["snapshot_order_count"])
         self.assertNotIn("snapshot_projection_started_ns", trace)

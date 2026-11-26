@@ -13,7 +13,7 @@ class _Status:
 
 
 class _Attachments:
-    def attach(self, request, *, current_control_version, evaluated_wall_ns):  # type: ignore[no-untyped-def]
+    def attach(self, request, *, current_control_version, evaluated_wall_ns):
         return (request, current_control_version, evaluated_wall_ns)
 
 

@@ -79,7 +79,7 @@ def _request_id(number: int) -> str:
 
 
 class _PassingValidator:
-    def validate(self, *, profile, evaluated_wall_ns):  # type: ignore[no-untyped-def]
+    def validate(self, *, profile, evaluated_wall_ns):
         return ProfileValidationEvidenceV1(
             evidence_id=f"evidence:{profile.identity.profile_id}",
             evidence_digest="b" * 64,
@@ -90,7 +90,7 @@ class _PassingValidator:
 
 
 class _BlockedValidator:
-    def validate(self, *, profile, evaluated_wall_ns):  # type: ignore[no-untyped-def]
+    def validate(self, *, profile, evaluated_wall_ns):
         del profile
         return ProfileValidationEvidenceV1(
             evidence_id="evidence:blocked",
@@ -105,7 +105,7 @@ class _SelectionGate:
     def __init__(self) -> None:
         self.selected: list[str] = []
 
-    def __call__(self, profile) -> None:  # type: ignore[no-untyped-def]
+    def __call__(self, profile) -> None:
         self.selected.append(profile.identity.adapter_instance_id)
 
 
@@ -113,7 +113,7 @@ class _RetirementGate:
     def __init__(self, reasons: tuple[str, ...] = ()) -> None:
         self.reasons = reasons
 
-    def incompleteness_reasons(self, profile) -> tuple[str, ...]:  # type: ignore[no-untyped-def]
+    def incompleteness_reasons(self, profile) -> tuple[str, ...]:
         del profile
         return self.reasons
 
@@ -125,7 +125,7 @@ class _FailOncePrepareRegistry(InMemoryProvisioningRegistryV1):
         super().__init__()
         self._failed = False
 
-    def create_prepared(self, **kwargs):  # type: ignore[no-untyped-def,override]
+    def create_prepared(self, **kwargs):
         if not self._failed:
             self._failed = True
             raise RuntimeError("simulated registry outage")
@@ -315,7 +315,7 @@ class ProvisioningControlPlaneTests(unittest.TestCase):
             )
         )
 
-    def _activate(self, prepared, suffix: str, number: int):  # type: ignore[no-untyped-def]
+    def _activate(self, prepared, suffix: str, number: int):
         validate_approval_id = f"approval-validate-{suffix}"
         self._record_approval(
             approval_id=validate_approval_id,

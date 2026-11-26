@@ -35,7 +35,7 @@ def test_t6_query_acceptance_requires_each_query_terminal_callback() -> None:
         "timeouts": 1,
         "native_rejected": 0,
     }
-    cases = {case["profile"]: case for case in result["cases"]}  # type: ignore[index]
+    cases = {case["profile"]: case for case in result["cases"]}
     assert cases["ordinary"]["verification"] == "terminal_callback_observed"
     assert cases["credit"]["verification"] == "blocked_semantics"
 
@@ -48,7 +48,7 @@ def test_t6_query_acceptance_classifies_documented_6077_as_unsupported_venue() -
     assert result["cases"][0]["verification"] == "blocked_semantics"
 
     report = _report("option", "rejected", False)
-    report["run"]["operation_outcomes"][0]["reason"] = "native_return_6077"  # type: ignore[index]
+    report["run"]["operation_outcomes"][0]["reason"] = "native_return_6077"
     classified = build_t6_query_acceptance((report,))
     assert classified["summary"]["unsupported_venue"] == 1
     assert classified["summary"]["blocked_semantics"] == 0

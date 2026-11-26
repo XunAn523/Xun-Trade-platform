@@ -97,7 +97,7 @@ class ConsumerOmsOperationsV2Tests(unittest.TestCase):
         )
         self.assertEqual(receipt.execution_id, order.execution_id)
         # EMS moves a successfully dispatched order to WORKING before its normal cancel lane.
-        self.operations._order_book.mark_working(  # type: ignore[reportPrivateUsage]
+        self.operations._order_book.mark_working(
             oms_order_id=receipt.oms_order_id
         )
         cancelled = self.operations.cancel_order(
@@ -118,7 +118,7 @@ class ConsumerOmsOperationsV2Tests(unittest.TestCase):
         )
         self.assertEqual(
             OmsOrderState.CANCEL_PENDING,
-            self.operations._order_book.order(cancelled.oms_order_id).order.state,  # type: ignore[reportPrivateUsage]
+            self.operations._order_book.order(cancelled.oms_order_id).order.state,
         )
 
     def test_submit_trace_has_ordered_non_sensitive_admission_boundaries(self) -> None:
@@ -222,7 +222,7 @@ class ConsumerOmsOperationsV2Tests(unittest.TestCase):
             strategy_binding_id="strategy-bind",
             signal=self._signal(),
         )
-        operations._order_book.mark_working(  # type: ignore[reportPrivateUsage]
+        operations._order_book.mark_working(
             oms_order_id=receipt.oms_order_id
         )
         operations.cancel_order(
@@ -234,7 +234,7 @@ class ConsumerOmsOperationsV2Tests(unittest.TestCase):
         )
         self.assertEqual([receipt.execution_id], execution_wakes)
         self.assertEqual([(receipt.execution_id, "cancel-1")], cancel_wakes)
-        facts = operations._order_book.journal.records  # type: ignore[attr-defined,reportPrivateUsage]
+        facts = operations._order_book.journal.records
         cancel_fact, transition_fact = facts[-2:]
         self.assertEqual("CANCEL_REQUESTED", cancel_fact.kind.value)
         self.assertEqual("cancel-1", cancel_fact.attributes["cancel_request_id"])
@@ -242,7 +242,7 @@ class ConsumerOmsOperationsV2Tests(unittest.TestCase):
         self.assertEqual(cancel_fact.attributes, transition_fact.attributes)
         self.assertEqual(
             OmsOrderState.CANCEL_PENDING,
-            operations._order_book.order(receipt.oms_order_id).order.state,  # type: ignore[reportPrivateUsage]
+            operations._order_book.order(receipt.oms_order_id).order.state,
         )
 
     def test_cancel_evidence_wakeup_failure_fences_after_committed_fact(self) -> None:
@@ -280,7 +280,7 @@ class ConsumerOmsOperationsV2Tests(unittest.TestCase):
         self.assertEqual(evidence[0][1].journal_lsn, result.journal_lsn)
         self.assertEqual(journal.records[-2].attributes["cancel_request_id"], "cancel-evidence-1")
         self.assertEqual(
-            operations._order_book.order(receipt.oms_order_id).order.state,  # type: ignore[reportPrivateUsage]
+            operations._order_book.order(receipt.oms_order_id).order.state,
             OmsOrderState.CANCEL_PENDING,
         )
 

@@ -131,7 +131,7 @@ def _runtime(manifest):
     )
 
 
-def _verified_capability(mapping) -> QmtCapabilityActivation:  # type: ignore[no-untyped-def]
+def _verified_capability(mapping) -> QmtCapabilityActivation:
     ownership = mapping.manifest.scope_ownership
     binding = mapping.manifest.route_token_binding
     assert ownership is not None and binding is not None

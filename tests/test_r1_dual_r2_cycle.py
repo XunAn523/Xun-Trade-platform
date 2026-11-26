@@ -54,7 +54,7 @@ class R1DualR2CycleTests(unittest.TestCase):
             "cleanup_approver_id": "operator",
         }
         values.update(overrides)
-        return Settings(**values)  # type: ignore[arg-type]
+        return Settings(**values)
 
     def test_b_command_keeps_b_in_an_isolated_signed_scope(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

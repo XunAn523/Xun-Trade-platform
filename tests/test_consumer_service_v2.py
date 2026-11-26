@@ -37,7 +37,7 @@ class _ControlledListener:
 class ConsumerUnixServiceV2Tests(unittest.TestCase):
     def test_complete_frame_gets_explicit_pre_dispatch_overload_reply(self) -> None:
         listener = _ControlledListener()
-        service = ConsumerUnixServiceV2(listener, worker_count=1, pending_capacity=1)  # type: ignore[arg-type]
+        service = ConsumerUnixServiceV2(listener, worker_count=1, pending_capacity=1)
         service.start()
         runner = Thread(target=service.serve_forever)
         runner.start()
@@ -90,7 +90,7 @@ class ConsumerUnixServiceV2Tests(unittest.TestCase):
 
     def test_pending_queue_is_bounded_and_overflow_is_closed(self) -> None:
         listener = _ControlledListener()
-        service = ConsumerUnixServiceV2(listener, worker_count=1, pending_capacity=1)  # type: ignore[arg-type]
+        service = ConsumerUnixServiceV2(listener, worker_count=1, pending_capacity=1)
         service.start()
         runner = Thread(target=service.serve_forever)
         runner.start()

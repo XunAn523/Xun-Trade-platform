@@ -139,8 +139,8 @@ class R1ReleasePreflightTests(unittest.TestCase):
             root = Path(temporary)
             report = run(self._settings(root), now_wall_ns=_NOW)
             self.assertEqual("prepared", report["preflight_status"])
-            self.assertEqual(False, report["safety"]["emt_sdk_imported"])  # type: ignore[index]
-            self.assertEqual(False, report["safety"]["account_file_read"])  # type: ignore[index]
+            self.assertEqual(False, report["safety"]["emt_sdk_imported"])
+            self.assertEqual(False, report["safety"]["account_file_read"])
             rendered = (root / "report.json").read_text(encoding="utf-8")
             self.assertNotIn("logical-emt-account", rendered)
             self.assertIn("scope_hash", rendered)

@@ -360,7 +360,7 @@ class F2ControlledExecutionCycleTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             marker = Path(directory) / "evidence" / "r2-marker.json"
             telemetry = _R1CrashAfterNativeReturnTelemetry(marker)
-            telemetry._write_marker(123)  # type: ignore[attr-defined]
+            telemetry._write_marker(123)
             document = json.loads(marker.read_text(encoding="utf-8"))
             self.assertEqual(
                 "R2_AFTER_INSERT_RETURN_BEFORE_NATIVE_ACCEPTED_PERSISTENCE",

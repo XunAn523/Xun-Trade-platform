@@ -11,7 +11,7 @@ from typing import Any
 try:
     import resource
 except ImportError:  # pragma: no cover
-    resource = None  # type: ignore[assignment]
+    resource = None
 
 
 @dataclass(frozen=True)

@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "suites": {
+    "native_core": {
+      "backend": "native",
+      "description": "Cross-platform core and explicit EMT/QMT composition verification; external services may be skipped with recorded prerequisites.",
+      "files": [
+        "tests/test_hybrid_compute.py",
+        "tests/test_ems_batch_routing.py",
+        "tests/test_offline_pipeline.py",
+        "tests/test_quality_scanner.py",
+        "tests/test_tradecore_package_boundary.py",
+        "tests/test_account_session_sharding.py",
+        "tests/test_journal.py",
+        "tests/test_journal_archive.py",
+        "tests/test_segmented_archive.py",
+        "tests/test_tradecore_codec.py",
+        "tests/test_consumer_contract_checkout_v2.py",
+        "tests/test_gateway.py",
+        "tests/test_account_execution_router.py",
+        "tests/test_execution_scheduler.py",
+        "tests/test_tradecore_oms.py",
+        "tests/test_execution_session_runtime.py",
+        "tests/test_account_ownership_fence.py",
+        "tests/test_oms_ems_sidecar_v1.py",
+        "tests/test_consumer_emt_submit_route_preparer_v1.py",
+        "tests/test_consumer_emt_submit_worker_v1.py",
+        "tests/test_consumer_emt_outcome_projection_v1.py",
+        "tests/test_qmt_capability_and_native_contract.py",
+        "tests/test_acceptance_baseline.py",
+        "tests/test_retained_order_book.py",
+        "tests/test_cold_aware_oms_runtime.py"
+      ]
+    },
+    "python_reference": {
+      "backend": "python",
+      "description": "Diagnostic/reference backend; native-only checks are explicitly not applicable.",
+      "files": ["tests/test_hybrid_compute.py", "tests/test_account_session_sharding.py", "tests/test_journal.py"]
+    },
+    "environment_review": {
+      "backend": "native",
+      "description": "Run file-by-file with a deadline; failures/timeouts are evidence, not an accepted release gate.",
+      "files": [
+        "tests/test_candidate_affinity.py", "tests/test_candidate_gil_interval.py",
+        "tests/test_candidate_helper.py", "tests/test_candidate_mock_batch.py",
+        "tests/test_candidate_probe_preparation.py", "tests/test_candidate_systemd.py",
+        "tests/test_functional_package_evidence_contract.py",
+        "tests/test_builtin_int_validation_candidate.py", "tests/test_cold_aware_oms_runtime.py",
+        "tests/test_cold_covered_restore.py", "tests/test_cold_intent_index.py"
+      ]
+    }
+  }
+}

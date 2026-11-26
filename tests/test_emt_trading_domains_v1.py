@@ -51,7 +51,7 @@ def _command(name: str) -> EmtOperationCommandV1:
 
 def test_t3_credit_control_and_fast_mutations_keep_their_catalogue_lanes() -> None:
     module = _Module()
-    service = EmtCreditTradingServiceV1(module)  # type: ignore[arg-type]
+    service = EmtCreditTradingServiceV1(module)
     permit = SideEffectPermit.simulated_fixture()
     assert service.cash_repay(_command("CreditCashRepay"), permit=permit).lane is EmtOperationLane.CONTROL_MUTATION
     assert service.sell_stock_repay_debt_interest_fee(
@@ -62,7 +62,7 @@ def test_t3_credit_control_and_fast_mutations_keep_their_catalogue_lanes() -> No
 
 def test_t4_option_combined_and_exercise_keep_separate_lanes() -> None:
     module = _Module()
-    service = EmtOptionTradingServiceV1(module)  # type: ignore[arg-type]
+    service = EmtOptionTradingServiceV1(module)
     permit = SideEffectPermit.simulated_fixture()
     assert service.exercise(_command("InsertOptionExerciseOrder"), permit=permit).lane is EmtOperationLane.CONTROL_MUTATION
     assert service.insert_combined_order(
@@ -72,7 +72,7 @@ def test_t4_option_combined_and_exercise_keep_separate_lanes() -> None:
 
 def test_domain_services_refuse_cross_domain_names_for_mutations_and_queries() -> None:
     module = _Module()
-    service = EmtCreditTradingServiceV1(module)  # type: ignore[arg-type]
+    service = EmtCreditTradingServiceV1(module)
     with pytest.raises(EmtTradingDomainServiceError, match="does not match"):
         service.cash_repay(_command("FundTransfer"), permit=SideEffectPermit.simulated_fixture())
     with pytest.raises(EmtTradingDomainServiceError, match="does not match"):

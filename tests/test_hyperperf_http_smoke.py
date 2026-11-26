@@ -46,8 +46,8 @@ class _Response:
 def scenario(monkeypatch: pytest.MonkeyPatch) -> ModuleType:
     # Never import/monkey-patch gevent or install dependencies in the test runner.
     locust = ModuleType("locust")
-    locust.HttpUser = type("HttpUser", (), {})  # type: ignore[attr-defined]
-    locust.task = lambda method: method  # type: ignore[attr-defined]
+    locust.HttpUser = type("HttpUser", (), {})
+    locust.task = lambda method: method
     monkeypatch.setitem(sys.modules, "locust", locust)
     spec = importlib.util.spec_from_file_location("_hyperperf_http_smoke_test", SCRIPT)
     assert spec is not None and spec.loader is not None

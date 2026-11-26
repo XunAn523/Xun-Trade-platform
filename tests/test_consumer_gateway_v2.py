@@ -197,7 +197,7 @@ class ConsumerGatewayV2Tests(unittest.TestCase):
             binding_snapshot=_snapshot,
             account_view_for=lambda _: self._ready_view(binding),
             wire_contract=_contract(),
-            operations=operations,  # type: ignore[arg-type]
+            operations=operations,
         )
         session = gateway.open_session(
             ConsumerPrincipal("consumer-1", "login", "name"), _versions()

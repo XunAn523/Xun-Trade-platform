@@ -118,7 +118,7 @@ class ConsumerSnapshotReadWorkerV2Tests(unittest.TestCase):
             if not failed_once:
                 failed_once = True
                 raise BrokenProcessPool("injected worker loss")
-            return original_submit(executor, function, *args, **kwargs)  # type: ignore[arg-type, return-value]
+            return original_submit(executor, function, *args, **kwargs)
 
         try:
             worker.publish(self._event(1))

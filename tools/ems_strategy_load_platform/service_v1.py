@@ -698,7 +698,7 @@ def _build_consumer_gateway() -> tuple[ConsumerAccountBinding, ConsumerGatewayV2
             ReconciliationStatus.VALIDATED,
         ),
         wire_contract=contract,
-        operations=_PerfConsumerOperations(),  # type: ignore[arg-type]
+        operations=_PerfConsumerOperations(),
     )
     session = gateway.open_session(
         ConsumerPrincipal("perf-consumer", "performance", "performance"),

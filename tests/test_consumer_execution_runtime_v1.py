@@ -128,26 +128,26 @@ class ConsumerExecutionRuntimeV1Tests(unittest.TestCase):
         )
         self.runtime = _Runtime(binding=self.binding)
         self.bridge = ConsumerEmsExecutionBridgeV1(
-            runtime_for_binding=lambda _binding: self.runtime,  # type: ignore[arg-type]
-            binding_for_order=lambda _order: self.binding,  # type: ignore[arg-type]
-            market_for_execution=lambda _instruction: SimpleNamespace(),  # type: ignore[arg-type]
-            kill_switches_for_account=lambda _account_id: SimpleNamespace(),  # type: ignore[arg-type]
+            runtime_for_binding=lambda _binding: self.runtime,
+            binding_for_order=lambda _order: self.binding,
+            market_for_execution=lambda _instruction: SimpleNamespace(),
+            kill_switches_for_account=lambda _account_id: SimpleNamespace(),
             serialized_size_for_execution=lambda _instruction: 64,
             serialized_size_for_cancel=lambda _request: 64,
             now_monotonic_ns=lambda: 10,
         )
 
     def test_committed_execution_is_dispatched_once_and_gains_owned_cancel_identity(self) -> None:
-        self.assertTrue(self.bridge.enqueue_committed_execution(self.order))  # type: ignore[arg-type]
-        self.assertFalse(self.bridge.enqueue_committed_execution(self.order))  # type: ignore[arg-type]
+        self.assertTrue(self.bridge.enqueue_committed_execution(self.order))
+        self.assertFalse(self.bridge.enqueue_committed_execution(self.order))
         record = self.bridge.dispatch_next()
         assert record is not None
         self.assertEqual(ConsumerExecutionDispatchStateV1.SUBMIT_ACCEPTED, record.state)
         self.assertEqual(["execution-1"], [item.execution_id for item in self.runtime.submit_commands])
-        self.assertTrue(self.bridge.can_request_cancel(self.order))  # type: ignore[arg-type]
+        self.assertTrue(self.bridge.can_request_cancel(self.order))
         self.assertTrue(
             self.bridge.enqueue_committed_cancel(
-                self.order, cancel_request_id="cancel-1", reason="strategy cleanup"  # type: ignore[arg-type]
+                self.order, cancel_request_id="cancel-1", reason="strategy cleanup"
             )
         )
         canceled = self.bridge.dispatch_next()
@@ -158,19 +158,19 @@ class ConsumerExecutionRuntimeV1Tests(unittest.TestCase):
 
     def test_uncertain_native_dispatch_is_not_requeued_and_closes_admission(self) -> None:
         self.runtime.raise_on_dispatch = True
-        self.assertTrue(self.bridge.enqueue_committed_execution(self.order))  # type: ignore[arg-type]
+        self.assertTrue(self.bridge.enqueue_committed_execution(self.order))
         record = self.bridge.dispatch_next()
         assert record is not None
         self.assertEqual(
             ConsumerExecutionDispatchStateV1.UNKNOWN_REQUIRES_RECONCILIATION, record.state
         )
         self.assertEqual(["consumer-ems-uncertain-native-dispatch"], self.runtime.close_reasons)
-        self.assertFalse(self.bridge.enqueue_committed_execution(self.order))  # type: ignore[arg-type]
+        self.assertFalse(self.bridge.enqueue_committed_execution(self.order))
         self.assertIsNone(self.bridge.dispatch_next())
 
     def test_generation_mismatch_fails_closed_before_native_admission(self) -> None:
         self.runtime = _Runtime(binding=self.binding, route_version=2)
-        self.assertTrue(self.bridge.enqueue_committed_execution(self.order))  # type: ignore[arg-type]
+        self.assertTrue(self.bridge.enqueue_committed_execution(self.order))
         record = self.bridge.dispatch_next()
         assert record is not None
         self.assertEqual(

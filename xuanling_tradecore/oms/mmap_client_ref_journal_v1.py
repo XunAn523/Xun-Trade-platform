@@ -18,7 +18,7 @@ from threading import RLock
 try:
     import fcntl
 except ImportError:  # Windows must not silently downgrade the lock.
-    fcntl = None  # type: ignore[assignment]
+    fcntl = None  # type: ignore[assignment]  # Windows has no POSIX lock; initialization must fail closed.
 
 from ..adapters.identity import (
     ClientOrderRefAllocationError,

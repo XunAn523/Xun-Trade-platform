@@ -24,7 +24,7 @@ class _Lookup:
         self.value = value
         self.calls = 0
 
-    def lookup_external_order(self, *, account_id, trading_day, identity):  # type: ignore[no-untyped-def]
+    def lookup_external_order(self, *, account_id, trading_day, identity):
         self.calls += 1
         assert (
             account_id == self.value.account_id
@@ -38,7 +38,7 @@ class _Facts:
     def __init__(self) -> None:
         self.facts = []
 
-    def append_external_order_attachment(self, fact):  # type: ignore[no-untyped-def]
+    def append_external_order_attachment(self, fact):
         self.facts.append(fact)
         return OmsJournalCommit("journal-new", 0, 0, 1)
 
@@ -90,7 +90,7 @@ def _verified(*, terminal: bool = False) -> VerifiedExternalOrderV1:
 
 
 class ExternalOrderAttachmentTests(unittest.TestCase):
-    def _request(self, **overrides):  # type: ignore[no-untyped-def]
+    def _request(self, **overrides):
         values = {
             "attachment_id": "attachment-1",
             "account_id": "account-1",

@@ -43,7 +43,7 @@ class CreditRepaymentTests(unittest.TestCase):
 
         session = Session()
         retained: list[object] = []
-        _release_or_retain_credit_session(session, retained.append)  # type: ignore[arg-type]
+        _release_or_retain_credit_session(session, retained.append)
         self.assertEqual([session], retained)
         self.assertFalse(session.closed)
 
@@ -56,7 +56,7 @@ class CreditRepaymentTests(unittest.TestCase):
                 self.closed = True
 
         session = Session()
-        _release_or_retain_credit_session(session, None)  # type: ignore[arg-type]
+        _release_or_retain_credit_session(session, None)
         self.assertTrue(session.closed)
 
     def test_native_zero_rejection_uses_only_integer_last_error_id(self) -> None:
@@ -73,9 +73,9 @@ class CreditRepaymentTests(unittest.TestCase):
                 return Invocation(self.value)
 
         facade = Facade({"error_id": 230113, "error_msg": "not exported"})
-        self.assertEqual(230113, _native_last_error_id(facade))  # type: ignore[arg-type]
+        self.assertEqual(230113, _native_last_error_id(facade))
         self.assertEqual("GetApiLastError", facade.name)
-        self.assertIsNone(_native_last_error_id(Facade({"error_id": "230113"})))  # type: ignore[arg-type]
+        self.assertIsNone(_native_last_error_id(Facade({"error_id": "230113"})))
 
     def test_plan_accepts_only_tiny_reviewed_credit_repayments(self) -> None:
         plan = select_credit_repayment_plan(

@@ -156,17 +156,17 @@ def test_certificate_keeps_real_terminal_gaps_and_binding_holes_disarmed() -> No
 def test_shared_query_cannot_be_promoted_by_the_other_profile() -> None:
     ordinary = _query_report("ordinary")
     credit = _query_report("credit")
-    for row in ordinary["run"]["operation_outcomes"]:  # type: ignore[index]
-        if row["api"] == "QueryOrdersByPage":  # type: ignore[index]
+    for row in ordinary["run"]["operation_outcomes"]:
+        if row["api"] == "QueryOrdersByPage":
             row.update(
                 {
                     "outcome": "timeout",
                     "reason": "native_accepted_missing_is_last_true",
                 }
             )
-    for row in ordinary["run"]["operation_observations"]:  # type: ignore[index]
-        if row["api"] == "QueryOrdersByPage":  # type: ignore[index]
-            row["terminal_seen"] = False  # type: ignore[index]
+    for row in ordinary["run"]["operation_observations"]:
+        if row["api"] == "QueryOrdersByPage":
+            row["terminal_seen"] = False
 
     certificate = build_ordinary_credit_release_certificate_v1(
         ordinary_query_report=ordinary,
@@ -185,5 +185,5 @@ def test_shared_query_cannot_be_promoted_by_the_other_profile() -> None:
             )
         },
     )
-    observed = {item["official_name"]: item["state"] for item in certificate["observed_api"]}  # type: ignore[index]
+    observed = {item["official_name"]: item["state"] for item in certificate["observed_api"]}
     assert observed["QueryOrdersByPage"] == "blocked_semantics"

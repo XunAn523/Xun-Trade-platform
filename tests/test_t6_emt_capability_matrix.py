@@ -32,8 +32,8 @@ def test_matrix_is_exact_and_does_not_upgrade_sweep_to_terminal_verification() -
         "unsupported_binding": 4,
         "not_terminally_verified": 155,
     }
-    api = {entry["official_name"]: entry for entry in matrix["api"]}  # type: ignore[index]
-    spi = {entry["official_name"]: entry for entry in matrix["spi"]}  # type: ignore[index]
+    api = {entry["official_name"]: entry for entry in matrix["api"]}
+    spi = {entry["official_name"]: entry for entry in matrix["spi"]}
     assert api["QueryAsset"]["state"] == "supported_contract_only"
     assert spi["OnQueryAsset"]["state"] == "supported_contract_only"
     assert api["CreditMarginAvlTransfer"]["state"] == "unsupported_binding"

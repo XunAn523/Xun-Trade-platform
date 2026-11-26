@@ -170,11 +170,29 @@ assert results == ((125000, 0),)
 
 ## 测试与性能
 
-安装后运行核心回归，将 `python` 替换为当前虚拟环境解释器：
+本地和 CI 使用同一份版本化验收清单；安装锁定的验收依赖后执行：
 
 ```bash
-python -m pytest -q tests/test_hybrid_compute.py tests/test_account_session_sharding.py tests/test_journal.py tests/test_gateway.py tests/test_account_execution_router.py tests/test_execution_scheduler.py tests/test_tradecore_oms.py tests/test_execution_session_runtime.py tests/test_account_ownership_fence.py
+python -m pip install uv==0.13.9
+uv sync --locked --extra ci --python 3.10
+uv run --locked --extra ci python -m tools.quality.run_acceptance --suite native_core
+uv run --locked --extra ci python -m tools.quality.run_acceptance --suite python_reference --output-dir build/acceptance/python_reference
+uv run --locked --extra ci python -m tools.quality.wheel_smoke
 ```
+
+`tools/quality/test_suites.json` 定义原生核心、Python 对照和环境排查范围。
+验收输出 JSON、JUnit 和日志，记录提交、工作区状态、依赖锁和清单哈希。
+每个跳过节点都列出原因及补验前提；未知跳过原因使验收失败。进程超时保留诊断并停止本次子进程树。
+wheel 检查从全新源码快照构建，在隔离环境中安装锁定运行依赖，并以 `-I` 验证已安装 C++20 扩展。
+
+环境排查可逐文件运行，历史证据缺失和失败不会计入发布通过结果：
+
+```bash
+uv run --locked --extra ci python -m tools.quality.run_acceptance --suite environment_review --per-file --timeout-seconds 90 --output-dir build/acceptance/environment_review
+uv run --locked --extra ci python -m tools.quality.run_acceptance --catalog build/acceptance/test-catalog.json
+```
+
+目录清单同时列出尚未纳入核心验收的测试文件；核心清单通过不等于全量历史测试通过。
 
 运行离线计算基准：
 

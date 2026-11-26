@@ -205,10 +205,10 @@ class EmtControlOperationProjectorV1:
             official_name=snapshot.official_name,
             scope_id=snapshot.scope_id,
             session_epoch=snapshot.session_epoch,
-            state=changes.get("state", snapshot.state),  # type: ignore[arg-type]
-            native_id=changes.get("native_id", snapshot.native_id),  # type: ignore[arg-type]
+            state=changes.get("state", snapshot.state),  # type: ignore[arg-type]  # Only typed state-machine transitions populate this enum.
+            native_id=changes.get("native_id", snapshot.native_id),  # type: ignore[arg-type]  # Native-return transitions validate this optional integer.
             expected_callback=snapshot.expected_callback,
-            terminal_reason=changes.get("terminal_reason", snapshot.terminal_reason),  # type: ignore[arg-type]
+            terminal_reason=changes.get("terminal_reason", snapshot.terminal_reason),  # type: ignore[arg-type]  # Terminal transitions supply optional diagnostic text.
         )
         self._by_operation[replacement.operation_id] = replacement
         return replacement

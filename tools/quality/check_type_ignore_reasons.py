@@ -1,7 +1,7 @@
 """Reject unexplained ``type: ignore`` comments in reviewed Python code.
 
 An ignore can be necessary at a dynamic vendor or test boundary, but it must
-name Pyright's diagnostic code and state why the local type model cannot
+name the checker's diagnostic code and state why the local type model cannot
 express the operation.  This keeps a future strict-Pyright expansion auditable.
 """
 
@@ -14,7 +14,10 @@ from pathlib import Path
 from tokenize import COMMENT, generate_tokens
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE_ROOTS = (ROOT / "emt_gateway", ROOT / "tests", ROOT / "tools")
+SOURCE_ROOTS = tuple(
+    ROOT / name
+    for name in ("xuntrade_omsems", "xuanling_tradecore", "emt_gateway", "tests", "tools")
+)
 _IGNORE = re.compile(r"#\s*type:\s*ignore\[[^\]]+\]\s+#\s*(?P<reason>\S.*)\s*$")
 
 

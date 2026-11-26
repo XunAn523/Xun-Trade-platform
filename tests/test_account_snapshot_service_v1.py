@@ -21,7 +21,7 @@ class _Executor:
         self.pages = pages
         self.calls: list[tuple[str, str | None]] = []
 
-    def execute(self, request, *, cursor, completion):  # type: ignore[no-untyped-def]
+    def execute(self, request, *, cursor, completion):
         del completion
         self.calls.append((request.query_kind, cursor))
         return self.pages[request.query_kind].pop(0)
@@ -50,7 +50,7 @@ def _page(
 
 
 class AccountSnapshotServiceTests(unittest.TestCase):
-    def _request(self, specs):  # type: ignore[no-untyped-def]
+    def _request(self, specs):
         return AccountSnapshotRequestV1(
             "snapshot-1",
             "account-1",

@@ -7,6 +7,7 @@ this live reducer must not be wired to the benchmark's full-history projection.
 from __future__ import annotations
 
 from collections import deque
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from hashlib import sha256
 from itertools import islice
@@ -358,6 +359,7 @@ class RetainedOrderBook(OrderBook):
         oms_order_id: str,
         target: OmsOrderState,
         first_fact_kind: OmsFactKind | None = None,
+        additional_state_attributes: Mapping[str, str] | None = None,
     ) -> OmsOrderEvent | None:
         account = self._account_for_order(oms_order_id)
         with account.lock:
@@ -373,7 +375,10 @@ class RetainedOrderBook(OrderBook):
             ):
                 raise OmsHotCapacityFull("order history capacity reached before Journal commit")
             result = super()._transition(
-                oms_order_id=oms_order_id, target=target, first_fact_kind=first_fact_kind
+                oms_order_id=oms_order_id,
+                target=target,
+                first_fact_kind=first_fact_kind,
+                additional_state_attributes=additional_state_attributes,
             )
             if result is not None:
                 self._capture(result)

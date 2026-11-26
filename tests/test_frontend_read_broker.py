@@ -104,7 +104,7 @@ def test_lane_specific_central_backpressure_queues_admitted_read_without_fencing
     central = _TemporarilyFullOwnerReads()
     broker = FrontendOwnerReadBrokerV1(
         (tuple(pair[1] for pair in pairs),),
-        owner_reads=central,  # type: ignore[arg-type]
+        owner_reads=central,
         shared_credit=shared_total,
         shared_read_slots=shared_reads,
     )
@@ -140,7 +140,7 @@ def test_frontend_read_serials_may_arrive_out_of_order_across_fixed_channels():
     central = _TemporarilyFullOwnerReads()
     broker = FrontendOwnerReadBrokerV1(
         (tuple(pair[1] for pair in pairs),),
-        owner_reads=central,  # type: ignore[arg-type]
+        owner_reads=central,
         shared_credit=shared_total,
         shared_read_slots=shared_reads,
     )

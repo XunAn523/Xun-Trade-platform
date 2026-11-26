@@ -5,6 +5,7 @@ from dataclasses import replace
 from pathlib import Path
 
 import pytest
+from xuanling_tradecore.domain import OmsOrderState
 from xuanling_tradecore.oms import IntentAdmissionOutcome, OmsOrderBookError, ReservationRequirement
 from xuanling_tradecore.oms.retained_order_book import (
     ColdIntentLookupRequired,
@@ -227,6 +228,34 @@ def test_order_event_cap_fails_before_commit(tmp_path: Path) -> None:
         book.cancel(oms_order_id=first.order.order.oms_order_id)
         retire(book, cold, first.order.order.oms_order_id)
         assert book.reservations("broker-account-1") == ()
+    finally:
+        cold.close()
+
+
+def test_retained_cancel_preserves_request_identity_and_reservation_until_confirmation(tmp_path):
+    cold, journal, book = setup(tmp_path)
+    try:
+        order_id = admit(book).order.order.oms_order_id
+        book.mark_working(oms_order_id=order_id)
+        event = book.request_cancel(
+            oms_order_id=order_id, cancel_request_id="cancel-1", reason="strategy requested"
+        )
+        assert event.order_state is OmsOrderState.CANCEL_PENDING
+        assert book.order(order_id).reservation.is_active
+        for fact in journal.batches[-1][0]:
+            assert fact.attributes["cancel_request_id"] == "cancel-1"
+            assert fact.attributes["reason"] == "strategy requested"
+        before = len(journal.batches)
+        assert (
+            book.request_cancel(
+                oms_order_id=order_id, cancel_request_id="cancel-1", reason="strategy requested"
+            )
+            is None
+        )
+        assert len(journal.batches) == before
+        book.cancel(oms_order_id=order_id)
+        assert not book.order(order_id).reservation.is_active
+        retire(book, cold, order_id)
     finally:
         cold.close()
 

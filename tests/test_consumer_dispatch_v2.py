@@ -53,11 +53,11 @@ class ConsumerDispatchV2Tests(unittest.TestCase):
             self.assertNotIn("private", str(record))
 
     def test_lists_bound_accounts_and_rejects_malformed_operation(self) -> None:
-        dispatcher = ConsumerWireDispatcherV2(_Gateway())  # type: ignore[arg-type]
+        dispatcher = ConsumerWireDispatcherV2(_Gateway())
         session = ConsumerSession("session-1", "consumer-1", ConsumerApiVersion(2, 0), 1, 2)
         response = dispatcher(
             session, {"operation": "ListAccounts", "request_id": "r", "payload": {}}
         )
-        self.assertEqual("ca-1", response["payload"]["accounts"][0]["consumer_account_id"])  # type: ignore[index]
+        self.assertEqual("ca-1", response["payload"]["accounts"][0]["consumer_account_id"])
         with self.assertRaisesRegex(ConsumerWireDispatchError, "SCHEMA_VALIDATION_FAILED"):
             dispatcher(session, {"operation": "SubmitSignal", "request_id": "r", "payload": {}})

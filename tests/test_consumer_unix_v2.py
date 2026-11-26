@@ -46,8 +46,8 @@ class ConsumerUnixV2Tests(unittest.TestCase):
     def test_oversize_response_becomes_correlated_error_frame(self) -> None:
         listener = ConsumerUnixSocketListenerV2(
             socket_path=Path.cwd() / "consumer-test.sock",
-            gateway=object(),  # type: ignore[arg-type]
-            principal_for_peer=lambda _: object(),  # type: ignore[return-value]
+            gateway=object(),
+            principal_for_peer=lambda _: object(),
             request_schema={"type": "object"},
             request_handler=lambda _session, _request: {
                 "message_type": "response",
@@ -70,7 +70,7 @@ class ConsumerUnixV2Tests(unittest.TestCase):
         )
         trace: dict[str, object] = {}
         with request_trace_scope(trace):
-            response = decode_frame(listener.response_for_frame(object(), decode_frame(request)))  # type: ignore[arg-type]
+            response = decode_frame(listener.response_for_frame(object(), decode_frame(request)))
         self.assertEqual(MessageKind.ERROR, response.header.message_kind)
         self.assertEqual(42, response.header.correlation_id)
         self.assertEqual("large-response", response.payload["request_id"])
@@ -341,8 +341,8 @@ class ConsumerUnixV2Tests(unittest.TestCase):
         left, right = socket.socketpair()
         listener = ConsumerUnixSocketListenerV2(
             socket_path=Path.cwd() / "consumer-test.sock",
-            gateway=object(),  # type: ignore[arg-type]
-            principal_for_peer=lambda _: object(),  # type: ignore[return-value]
+            gateway=object(),
+            principal_for_peer=lambda _: object(),
             request_schema={"type": "object"},
             request_handler=lambda session, request: {},
         )
@@ -378,8 +378,8 @@ class ConsumerUnixV2Tests(unittest.TestCase):
         left, right = socket.socketpair()
         listener = ConsumerUnixSocketListenerV2(
             socket_path=Path.cwd() / "consumer-test.sock",
-            gateway=object(),  # type: ignore[arg-type]
-            principal_for_peer=lambda _: object(),  # type: ignore[return-value]
+            gateway=object(),
+            principal_for_peer=lambda _: object(),
             request_schema={"type": "object", "required": ["message_type"]},
             request_handler=lambda session, request: {
                 "message_type": "response",
@@ -390,7 +390,7 @@ class ConsumerUnixV2Tests(unittest.TestCase):
             },
         )
         session = object()
-        worker = Thread(target=listener._serve_connection, args=(left, session))  # type: ignore[arg-type]
+        worker = Thread(target=listener._serve_connection, args=(left, session))
         worker.start()
         right.sendall(
             encode_frame(MessageKind.REQUEST, 7, {"message_type": "request", "request_id": "r"})
@@ -415,15 +415,15 @@ class ConsumerUnixV2Tests(unittest.TestCase):
 
         listener = ConsumerUnixSocketListenerV2(
             socket_path=Path.cwd() / "consumer-test.sock",
-            gateway=object(),  # type: ignore[arg-type]
-            principal_for_peer=lambda _: object(),  # type: ignore[return-value]
+            gateway=object(),
+            principal_for_peer=lambda _: object(),
             request_schema={"type": "object", "required": ["message_type", "request_id"]},
-            request_handler=handler,  # type: ignore[arg-type]
+            request_handler=handler,
             parallel_read_operations=frozenset({"GetAccountOrderSnapshot"}),
         )
         pairs = [socket.socketpair(), socket.socketpair()]
         workers = [
-            Thread(target=listener._serve_connection, args=(server, object()))  # type: ignore[arg-type]
+            Thread(target=listener._serve_connection, args=(server, object()))
             for server, _client in pairs
         ]
         try:
@@ -460,8 +460,8 @@ class ConsumerUnixV2Tests(unittest.TestCase):
         )
         listener = ConsumerUnixSocketListenerV2(
             socket_path=Path.cwd() / "consumer-test.sock",
-            gateway=object(),  # type: ignore[arg-type]
-            principal_for_peer=lambda _: object(),  # type: ignore[return-value]
+            gateway=object(),
+            principal_for_peer=lambda _: object(),
             request_schema={"type": "object", "required": ["message_type", "request_id"]},
             request_handler=lambda _session, _request: {},
             live_subscription_for=lambda _session, _request: ConsumerLiveSubscriptionV2(
@@ -469,7 +469,7 @@ class ConsumerUnixV2Tests(unittest.TestCase):
             ),
             live_poll_interval_seconds=0.01,
         )
-        worker = Thread(target=listener._serve_connection, args=(left, object()))  # type: ignore[arg-type]
+        worker = Thread(target=listener._serve_connection, args=(left, object()))
         worker.start()
         right.sendall(
             encode_frame(

@@ -66,11 +66,11 @@ def test_ordinary_credit_module_rejects_option_before_fast_dispatch() -> None:
         release_scope=ORDINARY_CREDIT_RELEASE_SCOPE_V1,
     )
     control = _Control()
-    control.release_scope = ORDINARY_CREDIT_RELEASE_SCOPE_V1  # type: ignore[attr-defined]
+    control.release_scope = ORDINARY_CREDIT_RELEASE_SCOPE_V1
     module = EmtFullTradingModuleV1(
         query_service=query,
-        control_dispatcher=control,  # type: ignore[arg-type]
-        fast_operation_port=_FastPort(),  # type: ignore[arg-type]
+        control_dispatcher=control,
+        fast_operation_port=_FastPort(),
         release_scope=ORDINARY_CREDIT_RELEASE_SCOPE_V1,
     )
     with pytest.raises(EmtTradingReleaseScopeError, match="CAPABILITY_UNAVAILABLE"):
@@ -91,7 +91,7 @@ def test_scoped_control_dispatcher_rejects_option_before_journal_or_sdk() -> Non
 
     dispatcher = EmtControlMutationDispatcherV1(
         facade=EmtTraderFacade(_Api(), session_id=1, query_registry=QueryRegistry()),
-        journal=_Journal(),  # type: ignore[arg-type]
+        journal=_Journal(),
         release_scope=ORDINARY_CREDIT_RELEASE_SCOPE_V1,
     )
     command = EmtOperationCommandV1(
@@ -116,11 +116,11 @@ def test_full_module_rejects_mixed_release_scope_composition() -> None:
         release_scope=ORDINARY_CREDIT_RELEASE_SCOPE_V1,
     )
     control = _Control()
-    control.release_scope = ALL_TRADING_RELEASE_SCOPE_V1  # type: ignore[attr-defined]
+    control.release_scope = ALL_TRADING_RELEASE_SCOPE_V1
     with pytest.raises(EmtTradingModuleError, match="release scope does not match"):
         EmtFullTradingModuleV1(
             query_service=query,
-            control_dispatcher=control,  # type: ignore[arg-type]
-            fast_operation_port=_FastPort(),  # type: ignore[arg-type]
+            control_dispatcher=control,
+            fast_operation_port=_FastPort(),
             release_scope=ORDINARY_CREDIT_RELEASE_SCOPE_V1,
         )

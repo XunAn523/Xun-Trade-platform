@@ -114,7 +114,7 @@ def test_child_worker_failure_is_never_reported_as_ready() -> None:
         try:
             # A malformed routing snapshot is injected only after normal
             # startup to prove the HTTP/service contract is fail-closed.
-            runtime._fresh_snapshot = lambda: None  # type: ignore[method-assign]
+            runtime._fresh_snapshot = lambda: None
             with pytest.raises(Exception, match="child preparation failed"):
                 await runtime.submit_plan(EmsPlanInputV1("worker-failure", wait_for_child=True))
         finally:

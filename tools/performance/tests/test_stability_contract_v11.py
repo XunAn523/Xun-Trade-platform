@@ -25,7 +25,7 @@ def test_stability_plan_requires_all_three_mixed_contracts_and_l2_faults(tmp_pat
     path.write_text(json.dumps(_plan()), encoding="utf-8")
     assert load_plan(path, level="L1")["profile_id"] == "test-v11"
     incomplete = _plan()
-    incomplete["workloads"] = incomplete["workloads"][:2]  # type: ignore[index]
+    incomplete["workloads"] = incomplete["workloads"][:2]
     path.write_text(json.dumps(incomplete), encoding="utf-8")
     with pytest.raises(StabilityContractError, match="OMS-W3"):
         load_plan(path, level="L1")

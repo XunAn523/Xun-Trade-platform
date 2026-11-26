@@ -34,7 +34,7 @@ class _RecordingResetFactPort:
         self.fail = fail
         self.batches = []
 
-    def append_account_stream_reset(self, fact):  # type: ignore[no-untyped-def]
+    def append_account_stream_reset(self, fact):
         self.batches.append(fact)
         if self.fail:
             raise RuntimeError("Journal unavailable")

@@ -22,7 +22,7 @@ from tools.oms_load_platform.service_v1 import (
 
 
 def _run(coroutine: object) -> object:
-    return asyncio.run(coroutine)  # type: ignore[arg-type]
+    return asyncio.run(coroutine)
 
 
 async def _runtime(*, seed_orders: int = 8) -> OmsLoadPlatformV1:
@@ -46,12 +46,12 @@ def test_fact_ingest_projects_immutable_snapshot_and_hdr_metrics() -> None:
             )
             assert receipt.position == 1
             assert await runtime.wait_until_idle()
-            assert runtime.order("test-execution-1")["state"] == "PRE_NATIVE_COMMITTED"  # type: ignore[index]
+            assert runtime.order("test-execution-1")["state"] == "PRE_NATIVE_COMMITTED"
             snapshot = runtime.snapshot_summary(require_fresh=True)
-            assert snapshot["watermarks"]["bench-scope-0"] == 1  # type: ignore[index]
+            assert snapshot["watermarks"]["bench-scope-0"] == 1
             metrics = runtime.metrics.summary()
             assert metrics["format"] == "HDRHistogramV1"
-            assert metrics["histograms_ns"]["fact_admit_to_projected_ns"]["count"] == 1  # type: ignore[index]
+            assert metrics["histograms_ns"]["fact_admit_to_projected_ns"]["count"] == 1
         finally:
             await runtime.stop()
 

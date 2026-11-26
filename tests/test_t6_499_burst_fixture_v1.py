@@ -12,9 +12,9 @@ from tools.performance.perfbench.tradecore_tight_burst_order_plan import (
 
 def test_t6_499_fixture_is_armed_simulated_and_binds_a_tight_plan(tmp_path) -> None:
     raw = t6_499_burst_fixture_v1()
-    assert raw["safety"]["armed"] is True  # type: ignore[index]
-    assert raw["safety"]["environment"] == "simulated"  # type: ignore[index]
-    assert raw["safety"]["max_total_submissions"] == _BURST_WIDTH  # type: ignore[index]
+    assert raw["safety"]["armed"] is True
+    assert raw["safety"]["environment"] == "simulated"
+    assert raw["safety"]["max_total_submissions"] == _BURST_WIDTH
 
     fixture = tmp_path / "t6-499-fixture.json"
     assert write_t6_499_burst_fixture(fixture) == fixture.name
