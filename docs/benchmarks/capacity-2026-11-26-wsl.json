@@ -1,0 +1,2524 @@
+{
+  "source": {
+    "commit": "2df524bd759b1e7e03e11856d6c31c7893ab2d90",
+    "working_tree_dirty": false,
+    "lock_sha256": "b3b05d0279dca2d935d686353083c8163596c1b5db7a5bbf191f7113eec2e107",
+    "test_manifest_sha256": "ec5bdf63857fdf64ca7ba25c2ce053a92bce085fe9500096ca310841f8e83348"
+  },
+  "scope": "offline fsync component chain; independent process per trial; not live SDK/fence/network acceptance",
+  "status": "passed",
+  "expected_trials": 15,
+  "finished_trials": 15,
+  "threshold_status": "no production SLA asserted; process/accounting verification only",
+  "percentile_method": "nearest rank per trial; summary min/median/max of trial P99, not pooled P99",
+  "sample_limit": "bounded sample; not a long-duration soak or statistically established production capacity",
+  "summary": [
+    {
+      "target_rate_per_second": 25.0,
+      "successful_trials": 3,
+      "completed": {
+        "min": 500,
+        "median": 500,
+        "max": 500
+      },
+      "rejected": {
+        "min": 0,
+        "median": 0,
+        "max": 0
+      },
+      "throughput_per_second": {
+        "min": 24.283936013877003,
+        "median": 25.032705156692373,
+        "max": 25.033389487334766
+      },
+      "completion_ratio": {
+        "min": 1.0,
+        "median": 1.0,
+        "max": 1.0
+      },
+      "per_trial_latency_p99_ms": {
+        "min": 23.353294,
+        "median": 485.96523,
+        "max": 1487.018052
+      },
+      "per_trial_generator_p99_ms": {
+        "min": 0.688979,
+        "median": 0.711813,
+        "max": 0.902408
+      },
+      "per_trial_queue_p99_ms": {
+        "min": 0.541711,
+        "median": 445.155765,
+        "max": 1449.620053
+      },
+      "trials_with_completions": 3,
+      "within_deadline_ratio_of_offered": {
+        "min": 0.53,
+        "median": 0.9,
+        "max": 1.0
+      }
+    },
+    {
+      "target_rate_per_second": 50.0,
+      "successful_trials": 3,
+      "completed": {
+        "min": 500,
+        "median": 500,
+        "max": 500
+      },
+      "rejected": {
+        "min": 0,
+        "median": 0,
+        "max": 0
+      },
+      "throughput_per_second": {
+        "min": 47.843852751126725,
+        "median": 50.014973752923005,
+        "max": 50.03625833428286
+      },
+      "completion_ratio": {
+        "min": 1.0,
+        "median": 1.0,
+        "max": 1.0
+      },
+      "per_trial_latency_p99_ms": {
+        "min": 112.845631,
+        "median": 445.11973,
+        "max": 494.264775
+      },
+      "per_trial_generator_p99_ms": {
+        "min": 0.639196,
+        "median": 0.695536,
+        "max": 0.709421
+      },
+      "per_trial_queue_p99_ms": {
+        "min": 54.002043,
+        "median": 421.634014,
+        "max": 446.098146
+      },
+      "trials_with_completions": 3,
+      "within_deadline_ratio_of_offered": {
+        "min": 0.864,
+        "median": 0.95,
+        "max": 0.988
+      }
+    },
+    {
+      "target_rate_per_second": 100.0,
+      "successful_trials": 3,
+      "completed": {
+        "min": 500,
+        "median": 500,
+        "max": 500
+      },
+      "rejected": {
+        "min": 0,
+        "median": 0,
+        "max": 0
+      },
+      "throughput_per_second": {
+        "min": 64.45824284373117,
+        "median": 67.1131069015942,
+        "max": 68.06943630979889
+      },
+      "completion_ratio": {
+        "min": 1.0,
+        "median": 1.0,
+        "max": 1.0
+      },
+      "per_trial_latency_p99_ms": {
+        "min": 2424.504711,
+        "median": 2511.424458,
+        "max": 2800.880375
+      },
+      "per_trial_generator_p99_ms": {
+        "min": 0.634789,
+        "median": 0.698878,
+        "max": 0.717049
+      },
+      "per_trial_queue_p99_ms": {
+        "min": 2411.154228,
+        "median": 2497.958985,
+        "max": 2787.023175
+      },
+      "trials_with_completions": 3,
+      "within_deadline_ratio_of_offered": {
+        "min": 0.036,
+        "median": 0.038,
+        "max": 0.04
+      }
+    },
+    {
+      "target_rate_per_second": 200.0,
+      "successful_trials": 3,
+      "completed": {
+        "min": 500,
+        "median": 500,
+        "max": 500
+      },
+      "rejected": {
+        "min": 0,
+        "median": 0,
+        "max": 0
+      },
+      "throughput_per_second": {
+        "min": 31.245398332007817,
+        "median": 34.90181285715446,
+        "max": 34.94925824664139
+      },
+      "completion_ratio": {
+        "min": 1.0,
+        "median": 1.0,
+        "max": 1.0
+      },
+      "per_trial_latency_p99_ms": {
+        "min": 11728.654894,
+        "median": 11777.268023,
+        "max": 13449.846723
+      },
+      "per_trial_generator_p99_ms": {
+        "min": 0.481941,
+        "median": 0.491116,
+        "max": 0.562521
+      },
+      "per_trial_queue_p99_ms": {
+        "min": 11691.405221,
+        "median": 11752.168688,
+        "max": 13426.859867
+      },
+      "trials_with_completions": 3,
+      "within_deadline_ratio_of_offered": {
+        "min": 0.008,
+        "median": 0.008,
+        "max": 0.012
+      }
+    },
+    {
+      "target_rate_per_second": 0.0,
+      "successful_trials": 3,
+      "completed": {
+        "min": 500,
+        "median": 500,
+        "max": 500
+      },
+      "rejected": {
+        "min": 0,
+        "median": 0,
+        "max": 0
+      },
+      "throughput_per_second": {
+        "min": 34.140025415158185,
+        "median": 35.552340964080955,
+        "max": 203.81708132593533
+      },
+      "completion_ratio": {
+        "min": 1.0,
+        "median": 1.0,
+        "max": 1.0
+      },
+      "per_trial_latency_p99_ms": {
+        "min": 2424.337528,
+        "median": 13924.765072,
+        "max": 14614.270088
+      },
+      "per_trial_generator_p99_ms": {
+        "min": 1.103947,
+        "median": 1.205457,
+        "max": 1.227719
+      },
+      "per_trial_queue_p99_ms": {
+        "min": 2419.913867,
+        "median": 13900.318945,
+        "max": 14607.329061
+      },
+      "trials_with_completions": 3,
+      "within_deadline_ratio_of_offered": {
+        "min": 0.006,
+        "median": 0.008,
+        "max": 0.036
+      }
+    }
+  ],
+  "trials": [
+    {
+      "status": "passed",
+      "returncode": 0,
+      "elapsed_seconds": 24.312113519059494,
+      "log": "/mnt/d/\u8368\u5b89/XunTradeOMSEMS/build/capacity/wsl/trial-000-d34ec9fac7c244918067dc62113a7a85/trial.log",
+      "timeout_seconds": 180,
+      "target_rate_per_second": 25.0,
+      "repeat": 1,
+      "measurement": {
+        "measured_at_utc": "2026-11-26T07:19:55.514489+00:00",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python": "3.10.18",
+        "processor": "x86_64",
+        "logical_cpus": 20,
+        "cpu_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "source": {
+          "commit": "2df524bd759b1e7e03e11856d6c31c7893ab2d90",
+          "working_tree_dirty": false,
+          "lock_sha256": "b3b05d0279dca2d935d686353083c8163596c1b5db7a5bbf191f7113eec2e107",
+          "test_manifest_sha256": "ec5bdf63857fdf64ca7ba25c2ce053a92bce085fe9500096ca310841f8e83348"
+        },
+        "native_binary_sha256": "eaec3a04ad3eb1d31333dbc4fd34a722948612a5b8a5c295f861316db06ed16a",
+        "environment_kind": "wsl",
+        "storage": {
+          "path": "/tmp/xuntrade-offline-e82oxe66",
+          "free_bytes": 989565972480,
+          "mount": {
+            "filesystems": [
+              {
+                "target": "/",
+                "fstype": "ext4",
+                "source": "/dev/sdd"
+              }
+            ]
+          }
+        },
+        "batch_size": 32,
+        "capacity_per_lane": 256,
+        "routing_workers": 1,
+        "arrival_profile": "open-loop fixed rate",
+        "target_rate_per_second": 25.0,
+        "scheduled_offer_window_ns": 20000000000,
+        "last_scheduled_arrival_ns": 19960000000,
+        "actual_offer_window_ns": 19960243269,
+        "actual_offered_per_second": 24.99969530807225,
+        "scope": "offline components only; simulated broker; no live risk/fence/SDK/network",
+        "backend": {
+          "engine": "cpp20",
+          "crc32c": "x86-sse4.2",
+          "api_version": 1,
+          "maximum_workers": 32,
+          "cxx_standard": 202002,
+          "maximum_batch_bytes": 67108864,
+          "maximum_compute_bytes": 268435456,
+          "maximum_compute_calls": 4,
+          "active_calls": 0,
+          "active_workers": 0,
+          "active_bytes": 0,
+          "worker_pool_threads": 0,
+          "mode": "native"
+        },
+        "offered": 500,
+        "completed": 500,
+        "rejected": 0,
+        "fake_broker_calls": 500,
+        "elapsed_ns": 20589742936,
+        "process_cpu_ns": 681494551,
+        "process_lifetime_peak_rss_bytes": 57155584,
+        "rss_scope": "whole process, including imports and bounded benchmark history; not steady-state OMS memory",
+        "completion_ratio": 1.0,
+        "rejection_ratio": 0.0,
+        "throughput_per_second": 24.283936013877003,
+        "completed_during_offer": 490,
+        "completed_during_offer_per_second": 24.548798999910627,
+        "drain_ns": 629363110,
+        "deadline_ms": 100.0,
+        "within_deadline": 450,
+        "within_deadline_ratio_of_offered": 0.9,
+        "latency_population": "completed only; scheduled arrival through durable callback ACK; rejected requests excluded",
+        "latency": {
+          "count": 500,
+          "p50_ns": 28684371,
+          "p95_ns": 183765508,
+          "p99_ns": 485965230,
+          "max_ns": 709606379
+        },
+        "generator_lateness": {
+          "count": 500,
+          "p50_ns": 283721,
+          "p95_ns": 514972,
+          "p99_ns": 688979,
+          "max_ns": 7568630
+        },
+        "rejection_latency": {
+          "count": 0,
+          "p50_ns": 0,
+          "p95_ns": 0,
+          "p99_ns": 0,
+          "max_ns": 0
+        },
+        "queue_wait": {
+          "count": 500,
+          "p50_ns": 219785,
+          "p95_ns": 144064112,
+          "p99_ns": 445155765,
+          "max_ns": 605611111
+        },
+        "routing_and_domain_batch": {
+          "count": 16,
+          "p50_ns": 343136,
+          "p95_ns": 459416,
+          "p99_ns": 459416,
+          "max_ns": 459416
+        },
+        "journal_flush": {
+          "count": 1500,
+          "p50_ns": 7584590,
+          "p95_ns": 18437636,
+          "p99_ns": 71432098,
+          "max_ns": 165326885
+        },
+        "gateway_c0_c7": {
+          "count": 500,
+          "p50_ns": 24075941,
+          "p95_ns": 76943934,
+          "p99_ns": 106042785,
+          "max_ns": 183085409
+        },
+        "broker_delay_us": 0
+      }
+    },
+    {
+      "status": "passed",
+      "returncode": 0,
+      "elapsed_seconds": 24.613061538198963,
+      "log": "/mnt/d/\u8368\u5b89/XunTradeOMSEMS/build/capacity/wsl/trial-001-467e115d48c2447b8a4d078e91445f34/trial.log",
+      "timeout_seconds": 180,
+      "target_rate_per_second": 25.0,
+      "repeat": 2,
+      "measurement": {
+        "measured_at_utc": "2026-11-26T07:20:18.264891+00:00",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python": "3.10.18",
+        "processor": "x86_64",
+        "logical_cpus": 20,
+        "cpu_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "source": {
+          "commit": "2df524bd759b1e7e03e11856d6c31c7893ab2d90",
+          "working_tree_dirty": false,
+          "lock_sha256": "b3b05d0279dca2d935d686353083c8163596c1b5db7a5bbf191f7113eec2e107",
+          "test_manifest_sha256": "ec5bdf63857fdf64ca7ba25c2ce053a92bce085fe9500096ca310841f8e83348"
+        },
+        "native_binary_sha256": "eaec3a04ad3eb1d31333dbc4fd34a722948612a5b8a5c295f861316db06ed16a",
+        "environment_kind": "wsl",
+        "storage": {
+          "path": "/tmp/xuntrade-offline-75bqa_6n",
+          "free_bytes": 989574205440,
+          "mount": {
+            "filesystems": [
+              {
+                "target": "/",
+                "fstype": "ext4",
+                "source": "/dev/sdd"
+              }
+            ]
+          }
+        },
+        "batch_size": 32,
+        "capacity_per_lane": 256,
+        "routing_workers": 1,
+        "arrival_profile": "open-loop fixed rate",
+        "target_rate_per_second": 25.0,
+        "scheduled_offer_window_ns": 20000000000,
+        "last_scheduled_arrival_ns": 19960000000,
+        "actual_offer_window_ns": 19960763419,
+        "actual_offered_per_second": 24.999043850448032,
+        "scope": "offline components only; simulated broker; no live risk/fence/SDK/network",
+        "backend": {
+          "engine": "cpp20",
+          "crc32c": "x86-sse4.2",
+          "api_version": 1,
+          "maximum_workers": 32,
+          "cxx_standard": 202002,
+          "maximum_batch_bytes": 67108864,
+          "maximum_compute_bytes": 268435456,
+          "maximum_compute_calls": 4,
+          "active_calls": 0,
+          "active_workers": 0,
+          "active_bytes": 0,
+          "worker_pool_threads": 0,
+          "mode": "native"
+        },
+        "offered": 500,
+        "completed": 500,
+        "rejected": 0,
+        "fake_broker_calls": 500,
+        "elapsed_ns": 19973870058,
+        "process_cpu_ns": 523981465,
+        "process_lifetime_peak_rss_bytes": 57036800,
+        "rss_scope": "whole process, including imports and bounded benchmark history; not steady-state OMS memory",
+        "completion_ratio": 1.0,
+        "rejection_ratio": 0.0,
+        "throughput_per_second": 25.032705156692373,
+        "completed_during_offer": 499,
+        "completed_during_offer_per_second": 24.999043850448032,
+        "drain_ns": 12995254,
+        "deadline_ms": 100.0,
+        "within_deadline": 265,
+        "within_deadline_ratio_of_offered": 0.53,
+        "latency_population": "completed only; scheduled arrival through durable callback ACK; rejected requests excluded",
+        "latency": {
+          "count": 500,
+          "p50_ns": 53868908,
+          "p95_ns": 1330194334,
+          "p99_ns": 1487018052,
+          "max_ns": 1587450658
+        },
+        "generator_lateness": {
+          "count": 500,
+          "p50_ns": 240356,
+          "p95_ns": 582333,
+          "p99_ns": 902408,
+          "max_ns": 1107954
+        },
+        "rejection_latency": {
+          "count": 0,
+          "p50_ns": 0,
+          "p95_ns": 0,
+          "p99_ns": 0,
+          "max_ns": 0
+        },
+        "queue_wait": {
+          "count": 500,
+          "p50_ns": 14887836,
+          "p95_ns": 1289121959,
+          "p99_ns": 1449620053,
+          "max_ns": 1547150506
+        },
+        "routing_and_domain_batch": {
+          "count": 16,
+          "p50_ns": 317115,
+          "p95_ns": 1103674,
+          "p99_ns": 1103674,
+          "max_ns": 1103674
+        },
+        "journal_flush": {
+          "count": 1500,
+          "p50_ns": 4339180,
+          "p95_ns": 58231435,
+          "p99_ns": 84471877,
+          "max_ns": 129961436
+        },
+        "gateway_c0_c7": {
+          "count": 500,
+          "p50_ns": 13893804,
+          "p95_ns": 94221177,
+          "p99_ns": 128692527,
+          "max_ns": 199463531
+        },
+        "broker_delay_us": 0
+      }
+    },
+    {
+      "status": "passed",
+      "returncode": 0,
+      "elapsed_seconds": 22.89152792096138,
+      "log": "/mnt/d/\u8368\u5b89/XunTradeOMSEMS/build/capacity/wsl/trial-002-ee93d8268e1f44fc8c8b7fbf0efbb498/trial.log",
+      "timeout_seconds": 180,
+      "target_rate_per_second": 25.0,
+      "repeat": 3,
+      "measurement": {
+        "measured_at_utc": "2026-11-26T07:20:41.147755+00:00",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python": "3.10.18",
+        "processor": "x86_64",
+        "logical_cpus": 20,
+        "cpu_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "source": {
+          "commit": "2df524bd759b1e7e03e11856d6c31c7893ab2d90",
+          "working_tree_dirty": false,
+          "lock_sha256": "b3b05d0279dca2d935d686353083c8163596c1b5db7a5bbf191f7113eec2e107",
+          "test_manifest_sha256": "ec5bdf63857fdf64ca7ba25c2ce053a92bce085fe9500096ca310841f8e83348"
+        },
+        "native_binary_sha256": "eaec3a04ad3eb1d31333dbc4fd34a722948612a5b8a5c295f861316db06ed16a",
+        "environment_kind": "wsl",
+        "storage": {
+          "path": "/tmp/xuntrade-offline-cy4j8t1j",
+          "free_bytes": 989579005952,
+          "mount": {
+            "filesystems": [
+              {
+                "target": "/",
+                "fstype": "ext4",
+                "source": "/dev/sdd"
+              }
+            ]
+          }
+        },
+        "batch_size": 32,
+        "capacity_per_lane": 256,
+        "routing_workers": 1,
+        "arrival_profile": "open-loop fixed rate",
+        "target_rate_per_second": 25.0,
+        "scheduled_offer_window_ns": 20000000000,
+        "last_scheduled_arrival_ns": 19960000000,
+        "actual_offer_window_ns": 19960803107,
+        "actual_offered_per_second": 24.99899414493032,
+        "scope": "offline components only; simulated broker; no live risk/fence/SDK/network",
+        "backend": {
+          "engine": "cpp20",
+          "crc32c": "x86-sse4.2",
+          "api_version": 1,
+          "maximum_workers": 32,
+          "cxx_standard": 202002,
+          "maximum_batch_bytes": 67108864,
+          "maximum_compute_bytes": 268435456,
+          "maximum_compute_calls": 4,
+          "active_calls": 0,
+          "active_workers": 0,
+          "active_bytes": 0,
+          "worker_pool_threads": 0,
+          "mode": "native"
+        },
+        "offered": 500,
+        "completed": 500,
+        "rejected": 0,
+        "fake_broker_calls": 500,
+        "elapsed_ns": 19973324038,
+        "process_cpu_ns": 528749154,
+        "process_lifetime_peak_rss_bytes": 57606144,
+        "rss_scope": "whole process, including imports and bounded benchmark history; not steady-state OMS memory",
+        "completion_ratio": 1.0,
+        "rejection_ratio": 0.0,
+        "throughput_per_second": 25.033389487334766,
+        "completed_during_offer": 499,
+        "completed_during_offer_per_second": 24.99899414493032,
+        "drain_ns": 12424796,
+        "deadline_ms": 100.0,
+        "within_deadline": 500,
+        "within_deadline_ratio_of_offered": 1.0,
+        "latency_population": "completed only; scheduled arrival through durable callback ACK; rejected requests excluded",
+        "latency": {
+          "count": 500,
+          "p50_ns": 13230586,
+          "p95_ns": 20285132,
+          "p99_ns": 23353294,
+          "max_ns": 36317326
+        },
+        "generator_lateness": {
+          "count": 500,
+          "p50_ns": 229110,
+          "p95_ns": 598362,
+          "p99_ns": 711813,
+          "max_ns": 895633
+        },
+        "rejection_latency": {
+          "count": 0,
+          "p50_ns": 0,
+          "p95_ns": 0,
+          "p99_ns": 0,
+          "max_ns": 0
+        },
+        "queue_wait": {
+          "count": 500,
+          "p50_ns": 178613,
+          "p95_ns": 327143,
+          "p99_ns": 541711,
+          "max_ns": 3608600
+        },
+        "routing_and_domain_batch": {
+          "count": 16,
+          "p50_ns": 315460,
+          "p95_ns": 384449,
+          "p99_ns": 384449,
+          "max_ns": 384449
+        },
+        "journal_flush": {
+          "count": 1500,
+          "p50_ns": 4231394,
+          "p95_ns": 7939505,
+          "p99_ns": 10086196,
+          "max_ns": 26790621
+        },
+        "gateway_c0_c7": {
+          "count": 500,
+          "p50_ns": 12653945,
+          "p95_ns": 19740414,
+          "p99_ns": 22665603,
+          "max_ns": 35797619
+        },
+        "broker_delay_us": 0
+      }
+    },
+    {
+      "status": "passed",
+      "returncode": 0,
+      "elapsed_seconds": 15.128701442852616,
+      "log": "/mnt/d/\u8368\u5b89/XunTradeOMSEMS/build/capacity/wsl/trial-003-a091f404ec1f44e094e53ffba1a700ea/trial.log",
+      "timeout_seconds": 180,
+      "target_rate_per_second": 50.0,
+      "repeat": 1,
+      "measurement": {
+        "measured_at_utc": "2026-11-26T07:20:54.313021+00:00",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python": "3.10.18",
+        "processor": "x86_64",
+        "logical_cpus": 20,
+        "cpu_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "source": {
+          "commit": "2df524bd759b1e7e03e11856d6c31c7893ab2d90",
+          "working_tree_dirty": false,
+          "lock_sha256": "b3b05d0279dca2d935d686353083c8163596c1b5db7a5bbf191f7113eec2e107",
+          "test_manifest_sha256": "ec5bdf63857fdf64ca7ba25c2ce053a92bce085fe9500096ca310841f8e83348"
+        },
+        "native_binary_sha256": "eaec3a04ad3eb1d31333dbc4fd34a722948612a5b8a5c295f861316db06ed16a",
+        "environment_kind": "wsl",
+        "storage": {
+          "path": "/tmp/xuntrade-offline-n8mt8lq9",
+          "free_bytes": 989584285696,
+          "mount": {
+            "filesystems": [
+              {
+                "target": "/",
+                "fstype": "ext4",
+                "source": "/dev/sdd"
+              }
+            ]
+          }
+        },
+        "batch_size": 32,
+        "capacity_per_lane": 256,
+        "routing_workers": 1,
+        "arrival_profile": "open-loop fixed rate",
+        "target_rate_per_second": 50.0,
+        "scheduled_offer_window_ns": 10000000000,
+        "last_scheduled_arrival_ns": 9980000000,
+        "actual_offer_window_ns": 9980229404,
+        "actual_offered_per_second": 49.99885070778078,
+        "scope": "offline components only; simulated broker; no live risk/fence/SDK/network",
+        "backend": {
+          "engine": "cpp20",
+          "crc32c": "x86-sse4.2",
+          "api_version": 1,
+          "maximum_workers": 32,
+          "cxx_standard": 202002,
+          "maximum_batch_bytes": 67108864,
+          "maximum_compute_bytes": 268435456,
+          "maximum_compute_calls": 4,
+          "active_calls": 0,
+          "active_workers": 0,
+          "active_bytes": 0,
+          "worker_pool_threads": 0,
+          "mode": "native"
+        },
+        "offered": 500,
+        "completed": 500,
+        "rejected": 0,
+        "fake_broker_calls": 500,
+        "elapsed_ns": 10450663382,
+        "process_cpu_ns": 576655568,
+        "process_lifetime_peak_rss_bytes": 56713216,
+        "rss_scope": "whole process, including imports and bounded benchmark history; not steady-state OMS memory",
+        "completion_ratio": 1.0,
+        "rejection_ratio": 0.0,
+        "throughput_per_second": 47.843852751126725,
+        "completed_during_offer": 483,
+        "completed_during_offer_per_second": 48.39568114600826,
+        "drain_ns": 470253573,
+        "deadline_ms": 100.0,
+        "within_deadline": 475,
+        "within_deadline_ratio_of_offered": 0.95,
+        "latency_population": "completed only; scheduled arrival through durable callback ACK; rejected requests excluded",
+        "latency": {
+          "count": 500,
+          "p50_ns": 14229128,
+          "p95_ns": 47601610,
+          "p99_ns": 494264775,
+          "max_ns": 578782078
+        },
+        "generator_lateness": {
+          "count": 500,
+          "p50_ns": 224838,
+          "p95_ns": 490387,
+          "p99_ns": 695536,
+          "max_ns": 1122312
+        },
+        "rejection_latency": {
+          "count": 0,
+          "p50_ns": 0,
+          "p95_ns": 0,
+          "p99_ns": 0,
+          "max_ns": 0
+        },
+        "queue_wait": {
+          "count": 500,
+          "p50_ns": 179549,
+          "p95_ns": 25196548,
+          "p99_ns": 446098146,
+          "max_ns": 564095003
+        },
+        "routing_and_domain_batch": {
+          "count": 16,
+          "p50_ns": 325514,
+          "p95_ns": 505399,
+          "p99_ns": 505399,
+          "max_ns": 505399
+        },
+        "journal_flush": {
+          "count": 1500,
+          "p50_ns": 4249237,
+          "p95_ns": 8344960,
+          "p99_ns": 13561191,
+          "max_ns": 237881236
+        },
+        "gateway_c0_c7": {
+          "count": 500,
+          "p50_ns": 13354609,
+          "p95_ns": 22093611,
+          "p99_ns": 74365328,
+          "max_ns": 248935423
+        },
+        "broker_delay_us": 0
+      }
+    },
+    {
+      "status": "passed",
+      "returncode": 0,
+      "elapsed_seconds": 13.69612840586342,
+      "log": "/mnt/d/\u8368\u5b89/XunTradeOMSEMS/build/capacity/wsl/trial-004-58fc2ff68b9b4667b8406560a026fde2/trial.log",
+      "timeout_seconds": 180,
+      "target_rate_per_second": 50.0,
+      "repeat": 2,
+      "measurement": {
+        "measured_at_utc": "2026-11-26T07:21:08.056120+00:00",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python": "3.10.18",
+        "processor": "x86_64",
+        "logical_cpus": 20,
+        "cpu_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "source": {
+          "commit": "2df524bd759b1e7e03e11856d6c31c7893ab2d90",
+          "working_tree_dirty": false,
+          "lock_sha256": "b3b05d0279dca2d935d686353083c8163596c1b5db7a5bbf191f7113eec2e107",
+          "test_manifest_sha256": "ec5bdf63857fdf64ca7ba25c2ce053a92bce085fe9500096ca310841f8e83348"
+        },
+        "native_binary_sha256": "eaec3a04ad3eb1d31333dbc4fd34a722948612a5b8a5c295f861316db06ed16a",
+        "environment_kind": "wsl",
+        "storage": {
+          "path": "/tmp/xuntrade-offline-qe5hpbyg",
+          "free_bytes": 989587304448,
+          "mount": {
+            "filesystems": [
+              {
+                "target": "/",
+                "fstype": "ext4",
+                "source": "/dev/sdd"
+              }
+            ]
+          }
+        },
+        "batch_size": 32,
+        "capacity_per_lane": 256,
+        "routing_workers": 1,
+        "arrival_profile": "open-loop fixed rate",
+        "target_rate_per_second": 50.0,
+        "scheduled_offer_window_ns": 10000000000,
+        "last_scheduled_arrival_ns": 9980000000,
+        "actual_offer_window_ns": 9980217642,
+        "actual_offered_per_second": 49.99890963299696,
+        "scope": "offline components only; simulated broker; no live risk/fence/SDK/network",
+        "backend": {
+          "engine": "cpp20",
+          "crc32c": "x86-sse4.2",
+          "api_version": 1,
+          "maximum_workers": 32,
+          "cxx_standard": 202002,
+          "maximum_batch_bytes": 67108864,
+          "maximum_compute_bytes": 268435456,
+          "maximum_compute_calls": 4,
+          "active_calls": 0,
+          "active_workers": 0,
+          "active_bytes": 0,
+          "worker_pool_threads": 0,
+          "mode": "native"
+        },
+        "offered": 500,
+        "completed": 500,
+        "rejected": 0,
+        "fake_broker_calls": 500,
+        "elapsed_ns": 9992753588,
+        "process_cpu_ns": 506381411,
+        "process_lifetime_peak_rss_bytes": 56508416,
+        "rss_scope": "whole process, including imports and bounded benchmark history; not steady-state OMS memory",
+        "completion_ratio": 1.0,
+        "rejection_ratio": 0.0,
+        "throughput_per_second": 50.03625833428286,
+        "completed_during_offer": 499,
+        "completed_during_offer_per_second": 49.99890963299696,
+        "drain_ns": 12434415,
+        "deadline_ms": 100.0,
+        "within_deadline": 494,
+        "within_deadline_ratio_of_offered": 0.988,
+        "latency_population": "completed only; scheduled arrival through durable callback ACK; rejected requests excluded",
+        "latency": {
+          "count": 500,
+          "p50_ns": 13149891,
+          "p95_ns": 23089211,
+          "p99_ns": 112845631,
+          "max_ns": 164362062
+        },
+        "generator_lateness": {
+          "count": 500,
+          "p50_ns": 148977,
+          "p95_ns": 496352,
+          "p99_ns": 709421,
+          "max_ns": 795516
+        },
+        "rejection_latency": {
+          "count": 0,
+          "p50_ns": 0,
+          "p95_ns": 0,
+          "p99_ns": 0,
+          "max_ns": 0
+        },
+        "queue_wait": {
+          "count": 500,
+          "p50_ns": 156571,
+          "p95_ns": 3877079,
+          "p99_ns": 54002043,
+          "max_ns": 150029134
+        },
+        "routing_and_domain_batch": {
+          "count": 16,
+          "p50_ns": 325804,
+          "p95_ns": 532247,
+          "p99_ns": 532247,
+          "max_ns": 532247
+        },
+        "journal_flush": {
+          "count": 1500,
+          "p50_ns": 4225680,
+          "p95_ns": 7885704,
+          "p99_ns": 10108498,
+          "max_ns": 102716887
+        },
+        "gateway_c0_c7": {
+          "count": 500,
+          "p50_ns": 12665998,
+          "p95_ns": 19252788,
+          "p99_ns": 23804332,
+          "max_ns": 112453566
+        },
+        "broker_delay_us": 0
+      }
+    },
+    {
+      "status": "passed",
+      "returncode": 0,
+      "elapsed_seconds": 12.942095216130838,
+      "log": "/mnt/d/\u8368\u5b89/XunTradeOMSEMS/build/capacity/wsl/trial-005-51a6a27c5f9242b6ba073e7eaba2c546/trial.log",
+      "timeout_seconds": 180,
+      "target_rate_per_second": 50.0,
+      "repeat": 3,
+      "measurement": {
+        "measured_at_utc": "2026-11-26T07:21:19.044784+00:00",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python": "3.10.18",
+        "processor": "x86_64",
+        "logical_cpus": 20,
+        "cpu_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "source": {
+          "commit": "2df524bd759b1e7e03e11856d6c31c7893ab2d90",
+          "working_tree_dirty": false,
+          "lock_sha256": "b3b05d0279dca2d935d686353083c8163596c1b5db7a5bbf191f7113eec2e107",
+          "test_manifest_sha256": "ec5bdf63857fdf64ca7ba25c2ce053a92bce085fe9500096ca310841f8e83348"
+        },
+        "native_binary_sha256": "eaec3a04ad3eb1d31333dbc4fd34a722948612a5b8a5c295f861316db06ed16a",
+        "environment_kind": "wsl",
+        "storage": {
+          "path": "/tmp/xuntrade-offline-82fda22h",
+          "free_bytes": 989591171072,
+          "mount": {
+            "filesystems": [
+              {
+                "target": "/",
+                "fstype": "ext4",
+                "source": "/dev/sdd"
+              }
+            ]
+          }
+        },
+        "batch_size": 32,
+        "capacity_per_lane": 256,
+        "routing_workers": 1,
+        "arrival_profile": "open-loop fixed rate",
+        "target_rate_per_second": 50.0,
+        "scheduled_offer_window_ns": 10000000000,
+        "last_scheduled_arrival_ns": 9980000000,
+        "actual_offer_window_ns": 9980207215,
+        "actual_offered_per_second": 49.99896187025211,
+        "scope": "offline components only; simulated broker; no live risk/fence/SDK/network",
+        "backend": {
+          "engine": "cpp20",
+          "crc32c": "x86-sse4.2",
+          "api_version": 1,
+          "maximum_workers": 32,
+          "cxx_standard": 202002,
+          "maximum_batch_bytes": 67108864,
+          "maximum_compute_bytes": 268435456,
+          "maximum_compute_calls": 4,
+          "active_calls": 0,
+          "active_workers": 0,
+          "active_bytes": 0,
+          "worker_pool_threads": 0,
+          "mode": "native"
+        },
+        "offered": 500,
+        "completed": 500,
+        "rejected": 0,
+        "fake_broker_calls": 500,
+        "elapsed_ns": 9997006146,
+        "process_cpu_ns": 509824779,
+        "process_lifetime_peak_rss_bytes": 56995840,
+        "rss_scope": "whole process, including imports and bounded benchmark history; not steady-state OMS memory",
+        "completion_ratio": 1.0,
+        "rejection_ratio": 0.0,
+        "throughput_per_second": 50.014973752923005,
+        "completed_during_offer": 499,
+        "completed_during_offer_per_second": 49.99896187025211,
+        "drain_ns": 16692556,
+        "deadline_ms": 100.0,
+        "within_deadline": 432,
+        "within_deadline_ratio_of_offered": 0.864,
+        "latency_population": "completed only; scheduled arrival through durable callback ACK; rejected requests excluded",
+        "latency": {
+          "count": 500,
+          "p50_ns": 13523851,
+          "p95_ns": 362870063,
+          "p99_ns": 445119730,
+          "max_ns": 481954808
+        },
+        "generator_lateness": {
+          "count": 500,
+          "p50_ns": 223025,
+          "p95_ns": 497519,
+          "p99_ns": 639196,
+          "max_ns": 1084891
+        },
+        "rejection_latency": {
+          "count": 0,
+          "p50_ns": 0,
+          "p95_ns": 0,
+          "p99_ns": 0,
+          "max_ns": 0
+        },
+        "queue_wait": {
+          "count": 500,
+          "p50_ns": 187894,
+          "p95_ns": 332022252,
+          "p99_ns": 421634014,
+          "max_ns": 468170307
+        },
+        "routing_and_domain_batch": {
+          "count": 16,
+          "p50_ns": 312469,
+          "p95_ns": 440062,
+          "p99_ns": 440062,
+          "max_ns": 440062
+        },
+        "journal_flush": {
+          "count": 1500,
+          "p50_ns": 4211334,
+          "p95_ns": 7931472,
+          "p99_ns": 10273345,
+          "max_ns": 430740062
+        },
+        "gateway_c0_c7": {
+          "count": 500,
+          "p50_ns": 12710190,
+          "p95_ns": 20007709,
+          "p99_ns": 27847774,
+          "max_ns": 444534163
+        },
+        "broker_delay_us": 0
+      }
+    },
+    {
+      "status": "passed",
+      "returncode": 0,
+      "elapsed_seconds": 10.223019683966413,
+      "log": "/mnt/d/\u8368\u5b89/XunTradeOMSEMS/build/capacity/wsl/trial-006-b3075e0afff24e74b41303d8f2503dfe/trial.log",
+      "timeout_seconds": 180,
+      "target_rate_per_second": 100.0,
+      "repeat": 1,
+      "measurement": {
+        "measured_at_utc": "2026-11-26T07:21:29.258937+00:00",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python": "3.10.18",
+        "processor": "x86_64",
+        "logical_cpus": 20,
+        "cpu_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "source": {
+          "commit": "2df524bd759b1e7e03e11856d6c31c7893ab2d90",
+          "working_tree_dirty": false,
+          "lock_sha256": "b3b05d0279dca2d935d686353083c8163596c1b5db7a5bbf191f7113eec2e107",
+          "test_manifest_sha256": "ec5bdf63857fdf64ca7ba25c2ce053a92bce085fe9500096ca310841f8e83348"
+        },
+        "native_binary_sha256": "eaec3a04ad3eb1d31333dbc4fd34a722948612a5b8a5c295f861316db06ed16a",
+        "environment_kind": "wsl",
+        "storage": {
+          "path": "/tmp/xuntrade-offline-otiihqcy",
+          "free_bytes": 989592825856,
+          "mount": {
+            "filesystems": [
+              {
+                "target": "/",
+                "fstype": "ext4",
+                "source": "/dev/sdd"
+              }
+            ]
+          }
+        },
+        "batch_size": 32,
+        "capacity_per_lane": 256,
+        "routing_workers": 1,
+        "arrival_profile": "open-loop fixed rate",
+        "target_rate_per_second": 100.0,
+        "scheduled_offer_window_ns": 5000000000,
+        "last_scheduled_arrival_ns": 4990000000,
+        "actual_offer_window_ns": 4990213862,
+        "actual_offered_per_second": 99.9957143720507,
+        "scope": "offline components only; simulated broker; no live risk/fence/SDK/network",
+        "backend": {
+          "engine": "cpp20",
+          "crc32c": "x86-sse4.2",
+          "api_version": 1,
+          "maximum_workers": 32,
+          "cxx_standard": 202002,
+          "maximum_batch_bytes": 67108864,
+          "maximum_compute_bytes": 268435456,
+          "maximum_compute_calls": 4,
+          "active_calls": 0,
+          "active_workers": 0,
+          "active_bytes": 0,
+          "worker_pool_threads": 0,
+          "mode": "native"
+        },
+        "offered": 500,
+        "completed": 500,
+        "rejected": 0,
+        "fake_broker_calls": 500,
+        "elapsed_ns": 7345440584,
+        "process_cpu_ns": 438244531,
+        "process_lifetime_peak_rss_bytes": 57094144,
+        "rss_scope": "whole process, including imports and bounded benchmark history; not steady-state OMS memory",
+        "completion_ratio": 1.0,
+        "rejection_ratio": 0.0,
+        "throughput_per_second": 68.06943630979889,
+        "completed_during_offer": 338,
+        "completed_during_offer_per_second": 67.73256805160949,
+        "drain_ns": 2355149988,
+        "deadline_ms": 100.0,
+        "within_deadline": 20,
+        "within_deadline_ratio_of_offered": 0.04,
+        "latency_population": "completed only; scheduled arrival through durable callback ACK; rejected requests excluded",
+        "latency": {
+          "count": 500,
+          "p50_ns": 1175165862,
+          "p95_ns": 2246083346,
+          "p99_ns": 2424504711,
+          "max_ns": 2465022054
+        },
+        "generator_lateness": {
+          "count": 500,
+          "p50_ns": 235895,
+          "p95_ns": 569883,
+          "p99_ns": 717049,
+          "max_ns": 1049511
+        },
+        "rejection_latency": {
+          "count": 0,
+          "p50_ns": 0,
+          "p95_ns": 0,
+          "p99_ns": 0,
+          "max_ns": 0
+        },
+        "queue_wait": {
+          "count": 500,
+          "p50_ns": 1161226985,
+          "p95_ns": 2230447225,
+          "p99_ns": 2411154228,
+          "max_ns": 2451854081
+        },
+        "routing_and_domain_batch": {
+          "count": 16,
+          "p50_ns": 317935,
+          "p95_ns": 1294473,
+          "p99_ns": 1294473,
+          "max_ns": 1294473
+        },
+        "journal_flush": {
+          "count": 1500,
+          "p50_ns": 4289738,
+          "p95_ns": 7989439,
+          "p99_ns": 10052601,
+          "max_ns": 16609457
+        },
+        "gateway_c0_c7": {
+          "count": 500,
+          "p50_ns": 13460963,
+          "p95_ns": 20731324,
+          "p99_ns": 25261168,
+          "max_ns": 29295542
+        },
+        "broker_delay_us": 0
+      }
+    },
+    {
+      "status": "passed",
+      "returncode": 0,
+      "elapsed_seconds": 10.575286112027243,
+      "log": "/mnt/d/\u8368\u5b89/XunTradeOMSEMS/build/capacity/wsl/trial-007-40b8b67601804083b70f5ebe913f59df/trial.log",
+      "timeout_seconds": 180,
+      "target_rate_per_second": 100.0,
+      "repeat": 2,
+      "measurement": {
+        "measured_at_utc": "2026-11-26T07:21:39.858163+00:00",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python": "3.10.18",
+        "processor": "x86_64",
+        "logical_cpus": 20,
+        "cpu_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "source": {
+          "commit": "2df524bd759b1e7e03e11856d6c31c7893ab2d90",
+          "working_tree_dirty": false,
+          "lock_sha256": "b3b05d0279dca2d935d686353083c8163596c1b5db7a5bbf191f7113eec2e107",
+          "test_manifest_sha256": "ec5bdf63857fdf64ca7ba25c2ce053a92bce085fe9500096ca310841f8e83348"
+        },
+        "native_binary_sha256": "eaec3a04ad3eb1d31333dbc4fd34a722948612a5b8a5c295f861316db06ed16a",
+        "environment_kind": "wsl",
+        "storage": {
+          "path": "/tmp/xuntrade-offline-3tshzcsd",
+          "free_bytes": 989593948160,
+          "mount": {
+            "filesystems": [
+              {
+                "target": "/",
+                "fstype": "ext4",
+                "source": "/dev/sdd"
+              }
+            ]
+          }
+        },
+        "batch_size": 32,
+        "capacity_per_lane": 256,
+        "routing_workers": 1,
+        "arrival_profile": "open-loop fixed rate",
+        "target_rate_per_second": 100.0,
+        "scheduled_offer_window_ns": 5000000000,
+        "last_scheduled_arrival_ns": 4990000000,
+        "actual_offer_window_ns": 4990302529,
+        "actual_offered_per_second": 99.99393766213086,
+        "scope": "offline components only; simulated broker; no live risk/fence/SDK/network",
+        "backend": {
+          "engine": "cpp20",
+          "crc32c": "x86-sse4.2",
+          "api_version": 1,
+          "maximum_workers": 32,
+          "cxx_standard": 202002,
+          "maximum_batch_bytes": 67108864,
+          "maximum_compute_bytes": 268435456,
+          "maximum_compute_calls": 4,
+          "active_calls": 0,
+          "active_workers": 0,
+          "active_bytes": 0,
+          "worker_pool_threads": 0,
+          "mode": "native"
+        },
+        "offered": 500,
+        "completed": 500,
+        "rejected": 0,
+        "fake_broker_calls": 500,
+        "elapsed_ns": 7450109570,
+        "process_cpu_ns": 448441818,
+        "process_lifetime_peak_rss_bytes": 56983552,
+        "rss_scope": "whole process, including imports and bounded benchmark history; not steady-state OMS memory",
+        "completion_ratio": 1.0,
+        "rejection_ratio": 0.0,
+        "throughput_per_second": 67.1131069015942,
+        "completed_during_offer": 332,
+        "completed_during_offer_per_second": 66.5290326730009,
+        "drain_ns": 2459715415,
+        "deadline_ms": 100.0,
+        "within_deadline": 18,
+        "within_deadline_ratio_of_offered": 0.036,
+        "latency_population": "completed only; scheduled arrival through durable callback ACK; rejected requests excluded",
+        "latency": {
+          "count": 500,
+          "p50_ns": 1279458043,
+          "p95_ns": 2355459108,
+          "p99_ns": 2511424458,
+          "max_ns": 2579670136
+        },
+        "generator_lateness": {
+          "count": 500,
+          "p50_ns": 218237,
+          "p95_ns": 559362,
+          "p99_ns": 698878,
+          "max_ns": 769988
+        },
+        "rejection_latency": {
+          "count": 0,
+          "p50_ns": 0,
+          "p95_ns": 0,
+          "p99_ns": 0,
+          "max_ns": 0
+        },
+        "queue_wait": {
+          "count": 500,
+          "p50_ns": 1262893409,
+          "p95_ns": 2342199473,
+          "p99_ns": 2497958985,
+          "max_ns": 2565760152
+        },
+        "routing_and_domain_batch": {
+          "count": 16,
+          "p50_ns": 306652,
+          "p95_ns": 1079835,
+          "p99_ns": 1079835,
+          "max_ns": 1079835
+        },
+        "journal_flush": {
+          "count": 1500,
+          "p50_ns": 4315494,
+          "p95_ns": 7981411,
+          "p99_ns": 10088582,
+          "max_ns": 13921832
+        },
+        "gateway_c0_c7": {
+          "count": 500,
+          "p50_ns": 13614313,
+          "p95_ns": 20310236,
+          "p99_ns": 24670941,
+          "max_ns": 27404576
+        },
+        "broker_delay_us": 0
+      }
+    },
+    {
+      "status": "passed",
+      "returncode": 0,
+      "elapsed_seconds": 10.78029190003872,
+      "log": "/mnt/d/\u8368\u5b89/XunTradeOMSEMS/build/capacity/wsl/trial-008-5abdd8cf285c42998f55863adb15b719/trial.log",
+      "timeout_seconds": 180,
+      "target_rate_per_second": 100.0,
+      "repeat": 3,
+      "measurement": {
+        "measured_at_utc": "2026-11-26T07:21:48.676058+00:00",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python": "3.10.18",
+        "processor": "x86_64",
+        "logical_cpus": 20,
+        "cpu_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "source": {
+          "commit": "2df524bd759b1e7e03e11856d6c31c7893ab2d90",
+          "working_tree_dirty": false,
+          "lock_sha256": "b3b05d0279dca2d935d686353083c8163596c1b5db7a5bbf191f7113eec2e107",
+          "test_manifest_sha256": "ec5bdf63857fdf64ca7ba25c2ce053a92bce085fe9500096ca310841f8e83348"
+        },
+        "native_binary_sha256": "eaec3a04ad3eb1d31333dbc4fd34a722948612a5b8a5c295f861316db06ed16a",
+        "environment_kind": "wsl",
+        "storage": {
+          "path": "/tmp/xuntrade-offline-c7cz6j6y",
+          "free_bytes": 989599051776,
+          "mount": {
+            "filesystems": [
+              {
+                "target": "/",
+                "fstype": "ext4",
+                "source": "/dev/sdd"
+              }
+            ]
+          }
+        },
+        "batch_size": 32,
+        "capacity_per_lane": 256,
+        "routing_workers": 1,
+        "arrival_profile": "open-loop fixed rate",
+        "target_rate_per_second": 100.0,
+        "scheduled_offer_window_ns": 5000000000,
+        "last_scheduled_arrival_ns": 4990000000,
+        "actual_offer_window_ns": 4990342642,
+        "actual_offered_per_second": 99.9931338983196,
+        "scope": "offline components only; simulated broker; no live risk/fence/SDK/network",
+        "backend": {
+          "engine": "cpp20",
+          "crc32c": "x86-sse4.2",
+          "api_version": 1,
+          "maximum_workers": 32,
+          "cxx_standard": 202002,
+          "maximum_batch_bytes": 67108864,
+          "maximum_compute_bytes": 268435456,
+          "maximum_compute_calls": 4,
+          "active_calls": 0,
+          "active_workers": 0,
+          "active_bytes": 0,
+          "worker_pool_threads": 0,
+          "mode": "native"
+        },
+        "offered": 500,
+        "completed": 500,
+        "rejected": 0,
+        "fake_broker_calls": 500,
+        "elapsed_ns": 7756959823,
+        "process_cpu_ns": 461866395,
+        "process_lifetime_peak_rss_bytes": 57278464,
+        "rss_scope": "whole process, including imports and bounded benchmark history; not steady-state OMS memory",
+        "completion_ratio": 1.0,
+        "rejection_ratio": 0.0,
+        "throughput_per_second": 64.45824284373117,
+        "completed_during_offer": 329,
+        "completed_during_offer_per_second": 65.92733677865161,
+        "drain_ns": 2766514093,
+        "deadline_ms": 100.0,
+        "within_deadline": 19,
+        "within_deadline_ratio_of_offered": 0.038,
+        "latency_population": "completed only; scheduled arrival through durable callback ACK; rejected requests excluded",
+        "latency": {
+          "count": 500,
+          "p50_ns": 1259142356,
+          "p95_ns": 2601230684,
+          "p99_ns": 2800880375,
+          "max_ns": 2863548489
+        },
+        "generator_lateness": {
+          "count": 500,
+          "p50_ns": 197038,
+          "p95_ns": 511884,
+          "p99_ns": 634789,
+          "max_ns": 1002258
+        },
+        "rejection_latency": {
+          "count": 0,
+          "p50_ns": 0,
+          "p95_ns": 0,
+          "p99_ns": 0,
+          "max_ns": 0
+        },
+        "queue_wait": {
+          "count": 500,
+          "p50_ns": 1240636645,
+          "p95_ns": 2585705421,
+          "p99_ns": 2787023175,
+          "max_ns": 2844077397
+        },
+        "routing_and_domain_batch": {
+          "count": 16,
+          "p50_ns": 304733,
+          "p95_ns": 1050933,
+          "p99_ns": 1050933,
+          "max_ns": 1050933
+        },
+        "journal_flush": {
+          "count": 1500,
+          "p50_ns": 4344755,
+          "p95_ns": 7996875,
+          "p99_ns": 10559848,
+          "max_ns": 157749257
+        },
+        "gateway_c0_c7": {
+          "count": 500,
+          "p50_ns": 13802112,
+          "p95_ns": 21019696,
+          "p99_ns": 28651394,
+          "max_ns": 177210789
+        },
+        "broker_delay_us": 0
+      }
+    },
+    {
+      "status": "passed",
+      "returncode": 0,
+      "elapsed_seconds": 19.168973257998005,
+      "log": "/mnt/d/\u8368\u5b89/XunTradeOMSEMS/build/capacity/wsl/trial-009-553532037555440890f72b16b8766727/trial.log",
+      "timeout_seconds": 180,
+      "target_rate_per_second": 200.0,
+      "repeat": 1,
+      "measurement": {
+        "measured_at_utc": "2026-11-26T07:22:07.847568+00:00",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python": "3.10.18",
+        "processor": "x86_64",
+        "logical_cpus": 20,
+        "cpu_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "source": {
+          "commit": "2df524bd759b1e7e03e11856d6c31c7893ab2d90",
+          "working_tree_dirty": false,
+          "lock_sha256": "b3b05d0279dca2d935d686353083c8163596c1b5db7a5bbf191f7113eec2e107",
+          "test_manifest_sha256": "ec5bdf63857fdf64ca7ba25c2ce053a92bce085fe9500096ca310841f8e83348"
+        },
+        "native_binary_sha256": "eaec3a04ad3eb1d31333dbc4fd34a722948612a5b8a5c295f861316db06ed16a",
+        "environment_kind": "wsl",
+        "storage": {
+          "path": "/tmp/xuntrade-offline-tzjz74th",
+          "free_bytes": 989599830016,
+          "mount": {
+            "filesystems": [
+              {
+                "target": "/",
+                "fstype": "ext4",
+                "source": "/dev/sdd"
+              }
+            ]
+          }
+        },
+        "batch_size": 32,
+        "capacity_per_lane": 256,
+        "routing_workers": 1,
+        "arrival_profile": "open-loop fixed rate",
+        "target_rate_per_second": 200.0,
+        "scheduled_offer_window_ns": 2500000000,
+        "last_scheduled_arrival_ns": 2495000000,
+        "actual_offer_window_ns": 2495257044,
+        "actual_offered_per_second": 199.97939739309678,
+        "scope": "offline components only; simulated broker; no live risk/fence/SDK/network",
+        "backend": {
+          "engine": "cpp20",
+          "crc32c": "x86-sse4.2",
+          "api_version": 1,
+          "maximum_workers": 32,
+          "cxx_standard": 202002,
+          "maximum_batch_bytes": 67108864,
+          "maximum_compute_bytes": 268435456,
+          "maximum_compute_calls": 4,
+          "active_calls": 0,
+          "active_workers": 0,
+          "active_bytes": 0,
+          "worker_pool_threads": 0,
+          "mode": "native"
+        },
+        "offered": 500,
+        "completed": 500,
+        "rejected": 0,
+        "fake_broker_calls": 500,
+        "elapsed_ns": 16002356401,
+        "process_cpu_ns": 519831535,
+        "process_lifetime_peak_rss_bytes": 56893440,
+        "rss_scope": "whole process, including imports and bounded benchmark history; not steady-state OMS memory",
+        "completion_ratio": 1.0,
+        "rejection_ratio": 0.0,
+        "throughput_per_second": 31.245398332007817,
+        "completed_during_offer": 60,
+        "completed_during_offer_per_second": 24.045618925021657,
+        "drain_ns": 13506996371,
+        "deadline_ms": 100.0,
+        "within_deadline": 6,
+        "within_deadline_ratio_of_offered": 0.012,
+        "latency_population": "completed only; scheduled arrival through durable callback ACK; rejected requests excluded",
+        "latency": {
+          "count": 500,
+          "p50_ns": 7999137794,
+          "p95_ns": 12967529534,
+          "p99_ns": 13449846723,
+          "max_ns": 13517253415
+        },
+        "generator_lateness": {
+          "count": 500,
+          "p50_ns": 180580,
+          "p95_ns": 436133,
+          "p99_ns": 481941,
+          "max_ns": 1096925
+        },
+        "rejection_latency": {
+          "count": 0,
+          "p50_ns": 0,
+          "p95_ns": 0,
+          "p99_ns": 0,
+          "max_ns": 0
+        },
+        "queue_wait": {
+          "count": 500,
+          "p50_ns": 7975974458,
+          "p95_ns": 12943725425,
+          "p99_ns": 13426859867,
+          "max_ns": 13493820317
+        },
+        "routing_and_domain_batch": {
+          "count": 16,
+          "p50_ns": 344364,
+          "p95_ns": 1123126,
+          "p99_ns": 1123126,
+          "max_ns": 1123126
+        },
+        "journal_flush": {
+          "count": 1500,
+          "p50_ns": 7531403,
+          "p95_ns": 18154460,
+          "p99_ns": 89248259,
+          "max_ns": 139644394
+        },
+        "gateway_c0_c7": {
+          "count": 500,
+          "p50_ns": 23571836,
+          "p95_ns": 91600144,
+          "p99_ns": 135947233,
+          "max_ns": 268203995
+        },
+        "broker_delay_us": 0
+      }
+    },
+    {
+      "status": "passed",
+      "returncode": 0,
+      "elapsed_seconds": 17.214156148955226,
+      "log": "/mnt/d/\u8368\u5b89/XunTradeOMSEMS/build/capacity/wsl/trial-010-d1c4e3aba163422d876efbadfd66b328/trial.log",
+      "timeout_seconds": 180,
+      "target_rate_per_second": 200.0,
+      "repeat": 2,
+      "measurement": {
+        "measured_at_utc": "2026-11-26T07:22:23.166948+00:00",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python": "3.10.18",
+        "processor": "x86_64",
+        "logical_cpus": 20,
+        "cpu_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "source": {
+          "commit": "2df524bd759b1e7e03e11856d6c31c7893ab2d90",
+          "working_tree_dirty": false,
+          "lock_sha256": "b3b05d0279dca2d935d686353083c8163596c1b5db7a5bbf191f7113eec2e107",
+          "test_manifest_sha256": "ec5bdf63857fdf64ca7ba25c2ce053a92bce085fe9500096ca310841f8e83348"
+        },
+        "native_binary_sha256": "eaec3a04ad3eb1d31333dbc4fd34a722948612a5b8a5c295f861316db06ed16a",
+        "environment_kind": "wsl",
+        "storage": {
+          "path": "/tmp/xuntrade-offline-2mus9p2d",
+          "free_bytes": 989602377728,
+          "mount": {
+            "filesystems": [
+              {
+                "target": "/",
+                "fstype": "ext4",
+                "source": "/dev/sdd"
+              }
+            ]
+          }
+        },
+        "batch_size": 32,
+        "capacity_per_lane": 256,
+        "routing_workers": 1,
+        "arrival_profile": "open-loop fixed rate",
+        "target_rate_per_second": 200.0,
+        "scheduled_offer_window_ns": 2500000000,
+        "last_scheduled_arrival_ns": 2495000000,
+        "actual_offer_window_ns": 2495536589,
+        "actual_offered_per_second": 199.9569961023721,
+        "scope": "offline components only; simulated broker; no live risk/fence/SDK/network",
+        "backend": {
+          "engine": "cpp20",
+          "crc32c": "x86-sse4.2",
+          "api_version": 1,
+          "maximum_workers": 32,
+          "cxx_standard": 202002,
+          "maximum_batch_bytes": 67108864,
+          "maximum_compute_bytes": 268435456,
+          "maximum_compute_calls": 4,
+          "active_calls": 0,
+          "active_workers": 0,
+          "active_bytes": 0,
+          "worker_pool_threads": 0,
+          "mode": "native"
+        },
+        "offered": 500,
+        "completed": 500,
+        "rejected": 0,
+        "fake_broker_calls": 500,
+        "elapsed_ns": 14306455275,
+        "process_cpu_ns": 508292470,
+        "process_lifetime_peak_rss_bytes": 56946688,
+        "rss_scope": "whole process, including imports and bounded benchmark history; not steady-state OMS memory",
+        "completion_ratio": 1.0,
+        "rejection_ratio": 0.0,
+        "throughput_per_second": 34.94925824664139,
+        "completed_during_offer": 92,
+        "completed_during_offer_per_second": 36.865818920677825,
+        "drain_ns": 11810820398,
+        "deadline_ms": 100.0,
+        "within_deadline": 4,
+        "within_deadline_ratio_of_offered": 0.008,
+        "latency_population": "completed only; scheduled arrival through durable callback ACK; rejected requests excluded",
+        "latency": {
+          "count": 500,
+          "p50_ns": 5964990411,
+          "p95_ns": 11220935655,
+          "p99_ns": 11728654894,
+          "max_ns": 11821356987
+        },
+        "generator_lateness": {
+          "count": 500,
+          "p50_ns": 200578,
+          "p95_ns": 428277,
+          "p99_ns": 562521,
+          "max_ns": 3249959
+        },
+        "rejection_latency": {
+          "count": 0,
+          "p50_ns": 0,
+          "p95_ns": 0,
+          "p99_ns": 0,
+          "max_ns": 0
+        },
+        "queue_wait": {
+          "count": 500,
+          "p50_ns": 5941155253,
+          "p95_ns": 11194549030,
+          "p99_ns": 11691405221,
+          "max_ns": 11773380766
+        },
+        "routing_and_domain_batch": {
+          "count": 16,
+          "p50_ns": 312264,
+          "p95_ns": 635229,
+          "p99_ns": 635229,
+          "max_ns": 635229
+        },
+        "journal_flush": {
+          "count": 1500,
+          "p50_ns": 7592585,
+          "p95_ns": 17818940,
+          "p99_ns": 21542714,
+          "max_ns": 104225101
+        },
+        "gateway_c0_c7": {
+          "count": 500,
+          "p50_ns": 23717572,
+          "p95_ns": 47313865,
+          "p99_ns": 52705443,
+          "max_ns": 156282410
+        },
+        "broker_delay_us": 0
+      }
+    },
+    {
+      "status": "passed",
+      "returncode": 0,
+      "elapsed_seconds": 17.423764063045382,
+      "log": "/mnt/d/\u8368\u5b89/XunTradeOMSEMS/build/capacity/wsl/trial-011-a359055dafca4baab9db509967cfa990/trial.log",
+      "timeout_seconds": 180,
+      "target_rate_per_second": 200.0,
+      "repeat": 3,
+      "measurement": {
+        "measured_at_utc": "2026-11-26T07:22:38.640763+00:00",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python": "3.10.18",
+        "processor": "x86_64",
+        "logical_cpus": 20,
+        "cpu_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "source": {
+          "commit": "2df524bd759b1e7e03e11856d6c31c7893ab2d90",
+          "working_tree_dirty": false,
+          "lock_sha256": "b3b05d0279dca2d935d686353083c8163596c1b5db7a5bbf191f7113eec2e107",
+          "test_manifest_sha256": "ec5bdf63857fdf64ca7ba25c2ce053a92bce085fe9500096ca310841f8e83348"
+        },
+        "native_binary_sha256": "eaec3a04ad3eb1d31333dbc4fd34a722948612a5b8a5c295f861316db06ed16a",
+        "environment_kind": "wsl",
+        "storage": {
+          "path": "/tmp/xuntrade-offline-ovaooa35",
+          "free_bytes": 989604253696,
+          "mount": {
+            "filesystems": [
+              {
+                "target": "/",
+                "fstype": "ext4",
+                "source": "/dev/sdd"
+              }
+            ]
+          }
+        },
+        "batch_size": 32,
+        "capacity_per_lane": 256,
+        "routing_workers": 1,
+        "arrival_profile": "open-loop fixed rate",
+        "target_rate_per_second": 200.0,
+        "scheduled_offer_window_ns": 2500000000,
+        "last_scheduled_arrival_ns": 2495000000,
+        "actual_offer_window_ns": 2495268826,
+        "actual_offered_per_second": 199.9784531432286,
+        "scope": "offline components only; simulated broker; no live risk/fence/SDK/network",
+        "backend": {
+          "engine": "cpp20",
+          "crc32c": "x86-sse4.2",
+          "api_version": 1,
+          "maximum_workers": 32,
+          "cxx_standard": 202002,
+          "maximum_batch_bytes": 67108864,
+          "maximum_compute_bytes": 268435456,
+          "maximum_compute_calls": 4,
+          "active_calls": 0,
+          "active_workers": 0,
+          "active_bytes": 0,
+          "worker_pool_threads": 0,
+          "mode": "native"
+        },
+        "offered": 500,
+        "completed": 500,
+        "rejected": 0,
+        "fake_broker_calls": 500,
+        "elapsed_ns": 14325903415,
+        "process_cpu_ns": 502426607,
+        "process_lifetime_peak_rss_bytes": 56614912,
+        "rss_scope": "whole process, including imports and bounded benchmark history; not steady-state OMS memory",
+        "completion_ratio": 1.0,
+        "rejection_ratio": 0.0,
+        "throughput_per_second": 34.90181285715446,
+        "completed_during_offer": 77,
+        "completed_during_offer_per_second": 30.858398581219642,
+        "drain_ns": 11830528114,
+        "deadline_ms": 100.0,
+        "within_deadline": 4,
+        "within_deadline_ratio_of_offered": 0.008,
+        "latency_population": "completed only; scheduled arrival through durable callback ACK; rejected requests excluded",
+        "latency": {
+          "count": 500,
+          "p50_ns": 5958326049,
+          "p95_ns": 11269749010,
+          "p99_ns": 11777268023,
+          "max_ns": 11840796940
+        },
+        "generator_lateness": {
+          "count": 500,
+          "p50_ns": 215029,
+          "p95_ns": 471654,
+          "p99_ns": 491116,
+          "max_ns": 558739
+        },
+        "rejection_latency": {
+          "count": 0,
+          "p50_ns": 0,
+          "p95_ns": 0,
+          "p99_ns": 0,
+          "max_ns": 0
+        },
+        "queue_wait": {
+          "count": 500,
+          "p50_ns": 5931680394,
+          "p95_ns": 11246212392,
+          "p99_ns": 11752168688,
+          "max_ns": 11807308385
+        },
+        "routing_and_domain_batch": {
+          "count": 16,
+          "p50_ns": 323155,
+          "p95_ns": 517714,
+          "p99_ns": 517714,
+          "max_ns": 517714
+        },
+        "journal_flush": {
+          "count": 1500,
+          "p50_ns": 7576099,
+          "p95_ns": 17795244,
+          "p99_ns": 21619309,
+          "max_ns": 153031959
+        },
+        "gateway_c0_c7": {
+          "count": 500,
+          "p50_ns": 23751863,
+          "p95_ns": 44375549,
+          "p99_ns": 61265857,
+          "max_ns": 168509308
+        },
+        "broker_delay_us": 0
+      }
+    },
+    {
+      "status": "passed",
+      "returncode": 0,
+      "elapsed_seconds": 16.854160939808935,
+      "log": "/mnt/d/\u8368\u5b89/XunTradeOMSEMS/build/capacity/wsl/trial-012-9a804813479c4aa8b26e5cd4396dd9db/trial.log",
+      "timeout_seconds": 180,
+      "target_rate_per_second": 0.0,
+      "repeat": 1,
+      "measurement": {
+        "measured_at_utc": "2026-11-26T07:22:55.552676+00:00",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python": "3.10.18",
+        "processor": "x86_64",
+        "logical_cpus": 20,
+        "cpu_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "source": {
+          "commit": "2df524bd759b1e7e03e11856d6c31c7893ab2d90",
+          "working_tree_dirty": false,
+          "lock_sha256": "b3b05d0279dca2d935d686353083c8163596c1b5db7a5bbf191f7113eec2e107",
+          "test_manifest_sha256": "ec5bdf63857fdf64ca7ba25c2ce053a92bce085fe9500096ca310841f8e83348"
+        },
+        "native_binary_sha256": "eaec3a04ad3eb1d31333dbc4fd34a722948612a5b8a5c295f861316db06ed16a",
+        "environment_kind": "wsl",
+        "storage": {
+          "path": "/tmp/xuntrade-offline-7yaq9erj",
+          "free_bytes": 989604110336,
+          "mount": {
+            "filesystems": [
+              {
+                "target": "/",
+                "fstype": "ext4",
+                "source": "/dev/sdd"
+              }
+            ]
+          }
+        },
+        "batch_size": 32,
+        "capacity_per_lane": 256,
+        "routing_workers": 1,
+        "arrival_profile": "unpaced bounded burst",
+        "target_rate_per_second": 0.0,
+        "scheduled_offer_window_ns": null,
+        "last_scheduled_arrival_ns": null,
+        "actual_offer_window_ns": 7934185,
+        "actual_offered_per_second": 62892.407978891344,
+        "scope": "offline components only; simulated broker; no live risk/fence/SDK/network",
+        "backend": {
+          "engine": "cpp20",
+          "crc32c": "x86-sse4.2",
+          "api_version": 1,
+          "maximum_workers": 32,
+          "cxx_standard": 202002,
+          "maximum_batch_bytes": 67108864,
+          "maximum_compute_bytes": 268435456,
+          "maximum_compute_calls": 4,
+          "active_calls": 0,
+          "active_workers": 0,
+          "active_bytes": 0,
+          "worker_pool_threads": 0,
+          "mode": "native"
+        },
+        "offered": 500,
+        "completed": 500,
+        "rejected": 0,
+        "fake_broker_calls": 500,
+        "elapsed_ns": 14063771511,
+        "process_cpu_ns": 468964249,
+        "process_lifetime_peak_rss_bytes": 57446400,
+        "rss_scope": "whole process, including imports and bounded benchmark history; not steady-state OMS memory",
+        "completion_ratio": 1.0,
+        "rejection_ratio": 0.0,
+        "throughput_per_second": 35.552340964080955,
+        "completed_during_offer": 0,
+        "completed_during_offer_per_second": 0.0,
+        "drain_ns": 14055704470,
+        "deadline_ms": 100.0,
+        "within_deadline": 4,
+        "within_deadline_ratio_of_offered": 0.008,
+        "latency_population": "completed only; scheduled arrival through durable callback ACK; rejected requests excluded",
+        "latency": {
+          "count": 500,
+          "p50_ns": 7136844812,
+          "p95_ns": 13400293151,
+          "p99_ns": 13924765072,
+          "max_ns": 14055998833
+        },
+        "generator_lateness": {
+          "count": 500,
+          "p50_ns": 324251,
+          "p95_ns": 513918,
+          "p99_ns": 1227719,
+          "max_ns": 1255702
+        },
+        "rejection_latency": {
+          "count": 0,
+          "p50_ns": 0,
+          "p95_ns": 0,
+          "p99_ns": 0,
+          "max_ns": 0
+        },
+        "queue_wait": {
+          "count": 500,
+          "p50_ns": 7110816719,
+          "p95_ns": 13377500792,
+          "p99_ns": 13900318945,
+          "max_ns": 14033275752
+        },
+        "routing_and_domain_batch": {
+          "count": 16,
+          "p50_ns": 217597,
+          "p95_ns": 319804,
+          "p99_ns": 319804,
+          "max_ns": 319804
+        },
+        "journal_flush": {
+          "count": 1500,
+          "p50_ns": 7538851,
+          "p95_ns": 17693856,
+          "p99_ns": 21422654,
+          "max_ns": 88990253
+        },
+        "gateway_c0_c7": {
+          "count": 500,
+          "p50_ns": 23563808,
+          "p95_ns": 44049579,
+          "p99_ns": 57613516,
+          "max_ns": 108166994
+        },
+        "broker_delay_us": 0
+      }
+    },
+    {
+      "status": "passed",
+      "returncode": 0,
+      "elapsed_seconds": 17.51438579009846,
+      "log": "/mnt/d/\u8368\u5b89/XunTradeOMSEMS/build/capacity/wsl/trial-013-83d2237c0bd54eae8950e054ff7bb9db/trial.log",
+      "timeout_seconds": 180,
+      "target_rate_per_second": 0.0,
+      "repeat": 2,
+      "measurement": {
+        "measured_at_utc": "2026-11-26T07:23:11.078669+00:00",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python": "3.10.18",
+        "processor": "x86_64",
+        "logical_cpus": 20,
+        "cpu_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "source": {
+          "commit": "2df524bd759b1e7e03e11856d6c31c7893ab2d90",
+          "working_tree_dirty": false,
+          "lock_sha256": "b3b05d0279dca2d935d686353083c8163596c1b5db7a5bbf191f7113eec2e107",
+          "test_manifest_sha256": "ec5bdf63857fdf64ca7ba25c2ce053a92bce085fe9500096ca310841f8e83348"
+        },
+        "native_binary_sha256": "eaec3a04ad3eb1d31333dbc4fd34a722948612a5b8a5c295f861316db06ed16a",
+        "environment_kind": "wsl",
+        "storage": {
+          "path": "/tmp/xuntrade-offline-034v505a",
+          "free_bytes": 989605470208,
+          "mount": {
+            "filesystems": [
+              {
+                "target": "/",
+                "fstype": "ext4",
+                "source": "/dev/sdd"
+              }
+            ]
+          }
+        },
+        "batch_size": 32,
+        "capacity_per_lane": 256,
+        "routing_workers": 1,
+        "arrival_profile": "unpaced bounded burst",
+        "target_rate_per_second": 0.0,
+        "scheduled_offer_window_ns": null,
+        "last_scheduled_arrival_ns": null,
+        "actual_offer_window_ns": 8203565,
+        "actual_offered_per_second": 60827.21353460355,
+        "scope": "offline components only; simulated broker; no live risk/fence/SDK/network",
+        "backend": {
+          "engine": "cpp20",
+          "crc32c": "x86-sse4.2",
+          "api_version": 1,
+          "maximum_workers": 32,
+          "cxx_standard": 202002,
+          "maximum_batch_bytes": 67108864,
+          "maximum_compute_bytes": 268435456,
+          "maximum_compute_calls": 4,
+          "active_calls": 0,
+          "active_workers": 0,
+          "active_bytes": 0,
+          "worker_pool_threads": 0,
+          "mode": "native"
+        },
+        "offered": 500,
+        "completed": 500,
+        "rejected": 0,
+        "fake_broker_calls": 500,
+        "elapsed_ns": 14645566133,
+        "process_cpu_ns": 467141140,
+        "process_lifetime_peak_rss_bytes": 56762368,
+        "rss_scope": "whole process, including imports and bounded benchmark history; not steady-state OMS memory",
+        "completion_ratio": 1.0,
+        "rejection_ratio": 0.0,
+        "throughput_per_second": 34.140025415158185,
+        "completed_during_offer": 0,
+        "completed_during_offer_per_second": 0.0,
+        "drain_ns": 14637289463,
+        "deadline_ms": 100.0,
+        "within_deadline": 3,
+        "within_deadline_ratio_of_offered": 0.006,
+        "latency_population": "completed only; scheduled arrival through durable callback ACK; rejected requests excluded",
+        "latency": {
+          "count": 500,
+          "p50_ns": 7311632180,
+          "p95_ns": 13634275272,
+          "p99_ns": 14614270088,
+          "max_ns": 14637538161
+        },
+        "generator_lateness": {
+          "count": 500,
+          "p50_ns": 346637,
+          "p95_ns": 613834,
+          "p99_ns": 1103947,
+          "max_ns": 1134357
+        },
+        "rejection_latency": {
+          "count": 0,
+          "p50_ns": 0,
+          "p95_ns": 0,
+          "p99_ns": 0,
+          "max_ns": 0
+        },
+        "queue_wait": {
+          "count": 500,
+          "p50_ns": 7287915065,
+          "p95_ns": 13610396347,
+          "p99_ns": 14607329061,
+          "max_ns": 14633462729
+        },
+        "routing_and_domain_batch": {
+          "count": 16,
+          "p50_ns": 216746,
+          "p95_ns": 369476,
+          "p99_ns": 369476,
+          "max_ns": 369476
+        },
+        "journal_flush": {
+          "count": 1500,
+          "p50_ns": 7591776,
+          "p95_ns": 17885411,
+          "p99_ns": 21854216,
+          "max_ns": 468384228
+        },
+        "gateway_c0_c7": {
+          "count": 500,
+          "p50_ns": 23786492,
+          "p95_ns": 47156636,
+          "p99_ns": 56498054,
+          "max_ns": 482042768
+        },
+        "broker_delay_us": 0
+      }
+    },
+    {
+      "status": "passed",
+      "returncode": 0,
+      "elapsed_seconds": 5.497665955219418,
+      "log": "/mnt/d/\u8368\u5b89/XunTradeOMSEMS/build/capacity/wsl/trial-014-07e7197b691348408fd5f0914bcba14b/trial.log",
+      "timeout_seconds": 180,
+      "target_rate_per_second": 0.0,
+      "repeat": 3,
+      "measurement": {
+        "measured_at_utc": "2026-11-26T07:23:16.576062+00:00",
+        "platform": "Linux-6.6.87.2-microsoft-standard-WSL2-x86_64-with-glibc2.39",
+        "python": "3.10.18",
+        "processor": "x86_64",
+        "logical_cpus": 20,
+        "cpu_affinity": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ],
+        "source": {
+          "commit": "2df524bd759b1e7e03e11856d6c31c7893ab2d90",
+          "working_tree_dirty": false,
+          "lock_sha256": "b3b05d0279dca2d935d686353083c8163596c1b5db7a5bbf191f7113eec2e107",
+          "test_manifest_sha256": "ec5bdf63857fdf64ca7ba25c2ce053a92bce085fe9500096ca310841f8e83348"
+        },
+        "native_binary_sha256": "eaec3a04ad3eb1d31333dbc4fd34a722948612a5b8a5c295f861316db06ed16a",
+        "environment_kind": "wsl",
+        "storage": {
+          "path": "/tmp/xuntrade-offline-tw5alwr8",
+          "free_bytes": 989603848192,
+          "mount": {
+            "filesystems": [
+              {
+                "target": "/",
+                "fstype": "ext4",
+                "source": "/dev/sdd"
+              }
+            ]
+          }
+        },
+        "batch_size": 32,
+        "capacity_per_lane": 256,
+        "routing_workers": 1,
+        "arrival_profile": "unpaced bounded burst",
+        "target_rate_per_second": 0.0,
+        "scheduled_offer_window_ns": null,
+        "last_scheduled_arrival_ns": null,
+        "actual_offer_window_ns": 7875408,
+        "actual_offered_per_second": 63361.79662056874,
+        "scope": "offline components only; simulated broker; no live risk/fence/SDK/network",
+        "backend": {
+          "engine": "cpp20",
+          "crc32c": "x86-sse4.2",
+          "api_version": 1,
+          "maximum_workers": 32,
+          "cxx_standard": 202002,
+          "maximum_batch_bytes": 67108864,
+          "maximum_compute_bytes": 268435456,
+          "maximum_compute_calls": 4,
+          "active_calls": 0,
+          "active_workers": 0,
+          "active_bytes": 0,
+          "worker_pool_threads": 0,
+          "mode": "native"
+        },
+        "offered": 500,
+        "completed": 500,
+        "rejected": 0,
+        "fake_broker_calls": 500,
+        "elapsed_ns": 2453180061,
+        "process_cpu_ns": 257890383,
+        "process_lifetime_peak_rss_bytes": 56844288,
+        "rss_scope": "whole process, including imports and bounded benchmark history; not steady-state OMS memory",
+        "completion_ratio": 1.0,
+        "rejection_ratio": 0.0,
+        "throughput_per_second": 203.81708132593533,
+        "completed_during_offer": 0,
+        "completed_during_offer_per_second": 0.0,
+        "drain_ns": 2445229755,
+        "deadline_ms": 100.0,
+        "within_deadline": 18,
+        "within_deadline_ratio_of_offered": 0.036,
+        "latency_population": "completed only; scheduled arrival through durable callback ACK; rejected requests excluded",
+        "latency": {
+          "count": 500,
+          "p50_ns": 1207211552,
+          "p95_ns": 2324957370,
+          "p99_ns": 2424337528,
+          "max_ns": 2445508608
+        },
+        "generator_lateness": {
+          "count": 500,
+          "p50_ns": 329226,
+          "p95_ns": 518665,
+          "p99_ns": 1205457,
+          "max_ns": 1231760
+        },
+        "rejection_latency": {
+          "count": 0,
+          "p50_ns": 0,
+          "p95_ns": 0,
+          "p99_ns": 0,
+          "max_ns": 0
+        },
+        "queue_wait": {
+          "count": 500,
+          "p50_ns": 1199981844,
+          "p95_ns": 2319545499,
+          "p99_ns": 2419913867,
+          "max_ns": 2440421010
+        },
+        "routing_and_domain_batch": {
+          "count": 16,
+          "p50_ns": 221430,
+          "p95_ns": 321660,
+          "p99_ns": 321660,
+          "max_ns": 321660
+        },
+        "journal_flush": {
+          "count": 1500,
+          "p50_ns": 1405431,
+          "p95_ns": 2083786,
+          "p99_ns": 2712226,
+          "max_ns": 6460048
+        },
+        "gateway_c0_c7": {
+          "count": 500,
+          "p50_ns": 4694781,
+          "p95_ns": 6207736,
+          "p99_ns": 7770005,
+          "max_ns": 9261701
+        },
+        "broker_delay_us": 0
+      }
+    }
+  ]
+}
