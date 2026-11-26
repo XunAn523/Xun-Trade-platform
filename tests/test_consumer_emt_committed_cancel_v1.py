@@ -4,7 +4,7 @@ import sys
 from dataclasses import replace
 
 import pytest
-from xuanling_tradecore.consumer.emt_committed_cancel_v1 import (
+from xuanling_tradecore.compatibility.emt_consumer.emt_committed_cancel_v1 import (
     EmtCommittedCancelErrorV1,
     verify_emt_committed_cancel_v1,
 )

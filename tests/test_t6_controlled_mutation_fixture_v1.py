@@ -4,7 +4,10 @@ from tools.acceptance.t6_controlled_mutation_fixture_v1 import (
     t6_credit_quota_transfer_fixture_v1,
     t6_fund_transfer_fixture_v1,
 )
-from tools.performance.perfbench.mutation_fixture import load_mutation_fixture, validate_mutation_fixture
+from tools.performance.perfbench.mutation_fixture import (
+    load_mutation_fixture,
+    validate_mutation_fixture,
+)
 
 
 def test_t6_fund_transfer_fixture_enables_only_one_tiny_reversible_action(tmp_path) -> None:

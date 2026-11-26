@@ -214,6 +214,10 @@ XunTradeOMSEMS/
 └── docs/                    # 架构、运维与验证文档
 ```
 
+EMT 专用 Consumer 组合位于 `xuanling_tradecore.compatibility.emt_consumer`，
+通用 Consumer 层保持与券商实现隔离。内部调用方应使用该命名空间导入 `emt_*_v1` 组合模块。
+CI 对全仓库执行 Ruff、模块边界和敏感内容扫描，并验证原生构建、协议与核心回归。
+
 ## 文档与运行范围
 
 - [混合架构与语言边界](docs/HYBRID_ARCHITECTURE.md)

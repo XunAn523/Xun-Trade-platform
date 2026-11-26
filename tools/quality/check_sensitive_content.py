@@ -26,9 +26,9 @@ _RULES: tuple[tuple[str, re.Pattern[str]], ...] = (
         re.compile(
             r"(?i)\b(?:api[_-]?key|access[_-]?key|password|passwd|client[_-]?secret|"
             r"bearer[_-]?token|auth(?:entication)?[_-]?token)\b"
-            r"\s*(?:=|:)\s*[\"']?(?!<[^>]+>|redacted\b|example\b|dummy\b|changeme\b|"
-            r"none\b|null\b|synthetic[-_]|test[-_]|sim[-_]|emt_gateway_test\b)"
-            r"[a-z0-9+/=_-]{12,}"
+            r"\s*(?:=|:)\s*([\"'])(?!<[^>]+>|redacted\b|example\b|dummy\b|changeme\b|"
+            r"none\b|null\b|synthetic[-_]|test[-_]|stub[-_]|sim[-_]|emt_gateway_test\b)"
+            r"[a-z0-9+/=_-]{12,}\1"
         ),
     ),
     ("SCS003", re.compile(r"(?i)(?:https?|ssh)://[^\s/:@]+:[^\s@]+@")),
@@ -77,7 +77,7 @@ def tracked_or_untracked_paths(root: Path) -> tuple[Path, ...]:
     """Return Git-tracked plus non-ignored untracked paths without shell parsing."""
 
     completed = subprocess.run(
-        ["git", "ls-files", "-co", "--exclude-standard"],
+        ["git", "ls-files", "-coz", "--exclude-standard"],
         cwd=root,
         check=False,
         capture_output=True,
@@ -85,7 +85,7 @@ def tracked_or_untracked_paths(root: Path) -> tuple[Path, ...]:
     )
     if completed.returncode != 0:
         raise RuntimeError("cannot enumerate repository files for sensitive-content scan")
-    return tuple(root / line for line in completed.stdout.splitlines() if line)
+    return tuple(root / name for name in completed.stdout.split("\0") if name)
 
 
 def _parse_args(argv: Sequence[str]) -> argparse.Namespace:

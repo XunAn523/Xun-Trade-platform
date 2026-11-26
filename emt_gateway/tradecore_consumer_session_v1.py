@@ -16,8 +16,10 @@ from xuanling_tradecore.adapters.emt import (
     EmtEd25519ScopeOwnershipVerifier,
     EmtSignedScopeOwnership,
 )
-from xuanling_tradecore.consumer.emt_outcome_projection_v1 import EmtCommittedOutcomeProjectorV1
-from xuanling_tradecore.consumer.emt_submit_route_preparer_v1 import (
+from xuanling_tradecore.compatibility.emt_consumer.emt_outcome_projection_v1 import (
+    EmtCommittedOutcomeProjectorV1,
+)
+from xuanling_tradecore.compatibility.emt_consumer.emt_submit_route_preparer_v1 import (
     EmtConsumerSubmitRoutePreparerV1,
 )
 from xuanling_tradecore.control_plane.provisioning_contracts_v1 import ConsumerBindingRevisionV1

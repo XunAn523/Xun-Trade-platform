@@ -85,6 +85,13 @@ from .namespace_release_v1 import (
     load_signed_namespace_release_v1_json,
     namespace_trust_anchor_hash_v1,
 )
+from .ordinary_credit_release_certificate_v1 import (
+    EmtOrdinaryCreditReleaseCertificateError,
+    EmtOrdinaryCreditReleaseCertificateV1,
+    EmtScopedApiObservationV1,
+    load_ordinary_credit_release_certificate_v1,
+    trading_catalog_sha256_v1,
+)
 from .profile import EmtAdapterProfile
 from .read_only_ingress import (
     EmtQueryCallbackIngress,
@@ -106,6 +113,14 @@ from .scope_ownership import (
     EmtSignedScopeOwnership,
     canonical_scope_ownership_payload,
 )
+from .session_adapter import (
+    EmtControlledReadOnlyAdapter,
+    EmtControlledSessionError,
+    EmtControlledSessionSnapshot,
+    EmtReadOnlySdkSession,
+    EmtReadOnlySdkSessionFactory,
+)
+from .trading_attestation_v1 import build_trading_abi_attestation_v1
 from .trading_catalog_v1 import (
     TRADER_API_SPECS_V1,
     TRADER_SPI_SPECS_V1,
@@ -124,24 +139,6 @@ from .trading_catalog_v1 import (
     trader_api_spec_v1,
     trader_spi_spec_v1,
 )
-from .trading_module_v1 import (
-    EmtControlMutationDispatcherV1,
-    EmtFastOperationPortV1,
-    EmtFullTradingModuleV1,
-    EmtOperationCommandV1,
-    EmtOperationJournalPortV1,
-    EmtOperationReceiptV1,
-    EmtTradingModuleError,
-    EmtTradingQueryServiceV1,
-)
-from .trading_spi_runtime_v1 import (
-    EmtTraderSpiBindingV1,
-    EmtTradingSpiRuntimeError,
-    TRADER_SPI_BINDINGS_V1,
-    build_complete_trader_spi_v1,
-    callback_priority_for_kind_v1,
-    register_complete_trader_spi_v1,
-)
 from .trading_control_state_v1 import (
     EmtControlOperationProjectorV1,
     EmtControlOperationSnapshotV1,
@@ -154,17 +151,20 @@ from .trading_domains_v1 import (
     EmtOptionTradingServiceV1,
     EmtTradingDomainServiceError,
 )
+from .trading_module_v1 import (
+    EmtControlMutationDispatcherV1,
+    EmtFastOperationPortV1,
+    EmtFullTradingModuleV1,
+    EmtOperationCommandV1,
+    EmtOperationJournalPortV1,
+    EmtOperationReceiptV1,
+    EmtTradingModuleError,
+    EmtTradingQueryServiceV1,
+)
 from .trading_permissions_v1 import (
     EmtTradingPermissionError,
     EmtTradingPermissionSetV1,
     required_permission_for_trader_api_v1,
-)
-from .ordinary_credit_release_certificate_v1 import (
-    EmtOrdinaryCreditReleaseCertificateError,
-    EmtOrdinaryCreditReleaseCertificateV1,
-    EmtScopedApiObservationV1,
-    load_ordinary_credit_release_certificate_v1,
-    trading_catalog_sha256_v1,
 )
 from .trading_readiness_v1 import (
     EmtCapabilityEvidenceV1,
@@ -180,13 +180,13 @@ from .trading_scope_v1 import (
     EmtTradingReleaseScopeError,
     EmtTradingReleaseScopeV1,
 )
-from .trading_attestation_v1 import build_trading_abi_attestation_v1
-from .session_adapter import (
-    EmtControlledReadOnlyAdapter,
-    EmtControlledSessionError,
-    EmtControlledSessionSnapshot,
-    EmtReadOnlySdkSession,
-    EmtReadOnlySdkSessionFactory,
+from .trading_spi_runtime_v1 import (
+    TRADER_SPI_BINDINGS_V1,
+    EmtTraderSpiBindingV1,
+    EmtTradingSpiRuntimeError,
+    build_complete_trader_spi_v1,
+    callback_priority_for_kind_v1,
+    register_complete_trader_spi_v1,
 )
 
 __all__ = [
@@ -317,3 +317,6 @@ __all__ = [
     "EmtTradingReleaseScopeV1",
     "build_trading_abi_attestation_v1",
 ]
+
+# Public EMT catalog and operation contracts.
+__all__ += ['TRADER_API_SPECS_V1', 'TRADER_SPI_SPECS_V1', 'EmtCallbackPriority', 'EmtCapabilityState', 'EmtOperationLane', 'EmtTradingCatalogError', 'EmtTradingDomain', 'TraderApiCapabilityV1', 'TraderApiSpecV1', 'TraderSpiCapabilityV1', 'TraderSpiSpecV1', 'inspect_trader_api_capabilities_v1', 'inspect_trader_spi_capabilities_v1', 'known_linux_binding_blockers_v1', 'trader_api_spec_v1', 'trader_spi_spec_v1', 'EmtControlMutationDispatcherV1', 'EmtFastOperationPortV1', 'EmtFullTradingModuleV1', 'EmtOperationCommandV1', 'EmtOperationJournalPortV1', 'EmtOperationReceiptV1', 'EmtTradingModuleError', 'EmtTradingQueryServiceV1']

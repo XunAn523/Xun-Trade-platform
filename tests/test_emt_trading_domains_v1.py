@@ -1,17 +1,17 @@
 from __future__ import annotations
 
 import pytest
-
 from emt_gateway.facade import SideEffectPermit
-from emt_gateway.query_registry import QueryRegistry
-
 from xuanling_tradecore.adapters.emt.trading_catalog_v1 import EmtOperationLane
 from xuanling_tradecore.adapters.emt.trading_domains_v1 import (
     EmtCreditTradingServiceV1,
     EmtOptionTradingServiceV1,
     EmtTradingDomainServiceError,
 )
-from xuanling_tradecore.adapters.emt.trading_module_v1 import EmtOperationCommandV1, EmtOperationReceiptV1
+from xuanling_tradecore.adapters.emt.trading_module_v1 import (
+    EmtOperationCommandV1,
+    EmtOperationReceiptV1,
+)
 
 
 class _Module:

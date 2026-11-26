@@ -16,7 +16,13 @@ import mmap
 import os
 import struct
 import zlib
+from typing import TYPE_CHECKING
 
+if TYPE_CHECKING:
+    # The QMT host injects these callables into the strategy globals at runtime.
+    def passorder(*args: object) -> object: ...
+    def cancel(*args: object) -> object: ...
+    def get_trade_detail_data(*args: object) -> object: ...
 
 MAGIC = b"TCQMT001"
 ABI = 2

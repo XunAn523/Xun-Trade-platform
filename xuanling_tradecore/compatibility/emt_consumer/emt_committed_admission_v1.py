@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from ..oms import (
+from ...oms import (
     MmapOmsFactJournalV1,
     OmsFactJournal,
     OmsFactKind,

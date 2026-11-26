@@ -17,11 +17,10 @@ from ...compatibility.emt_trading_platform import (
     build_trader_spi_v2_bridge,
     register_official_trader_spi_v2_kinds,
 )
-
 from .trading_catalog_v1 import (
+    TRADER_SPI_SPECS_V1,
     EmtCallbackPriority,
     EmtTradingCatalogError,
-    TRADER_SPI_SPECS_V1,
     inspect_trader_spi_capabilities_v1,
 )
 

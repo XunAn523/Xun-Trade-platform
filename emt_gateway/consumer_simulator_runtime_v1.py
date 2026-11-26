@@ -34,20 +34,30 @@ from xuanling_tradecore.adapters.emt.namespace_recovery import (
     VerifiedNamespaceBoundEmtClientOrderIdAllocator,
 )
 from xuanling_tradecore.adapters.emt.route_token import EmtAdapterRouteTokenCodec
-from xuanling_tradecore.consumer.base import ConsumerAuthorizationError
-from xuanling_tradecore.consumer.cursor_v2 import CursorKeyRingV2, CursorSigningKeyV2
-from xuanling_tradecore.consumer.emt_callback_pump_v1 import ManagedEmtCallbackPumpV1
-from xuanling_tradecore.consumer.emt_outcome_projection_v1 import EmtCommittedOutcomeProjectorV1
-from xuanling_tradecore.consumer.emt_submit_composition_v1 import (
+from xuanling_tradecore.compatibility.emt_consumer.emt_callback_pump_v1 import (
+    ManagedEmtCallbackPumpV1,
+)
+from xuanling_tradecore.compatibility.emt_consumer.emt_outcome_projection_v1 import (
+    EmtCommittedOutcomeProjectorV1,
+)
+from xuanling_tradecore.compatibility.emt_consumer.emt_submit_composition_v1 import (
     ManagedEmtConsumerSubmitV1,
     ManagedEmtExecutionSessionV1,
 )
-from xuanling_tradecore.consumer.emt_submit_disposition_v1 import MmapEmtSubmitDispositionJournalV1
-from xuanling_tradecore.consumer.emt_submit_route_preparer_v1 import (
+from xuanling_tradecore.compatibility.emt_consumer.emt_submit_disposition_v1 import (
+    MmapEmtSubmitDispositionJournalV1,
+)
+from xuanling_tradecore.compatibility.emt_consumer.emt_submit_route_preparer_v1 import (
     EmtConsumerSubmitRoutePreparerV1,
 )
-from xuanling_tradecore.consumer.emt_submit_uds_v1 import build_consumer_emt_submit_uds_v1
-from xuanling_tradecore.consumer.emt_submit_worker_v1 import EmtConsumerSubmitWorkerV1
+from xuanling_tradecore.compatibility.emt_consumer.emt_submit_uds_v1 import (
+    build_consumer_emt_submit_uds_v1,
+)
+from xuanling_tradecore.compatibility.emt_consumer.emt_submit_worker_v1 import (
+    EmtConsumerSubmitWorkerV1,
+)
+from xuanling_tradecore.consumer.base import ConsumerAuthorizationError
+from xuanling_tradecore.consumer.cursor_v2 import CursorKeyRingV2, CursorSigningKeyV2
 from xuanling_tradecore.consumer.oms_operations_v2 import ConsumerOmsAdmissionContextV2
 from xuanling_tradecore.consumer.replay_v2 import ConsumerCursorReplayServiceV2
 from xuanling_tradecore.consumer.snapshot_v2 import ConsumerSnapshotProjectionV2

@@ -19,7 +19,7 @@ import os
 STRATEGY_NAME = "TradeCore_QMT_P0_PROBE"
 CONFIG_PATH = r"D:\projects\TradeCore\qmt-edge\config\edge.json"
 ENGINE_PATH = r"D:\projects\TradeCore\qmt-edge\src\deploy\windows-qmt-edge\qmt_native_engine.py"
-EXPECTED_ENGINE_SHA256 = "5e80b6f5d4ddf137388ea0d1df96a4d387296fa5be9dfb883079b7b4a5ccd9c7"
+EXPECTED_ENGINE_SHA256 = "a479a9e01788331e40f3490782b42d3a50d4ce64cc97af810014d64e905ccca3"
 
 
 def _same_path(left, right):

@@ -1,8 +1,12 @@
 """Lifecycle guarantees independent of the vendor SDK and trading authority."""
 
 import pytest
-from xuanling_tradecore.consumer.emt_submit_composition_v1 import ManagedEmtExecutionSessionV1
-from xuanling_tradecore.consumer.emt_submit_worker_v1 import EmtConsumerSubmitWorkerErrorV1
+from xuanling_tradecore.compatibility.emt_consumer.emt_submit_composition_v1 import (
+    ManagedEmtExecutionSessionV1,
+)
+from xuanling_tradecore.compatibility.emt_consumer.emt_submit_worker_v1 import (
+    EmtConsumerSubmitWorkerErrorV1,
+)
 from xuanling_tradecore.consumer.service_v2 import ConsumerUnixServiceV2
 
 

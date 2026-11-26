@@ -11,7 +11,6 @@ from __future__ import annotations
 from typing import Any, Sequence
 
 from ...compatibility.emt_trading_platform import QueryCompletion, QueryHandle, SideEffectPermit
-
 from .trading_catalog_v1 import EmtOperationLane, EmtTradingDomain
 from .trading_module_v1 import (
     EmtFullTradingModuleV1,

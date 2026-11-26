@@ -14,12 +14,13 @@ from typing import Any
 
 from ...compatibility.emt_trading_platform import (
     OFFICIAL_TRADER_API,
+    OFFICIAL_TRADER_SPI,
     CapabilityReport,
     CapabilityStatus,
     inspect_trader_api,
     python_api_name,
+    python_callback_name,
 )
-from ...compatibility.emt_trading_platform import OFFICIAL_TRADER_SPI, python_callback_name
 
 
 class EmtTradingCatalogError(RuntimeError):

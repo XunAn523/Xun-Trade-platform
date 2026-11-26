@@ -13,7 +13,7 @@ from enum import Enum
 from types import MappingProxyType
 from typing import Mapping
 
-from .trading_catalog_v1 import EmtOperationLane, trader_api_spec_v1
+from .trading_catalog_v1 import EmtOperationLane
 from .trading_module_v1 import EmtOperationCommandV1, EmtOperationReceiptV1
 
 

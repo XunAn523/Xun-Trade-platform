@@ -2,7 +2,7 @@ from threading import Event
 from types import SimpleNamespace
 
 import pytest
-from xuanling_tradecore.consumer.emt_callback_pump_v1 import (
+from xuanling_tradecore.compatibility.emt_consumer.emt_callback_pump_v1 import (
     EmtCallbackPumpErrorV1,
     ManagedEmtCallbackPumpV1,
 )

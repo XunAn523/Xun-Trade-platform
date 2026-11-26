@@ -9,9 +9,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from ..domain import OmsOrderState
-from ..domain._validation import require_text
-from ..oms import (
+from ...domain import OmsOrderState
+from ...domain._validation import require_text
+from ...oms import (
     MmapOmsFactJournalV1,
     OmsFactKind,
     OmsJournalCommit,

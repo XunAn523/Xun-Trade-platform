@@ -11,10 +11,10 @@ from dataclasses import dataclass
 from typing import Literal
 
 from xuanling_tradecore.adapters.emt.trading_catalog_v1 import (
-    EmtCallbackPriority,
-    EmtOperationLane,
     TRADER_API_SPECS_V1,
     TRADER_SPI_SPECS_V1,
+    EmtCallbackPriority,
+    EmtOperationLane,
 )
 
 InterfaceKind = Literal["api", "spi"]

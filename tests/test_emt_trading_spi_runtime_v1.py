@@ -1,9 +1,7 @@
 from __future__ import annotations
 
 import pytest
-
 from emt_gateway.spi_bridge import OFFICIAL_TRADER_SPI
-
 from xuanling_tradecore.adapters.emt.trading_spi_runtime_v1 import (
     TRADER_SPI_BINDINGS_V1,
     build_complete_trader_spi_v1,

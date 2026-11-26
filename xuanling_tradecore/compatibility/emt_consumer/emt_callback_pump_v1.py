@@ -8,7 +8,7 @@ from __future__ import annotations
 
 from threading import Event, Lock, Thread
 
-from ..ems import ExecutionSessionRuntime
+from ...ems import ExecutionSessionRuntime
 from .emt_submit_composition_v1 import ManagedEmtConsumerSubmitV1
 
 

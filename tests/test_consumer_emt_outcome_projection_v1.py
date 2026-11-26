@@ -8,7 +8,7 @@ from emt_gateway.fastspi_v2_outcome import (
     FastSpiV2NativeOutcomeObserver,
     FastSpiV2OutcomeResolution,
 )
-from xuanling_tradecore.consumer.emt_outcome_projection_v1 import (
+from xuanling_tradecore.compatibility.emt_consumer.emt_outcome_projection_v1 import (
     EmtCommittedOutcomeProjectorV1,
     EmtConsumerProjectionErrorV1,
 )

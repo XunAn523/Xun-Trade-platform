@@ -22,16 +22,18 @@ from xuanling_tradecore.adapters.emt import MmapRouteLedgerV2
 from xuanling_tradecore.adapters.emt.mapping import load_builtin_emt_legacy_sim_manifest
 from xuanling_tradecore.adapters.emt.mutation import EmtSubmitRequest
 from xuanling_tradecore.adapters.mapping import MappedVenueOrder
-from xuanling_tradecore.consumer.base import ConsumerGatewayError
-from xuanling_tradecore.consumer.emt_submit_composition_v1 import (
+from xuanling_tradecore.compatibility.emt_consumer.emt_submit_composition_v1 import (
     ManagedEmtConsumerSubmitV1,
     build_consumer_emt_submit_operations_v1,
 )
-from xuanling_tradecore.consumer.emt_submit_disposition_v1 import MmapEmtSubmitDispositionJournalV1
-from xuanling_tradecore.consumer.emt_submit_worker_v1 import (
+from xuanling_tradecore.compatibility.emt_consumer.emt_submit_disposition_v1 import (
+    MmapEmtSubmitDispositionJournalV1,
+)
+from xuanling_tradecore.compatibility.emt_consumer.emt_submit_worker_v1 import (
     EmtConsumerSubmitWorkerErrorV1,
     EmtConsumerSubmitWorkerV1,
 )
+from xuanling_tradecore.consumer.base import ConsumerGatewayError
 from xuanling_tradecore.consumer.execution_runtime_v1 import ConsumerExecutionDispatchStateV1
 from xuanling_tradecore.domain import VenueOrderIdentity
 from xuanling_tradecore.ems import ExecutionDispatchOutcome

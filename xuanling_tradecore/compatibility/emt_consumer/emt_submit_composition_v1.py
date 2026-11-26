@@ -10,18 +10,21 @@ from __future__ import annotations
 from threading import Event, Lock, Thread
 from typing import Callable, Protocol
 
-from ..adapters import BrokerEventObserver
-from ..domain import ConsumerAccountBinding, ConsumerOrderEvent, RiskSnapshot
-from ..ems import ExecutionSessionRuntime
-from ..oms import OmsJournalCommit, OrderBook, OrderBookOrder
-from .base import (
+from ...adapters import BrokerEventObserver
+from ...consumer.base import (
     ConsumerAccountOrderSnapshotV2,
     ConsumerOrderSignal,
     ConsumerSession,
 )
+from ...consumer.gateway_v2 import ConsumerGatewayConfigurationError
+from ...consumer.oms_operations_v2 import (
+    ConsumerOmsAdmissionContextV2,
+    OrderBookConsumerOperationsV2,
+)
+from ...domain import ConsumerAccountBinding, ConsumerOrderEvent, RiskSnapshot
+from ...ems import ExecutionSessionRuntime
+from ...oms import OmsJournalCommit, OrderBook, OrderBookOrder
 from .emt_submit_worker_v1 import EmtConsumerSubmitWorkerErrorV1, EmtConsumerSubmitWorkerV1
-from .gateway_v2 import ConsumerGatewayConfigurationError
-from .oms_operations_v2 import ConsumerOmsAdmissionContextV2, OrderBookConsumerOperationsV2
 
 
 class ConsumerEmtRuntimeGatePortV1(Protocol):

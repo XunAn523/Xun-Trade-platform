@@ -10,11 +10,11 @@ import re
 from hashlib import sha256
 from threading import RLock
 
-from ..oms import MmapOmsFactJournalV1, OmsFactKind, OmsJournalCommit, OmsJournalFact
-from .execution_runtime_v1 import (
+from ...consumer.execution_runtime_v1 import (
     ConsumerExecutionDispatchRecordV1,
     ConsumerExecutionDispatchStateV1,
 )
+from ...oms import MmapOmsFactJournalV1, OmsFactKind, OmsJournalCommit, OmsJournalFact
 
 
 class EmtSubmitDispositionErrorV1(RuntimeError):

@@ -4,11 +4,11 @@ import unittest
 
 from emt_gateway.spi_bridge import DeferredCallbackIngress, build_trader_spi_bridge
 from xuanling_tradecore.adapters.emt.trading_catalog_v1 import (
+    TRADER_API_SPECS_V1,
+    TRADER_SPI_SPECS_V1,
     EmtCallbackPriority,
     EmtCapabilityState,
     EmtOperationLane,
-    TRADER_API_SPECS_V1,
-    TRADER_SPI_SPECS_V1,
     inspect_trader_api_capabilities_v1,
     inspect_trader_spi_capabilities_v1,
     known_linux_binding_blockers_v1,

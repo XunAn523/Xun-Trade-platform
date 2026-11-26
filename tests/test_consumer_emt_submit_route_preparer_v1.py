@@ -19,11 +19,11 @@ from xuanling_tradecore.adapters.emt.namespace_release_v1 import (
     NamespaceReleaseStateV1,
 )
 from xuanling_tradecore.adapters.emt.route_token import EmtAdapterRouteTokenCodec
-from xuanling_tradecore.consumer import OrderBookConsumerOperationsV2
-from xuanling_tradecore.consumer.emt_submit_route_preparer_v1 import (
+from xuanling_tradecore.compatibility.emt_consumer.emt_submit_route_preparer_v1 import (
     EmtConsumerSubmitRoutePreparerV1,
     EmtSubmitRoutePreparationErrorV1,
 )
+from xuanling_tradecore.consumer import OrderBookConsumerOperationsV2
 from xuanling_tradecore.ems.ownership import AccountFenceScope, canonical_account_scope_hash
 from xuanling_tradecore.ems.routing import AccountExecutionBinding
 from xuanling_tradecore.oms import MmapOmsFactJournalV1, OmsFactKind, OrderBook

@@ -7,7 +7,6 @@ engine under D:\\projects\\TradeCore\\qmt-edge do not require re-pasting into
 QMT.
 """
 
-import os
 
 HELPER_PATH = r"D:\projects\TradeCore\qmt-edge\src\deploy\windows-qmt-edge\bigqmt_strategy\tradecore_qmt_p0_probe_strategy.py"
 

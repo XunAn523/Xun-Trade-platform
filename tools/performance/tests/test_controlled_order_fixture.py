@@ -9,6 +9,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
+from emt_gateway.gateway import CallbackRecord
 from perfbench.cli import main
 from perfbench.controlled_order_fixture import (
     ControlledOrderFixtureError,
@@ -17,14 +18,13 @@ from perfbench.controlled_order_fixture import (
 from perfbench.gateway_controlled_order import (
     ControlledOrderError,
     ControlledOrderSettings,
-    _OwnedTradeObserver,
     _local_latency_gate_evidence,
+    _OwnedTradeObserver,
     _targeted_command_latency,
     run_controlled_order_experiment,
 )
 from perfbench.simulated_accounts import SimulatedAccount, SimulatedAccounts
 from perfbench.trace import TraceRecord
-from emt_gateway.gateway import CallbackRecord
 
 _FIXTURE_PATH = (
     Path(__file__).resolve().parents[1] / "fixtures" / "emt-controlled-order-fixture.example.json"

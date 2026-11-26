@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import pytest
-
 from xuanling_tradecore.adapters.emt.trading_permissions_v1 import (
     EmtTradingPermissionError,
     EmtTradingPermissionSetV1,

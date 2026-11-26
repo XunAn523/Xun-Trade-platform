@@ -11,22 +11,33 @@ from typing import Callable, Protocol
 
 from emt_gateway.consumer_simulator_gate_v1 import ConsumerEmtSimulatorGateV1
 
-from ..domain import (
+from ...consumer.base import (
+    ConsumerAccountOrderSnapshotV2,
+    ConsumerAccountView,
+    ConsumerOrderSignal,
+    ConsumerSession,
+)
+from ...consumer.bindings_v2 import ConsumerBindingSnapshotV2
+from ...consumer.dispatch_v2 import ConsumerWireDispatcherV2
+from ...consumer.gateway_v2 import ConsumerGatewayV2
+from ...consumer.oms_operations_v2 import ConsumerOmsAdmissionContextV2
+from ...consumer.replay_v2 import ConsumerCursorReplayServiceV2
+from ...consumer.service_v2 import ConsumerUnixServiceV2
+from ...consumer.uds_server_v2 import load_consumer_request_schema
+from ...consumer.unix_v2 import (
+    ConsumerUnixPeerV2,
+    ConsumerUnixSocketError,
+    ConsumerUnixSocketListenerV2,
+)
+from ...consumer.wire_v2 import load_contract_identity
+from ...domain import (
     AccountLifecycle,
     ConsumerAccountBinding,
     ConsumerOrderEvent,
     ConsumerPrincipal,
     ReconciliationStatus,
 )
-from ..oms import OrderBook
-from .base import (
-    ConsumerAccountOrderSnapshotV2,
-    ConsumerAccountView,
-    ConsumerOrderSignal,
-    ConsumerSession,
-)
-from .bindings_v2 import ConsumerBindingSnapshotV2
-from .dispatch_v2 import ConsumerWireDispatcherV2
+from ...oms import OrderBook
 from .emt_callback_pump_v1 import ManagedEmtCallbackPumpV1
 from .emt_submit_composition_v1 import (
     ConsumerEmtRuntimeGatePortV1,
@@ -34,13 +45,6 @@ from .emt_submit_composition_v1 import (
     ManagedEmtExecutionSessionV1,
     build_consumer_emt_submit_operations_v1,
 )
-from .gateway_v2 import ConsumerGatewayV2
-from .oms_operations_v2 import ConsumerOmsAdmissionContextV2
-from .replay_v2 import ConsumerCursorReplayServiceV2
-from .service_v2 import ConsumerUnixServiceV2
-from .uds_server_v2 import load_consumer_request_schema
-from .unix_v2 import ConsumerUnixPeerV2, ConsumerUnixSocketError, ConsumerUnixSocketListenerV2
-from .wire_v2 import load_contract_identity
 
 
 class ManagedConsumerEmtGatePortV1(Protocol):

@@ -15,15 +15,15 @@ from typing import Callable, Protocol
 
 from emt_gateway.tradecore_mmap_journal import EmtNativeRouteResolver
 
-from ..domain import ExecutionInstruction
-from ..ems import ExecutionSessionRuntime, GuardMarketSnapshot, KillSwitchSnapshot
-from ..oms import OmsJournalCommit, OrderBookOrder
-from .emt_submit_route_preparer_v1 import EmtConsumerSubmitRoutePreparerV1
-from .execution_runtime_v1 import (
+from ...consumer.execution_runtime_v1 import (
     ConsumerEmsExecutionBridgeV1,
     ConsumerExecutionDispatchRecordV1,
     ConsumerExecutionDispatchStateV1,
 )
+from ...domain import ExecutionInstruction
+from ...ems import ExecutionSessionRuntime, GuardMarketSnapshot, KillSwitchSnapshot
+from ...oms import OmsJournalCommit, OrderBookOrder
+from .emt_submit_route_preparer_v1 import EmtConsumerSubmitRoutePreparerV1
 
 
 class EmtConsumerSubmitWorkerErrorV1(RuntimeError):

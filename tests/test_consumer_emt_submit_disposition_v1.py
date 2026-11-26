@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import replace
 
 import pytest
-from xuanling_tradecore.consumer.emt_submit_disposition_v1 import (
+from xuanling_tradecore.compatibility.emt_consumer.emt_submit_disposition_v1 import (
     EmtSubmitDispositionErrorV1,
     MmapEmtSubmitDispositionJournalV1,
 )

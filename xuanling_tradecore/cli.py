@@ -110,7 +110,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             config_path=arguments.config, contract_root=arguments.contract_root
         )
     elif arguments.command == "consumer-emt-simulator":
-        from emt_gateway.consumer_simulator_runtime_v1 import run_consumer_emt_simulator_v1
+        from .compatibility.simulator_cli import run_consumer_emt_simulator_v1
 
         # Dedicated native process: preserve already-released vendor wrappers
         # through process exit, avoiding their unsafe/hanging Python finalizer.
