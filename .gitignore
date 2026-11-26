@@ -28,6 +28,7 @@ dist/
 .ruff_cache/
 .hypothesis/
 benchmark-results.local.json
+pipeline-results.local.json
 .env
 .env.*
 !.env.example

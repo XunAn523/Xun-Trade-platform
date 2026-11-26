@@ -1,0 +1,60 @@
+{
+  "measured_at_utc": "2026-11-26T05:38:37.671632+00:00",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "python": "3.10.11",
+  "batch_size": 32,
+  "capacity_per_lane": 256,
+  "routing_workers": 1,
+  "arrival_profile": "unpaced bounded burst",
+  "scope": "offline components only; simulated broker; no live risk/fence/SDK/network",
+  "backend": {
+    "engine": "cpp20",
+    "crc32c": "x86-sse4.2",
+    "api_version": 1,
+    "maximum_workers": 32,
+    "cxx_standard": 202002,
+    "mode": "native"
+  },
+  "offered": 200,
+  "completed": 200,
+  "rejected": 0,
+  "fake_broker_calls": 200,
+  "elapsed_ns": 1525530800,
+  "throughput_per_second": 131.10190892245507,
+  "latency": {
+    "count": 200,
+    "p50_ns": 747807700,
+    "p95_ns": 1457261100,
+    "p99_ns": 1503291300,
+    "max_ns": 1522329700
+  },
+  "queue_wait": {
+    "count": 200,
+    "p50_ns": 742218200,
+    "p95_ns": 1452053800,
+    "p99_ns": 1500997600,
+    "max_ns": 1510184000
+  },
+  "routing_and_domain_batch": {
+    "count": 7,
+    "p50_ns": 203600,
+    "p95_ns": 340600,
+    "p99_ns": 340600,
+    "max_ns": 340600
+  },
+  "journal_flush": {
+    "count": 600,
+    "p50_ns": 759200,
+    "p95_ns": 5808200,
+    "p99_ns": 35415900,
+    "max_ns": 69632600
+  },
+  "gateway_c0_c7": {
+    "count": 200,
+    "p50_ns": 4821200,
+    "p95_ns": 33870800,
+    "p99_ns": 65934000,
+    "max_ns": 73965600
+  },
+  "broker_delay_us": 0
+}

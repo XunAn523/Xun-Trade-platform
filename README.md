@@ -174,6 +174,15 @@ python -m pytest -q tests/test_hybrid_compute.py tests/test_account_session_shar
 python -m tools.benchmarks.hybrid_compute --batch-size 50000 --repeats 7 --workers 4 --output benchmark-results.local.json
 ```
 
+测量离线组件链路（批量路由 → 有界调度 → fsync 日志 → 模拟券商 → 回调 ACK）：
+
+```bash
+python -m tools.benchmarks.offline_pipeline --orders 200 --capacity 256 --output pipeline-results.local.json
+```
+
+该工具报告完成/拒绝数量、吞吐、P50/P95/P99、排队时间和日志同步时间；
+`--capacity 4 --broker-delay-us 1000` 可观察背压。模拟链路不装载 SDK，不代表实盘风控与执行权部署验收。
+
 基准比较 Python、C++ 单线程与 C++ 多线程，包含 Python 调用和数据转换成本。
 测量范围不含磁盘 fsync、网络、OMS 领域校验或券商延迟，不能外推为完整交易链路的性能保证。
 
