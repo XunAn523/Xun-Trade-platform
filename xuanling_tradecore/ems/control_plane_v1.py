@@ -158,12 +158,16 @@ class EmsControlPlaneV1:
         session_router: AccountSessionShardRouter,
         pending_plans: EmsPendingPlanBufferV1,
         maximum_snapshot_lag_positions: int = 0,
+        routing_workers: int = 1,
     ) -> None:
         if maximum_snapshot_lag_positions < 0:
             raise EmsControlPlaneError("EMS maximum snapshot lag is invalid")
+        if type(routing_workers) is not int or not 1 <= routing_workers <= 32:
+            raise EmsControlPlaneError("EMS routing workers must be in [1, 32]")
         self._router = session_router
         self._pending_plans = pending_plans
         self._maximum_snapshot_lag_positions = maximum_snapshot_lag_positions
+        self._routing_workers = routing_workers
 
     def create_plan(
         self,
@@ -188,9 +192,11 @@ class EmsControlPlaneV1:
         ):
             return EmsPlanAdmissionV1(EmsPlanAdmissionOutcome.SNAPSHOT_STALE, None)
         algorithm_plan = algorithm.plan(parent_instruction)
+        instructions = tuple(child.instruction for child in algorithm_plan.children)
+        # Routing is computation only: no child has been admitted or dispatched.
+        lanes = self._router.route_executions(instructions, workers=self._routing_workers)
         routed: list[EmsRoutedChildInstructionV1] = []
-        for child in algorithm_plan.children:
-            lane = self._router.route_execution(child.instruction)
+        for child, lane in zip(algorithm_plan.children, lanes, strict=True):
             binding = lane.binding
             routed.append(
                 EmsRoutedChildInstructionV1(

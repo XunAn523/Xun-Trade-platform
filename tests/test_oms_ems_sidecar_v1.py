@@ -111,6 +111,9 @@ def _instruction() -> ExecutionInstruction:
 class _Router:
     """Control-plane test double; it deliberately exposes no submit/cancel API."""
 
+    def route_executions(self, instructions, *, workers=1):
+        return tuple(self.route_execution(item) for item in instructions)
+
     def route_execution(self, instruction: ExecutionInstruction):
         return SimpleNamespace(
             binding=SimpleNamespace(

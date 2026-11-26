@@ -375,6 +375,23 @@ class AccountSessionShardRouter:
             )
         )
 
+    def route_executions(
+        self, instructions: tuple[ExecutionInstruction, ...], *, workers: int = 1
+    ) -> tuple[AccountSessionShardLane, ...]:
+        """Validate the entire account batch before computing any route."""
+        if type(instructions) is not tuple or len(instructions) > 1_000_000:
+            raise AccountSessionShardingError("instructions require a bounded tuple")
+        for instruction in instructions:
+            if not isinstance(instruction, ExecutionInstruction):
+                raise AccountSessionShardingError("batch contains a non-execution instruction")
+            if instruction.account_id != self._plan.account_id:
+                raise AccountSessionShardingError("execution batch crosses account ownership")
+        return self.route_execution_ids(
+            account_id=self._plan.account_id,
+            execution_ids=tuple(item.execution_id for item in instructions),
+            workers=workers,
+        )
+
     def route_event(self, event: BrokerEvent) -> AccountSessionShardLane:
         if event.account_id != self._plan.account_id:
             raise AccountSessionShardingError(
