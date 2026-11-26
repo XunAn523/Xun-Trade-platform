@@ -170,9 +170,10 @@ PyObject* assessments(PyObject*, PyObject* args) {
 }
 
 PyObject* backend_info(PyObject*, PyObject*) {
-    return Py_BuildValue("{s:s,s:s,s:i,s:i}", "engine", "cpp20", "crc32c",
+    return Py_BuildValue("{s:s,s:s,s:i,s:i,s:l}", "engine", "cpp20", "crc32c",
                         xuntrade::crc32c_implementation(), "api_version", 1,
-                        "maximum_workers", xuntrade::maximum_workers);
+                        "maximum_workers", xuntrade::maximum_workers,
+                        "cxx_standard", static_cast<long>(__cplusplus));
 }
 
 PyMethodDef methods[]{

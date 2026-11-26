@@ -1,6 +1,18 @@
 cmake_minimum_required(VERSION 3.25)
 project(XunTradeOMSEMS VERSION 0.1.0 LANGUAGES CXX)
 
+# One language policy for the library, CPython module and every native test.
+if(DEFINED CMAKE_CXX_STANDARD AND NOT CMAKE_CXX_STANDARD STREQUAL "20")
+  message(FATAL_ERROR "XunTradeOMSEMS requires CMAKE_CXX_STANDARD=20")
+endif()
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+if(MSVC)
+  # MSVC otherwise reports the historical __cplusplus value even in C++20 mode.
+  add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:/Zc:__cplusplus>")
+endif()
+
 find_package(Threads REQUIRED)
 add_library(xuntrade_kernels STATIC native/src/kernels.cpp)
 target_include_directories(xuntrade_kernels PUBLIC native/include)

@@ -5,6 +5,9 @@
 #include <limits>
 #include <stdexcept>
 
+// Exercise the effective compiler mode rather than trusting a CMake label.
+static_assert(__cplusplus == 202002L, "Native targets must compile in ISO C++20 mode");
+
 void require(bool condition, const char* message) {
     if (!condition) throw std::runtime_error(message);
 }

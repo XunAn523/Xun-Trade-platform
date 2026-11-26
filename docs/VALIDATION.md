@@ -76,3 +76,26 @@ python -m tools.benchmarks.hybrid_compute --batch-size 50000 --repeats 7 --worke
 
 GitHub Actions 配置了两个平台的构建、自检、核心回归及后端对照。配置已提交，
 本报告不把尚未观察到结果的远端 Actions 运行计为通过。
+
+## 2026-11-26：C++20 构建标准复核
+
+所有项目 C++ 目标统一使用 ISO C++20，包括核心库、CPython 绑定和原生测试。
+CMake 固定标准为 20，禁止降级和 GNU 扩展；设置为 17 或 23 时配置失败。
+公共原生头文件拒绝低于 C++20 的直接编译，原生测试在编译期断言 `__cplusplus == 202002L`。
+MSVC 的 CMake 与 pip 构建均启用 `/Zc:__cplusplus`。
+
+| 本次检查 | Windows x64 | Ubuntu / WSL2 x64 |
+| --- | --- | --- |
+| CMake 核心库、Python 绑定、原生测试构建 | 通过 | 通过 |
+| CTest | 1/1 通过 | 1/1 通过 |
+| pip 原生扩展重建与离线自检 | 通过 | 通过 |
+| 构建变更相关核心回归 | 108 通过，16 跳过 | 112 通过，12 跳过 |
+
+逐项检查 MSVC 工程和 GCC 编译命令，三个 C++ 编译单元均采用 C++20。
+Windows 的 CMake 扩展和两平台的 pip 扩展实际报告 `cxx_standard: 202002`。
+CMake C++17/C++23 配置拒绝检查、直接 C++17 编译拒绝检查均通过。
+Windows Python 诊断后端回归为 53 项通过，改动 Python 文件的 Ruff lint/format 检查通过。
+
+本次核心回归范围小于 2026-11-23 的 Linux 扩展回归；两次记录按各自范围解读。
+原有 C 回调队列采用独立的 C 构建配置。GitHub Actions 已加入 CMake Python 绑定构建，
+本记录只报告本地观察到的运行结果。

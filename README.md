@@ -60,6 +60,10 @@ flowchart TD
 | Linux 原生构建 | x64，支持 C++20 的 GCC/Clang，Python 开发头文件 |
 | 独立 C++ 构建 | CMake 3.25 或更高版本 |
 
+所有 C++ 目标统一使用 **ISO C++20**，包括计算内核、Python 绑定和原生测试。
+CMake 禁止标准降级与 GNU 语言扩展；MSVC 使用 `/std:c++20 /Zc:__cplusplus`，
+GCC/Clang 使用 `-std=c++20`。C 回调队列模块使用独立的 C 构建配置。
+
 获取代码：
 
 ```bash
@@ -118,6 +122,8 @@ C++ 核心可独立构建和测试，不依赖券商 SDK、数据库或交易连
 ```bash
 python -m xuntrade_omsems info
 ```
+
+原生后端信息中的 `cxx_standard: 202002` 表示扩展实际以 C++20 模式编译。
 
 原生计算运行失败会向调用方返回异常，不静默切换后端。
 

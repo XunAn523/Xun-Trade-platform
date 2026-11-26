@@ -1,5 +1,13 @@
 #pragma once
 
+#if defined(_MSVC_LANG)
+#if _MSVC_LANG < 202002L
+#error "XunTradeOMSEMS C++ sources require ISO C++20 or newer."
+#endif
+#elif __cplusplus < 202002L
+#error "XunTradeOMSEMS C++ sources require ISO C++20 or newer."
+#endif
+
 #include <cstddef>
 #include <cstdint>
 #include <span>

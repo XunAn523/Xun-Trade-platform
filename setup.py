@@ -7,7 +7,9 @@ import sys
 from setuptools import Extension, setup
 
 cpp_flags = (
-    ["/std:c++20", "/O2", "/EHsc"] if sys.platform == "win32" else ["-std=c++20", "-O3", "-pthread"]
+    ["/std:c++20", "/Zc:__cplusplus", "/O2", "/EHsc"]
+    if sys.platform == "win32"
+    else ["-std=c++20", "-O3", "-pthread"]
 )
 extensions = [
     Extension(

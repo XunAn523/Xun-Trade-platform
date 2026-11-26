@@ -213,6 +213,7 @@ print(json.dumps([assess_orders(((100,12,1200,1200),(2**63-1,2,1,1))),
 
 def test_explicit_native_requirement_matches_reported_backend():
     if compute.backend_info()["engine"] == "cpp20":
+        assert compute.backend_info()["cxx_standard"] == 202002
         compute.require_native()
     else:
         with pytest.raises(RuntimeError):
