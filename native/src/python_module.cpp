@@ -188,8 +188,9 @@ PyObject* assessments(PyObject*, PyObject* args) {
 }
 
 PyObject* backend_info(PyObject*, PyObject*) {
+    try {
     const auto capacity = xuntrade::compute_capacity();
-    return Py_BuildValue("{s:s,s:s,s:i,s:i,s:l,s:K,s:K,s:I,s:I,s:I,s:K}", "engine", "cpp20", "crc32c",
+    return Py_BuildValue("{s:s,s:s,s:i,s:i,s:l,s:K,s:K,s:I,s:I,s:I,s:K,s:I}", "engine", "cpp20", "crc32c",
                         xuntrade::crc32c_implementation(), "api_version", 1,
                         "maximum_workers", xuntrade::maximum_workers,
                         "cxx_standard", static_cast<long>(__cplusplus),
@@ -197,7 +198,9 @@ PyObject* backend_info(PyObject*, PyObject*) {
                         "maximum_compute_bytes", static_cast<unsigned long long>(xuntrade::maximum_compute_bytes),
                         "maximum_compute_calls", xuntrade::maximum_compute_calls,
                         "active_calls", capacity.calls, "active_workers", capacity.workers,
-                        "active_bytes", static_cast<unsigned long long>(capacity.bytes));
+                        "active_bytes", static_cast<unsigned long long>(capacity.bytes),
+                        "worker_pool_threads", xuntrade::worker_pool_thread_count());
+    } catch (...) { translate_exception(); return nullptr; }
 }
 
 PyMethodDef methods[]{

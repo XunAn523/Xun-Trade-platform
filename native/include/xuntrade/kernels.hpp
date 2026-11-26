@@ -59,6 +59,9 @@ struct ComputeCapacity {
     unsigned workers;
 };
 ComputeCapacity compute_capacity();
+std::uint64_t compute_process_id() noexcept;
+bool compute_process_is_owner() noexcept;
+unsigned worker_pool_thread_count() noexcept;
 
 // Binding-owned lease spans validation, copied inputs, calculation and outputs.
 class ComputeLease {

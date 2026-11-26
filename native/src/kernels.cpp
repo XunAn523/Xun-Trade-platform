@@ -3,8 +3,14 @@
 #include <algorithm>
 #include <array>
 #include <bit>
+#include <atomic>
+#include <condition_variable>
 #include <cstring>
+#include <deque>
+#include <exception>
+#include <functional>
 #include <limits>
+#include <mutex>
 #include <stdexcept>
 #include <thread>
 
@@ -27,6 +33,78 @@ constexpr auto crc_table = [] {
     }
     return table;
 }();
+
+std::atomic<unsigned> pool_threads{0};
+
+class WorkerPool {
+    std::mutex mutex_;
+    std::condition_variable ready_;
+    std::deque<std::function<void()>> jobs_;
+    std::vector<std::jthread> threads_;
+    bool closing_ = false;
+
+    void run() {
+        while (true) {
+            std::function<void()> job;
+            {
+                std::unique_lock lock(mutex_);
+                ready_.wait(lock, [&] { return closing_ || !jobs_.empty(); });
+                if (jobs_.empty()) return;
+                job = std::move(jobs_.front());
+                jobs_.pop_front();
+            }
+            job();
+        }
+    }
+public:
+    WorkerPool() { threads_.reserve(maximum_workers - 1); }
+    ~WorkerPool() {
+        {
+            std::lock_guard lock(mutex_);
+            closing_ = true;
+        }
+        ready_.notify_all();
+        threads_.clear();  // Join before destroying the queue or condition variable.
+    }
+
+    void submit(std::vector<std::function<void()>>& jobs, unsigned needed) {
+        std::unique_lock lock(mutex_);
+        if (closing_ || jobs_.size() + jobs.size() > 128)
+            throw std::runtime_error("native worker queue capacity exhausted");
+        while (threads_.size() < needed) {
+            threads_.emplace_back([this] { run(); });
+            pool_threads.store(static_cast<unsigned>(threads_.size()));
+        }
+        // Publish the entire group atomically. On allocation failure remove every
+        // newly queued closure before the workers can see its caller-owned state.
+        std::size_t added = 0;
+        try {
+            for (auto& job : jobs) { jobs_.push_back(std::move(job)); ++added; }
+        } catch (...) {
+            while (added > 0) { jobs_.pop_back(); --added; }
+            throw;
+        }
+        lock.unlock();
+        ready_.notify_all();
+    }
+};
+
+struct PoolOwner {
+    const std::uint64_t pid = compute_process_id();
+    WorkerPool* pool = new WorkerPool;
+    ~PoolOwner() {
+        // An inherited child has no copies of the parent's OS threads. Never
+        // lock/join their inherited C++ handles while the child is exiting.
+        if (pid == compute_process_id()) delete pool;
+    }
+};
+
+WorkerPool& worker_pool() {
+    if (!compute_process_is_owner())
+        throw std::runtime_error("native compute cannot be inherited through fork; use spawn");
+    static PoolOwner owner;
+    return *owner.pool;
+}
 
 #if defined(_M_X64) || defined(__x86_64__)
 bool has_sse42() noexcept {
@@ -119,22 +197,42 @@ void parallel_for(std::size_t count, unsigned workers, Function function) {
     if (workers == 0 || workers > maximum_workers)
         throw std::invalid_argument("workers must be in [1, 32]");
     if (count > maximum_batch_size) throw std::invalid_argument("batch exceeds 1000000 rows");
-    // Small batches do not amortize thread creation. Caller can reuse Python workers.
+    // Small batches stay on the caller. Larger requests reuse process-owned workers.
     workers = static_cast<unsigned>(std::min<std::size_t>(workers, count / 2048 + 1));
     if (workers <= 1) {
         for (std::size_t i = 0; i < count; ++i) function(i);
         return;
     }
-    std::vector<std::jthread> threads;
-    threads.reserve(workers - 1);
+    std::mutex state_mutex;
+    std::condition_variable complete;
+    unsigned remaining = workers - 1;
+    std::exception_ptr error;
+    std::vector<std::function<void()>> jobs;
+    jobs.reserve(workers - 1);
     for (unsigned worker = 1; worker < workers; ++worker) {
-        threads.emplace_back([&, worker] {
-            for (auto i = count * worker / workers; i < count * (worker + 1) / workers; ++i)
-                function(i);
+        jobs.emplace_back([&, worker] {
+            try {
+                for (auto i = count * worker / workers; i < count * (worker + 1) / workers; ++i)
+                    function(i);
+            } catch (...) {
+                std::lock_guard lock(state_mutex);
+                if (!error) error = std::current_exception();
+            }
+            std::lock_guard lock(state_mutex);
+            --remaining;
+            complete.notify_one();
         });
     }
-    for (std::size_t i = 0; i < count / workers; ++i) function(i);
-    // jthread joins on scope exit, including partial thread-creation failure.
+    worker_pool().submit(jobs, workers - 1);
+    try {
+        for (std::size_t i = 0; i < count / workers; ++i) function(i);
+    } catch (...) {
+        std::lock_guard lock(state_mutex);
+        if (!error) error = std::current_exception();
+    }
+    std::unique_lock lock(state_mutex);
+    complete.wait(lock, [&] { return remaining == 0; });
+    if (error) std::rethrow_exception(error);
 }
 }  // namespace
 
@@ -145,6 +243,7 @@ std::uint32_t crc32c_portable(std::span<const std::uint8_t> data) noexcept {
 }
 
 std::uint32_t crc32c(std::span<const std::uint8_t> data) noexcept { return selected_crc(data); }
+unsigned worker_pool_thread_count() noexcept { return pool_threads.load(); }
 const char* crc32c_implementation() noexcept {
     return selected_crc == crc32c_portable ? "portable-table" : "x86-sse4.2";
 }

@@ -231,6 +231,44 @@ def test_accounted_memory_budget_rejects_before_computing_and_releases_on_errors
     assert compute.backend_info()["active_bytes"] == 0
 
 
+def test_native_workers_are_reused_across_batches():
+    if compute.backend_info()["engine"] != "cpp20":
+        pytest.skip("native worker pool only")
+    ids = tuple(f"reuse-{i}" for i in range(12000))
+    expected = compute.session_shards(ids, 3, workers=4)
+    count = compute.backend_info()["worker_pool_threads"]
+    assert 3 <= count <= 31
+    assert compute.session_shards(ids, 3, workers=4) == expected
+    assert compute.backend_info()["worker_pool_threads"] == count
+
+
+@pytest.mark.skipif(not hasattr(os, "fork"), reason="POSIX fork boundary")
+def test_forked_child_rejects_inherited_pool_without_hanging():
+    if compute.backend_info()["engine"] != "cpp20":
+        pytest.skip("native pool only")
+    script = """
+import os
+from xuntrade_omsems.compute import session_shards
+session_shards(tuple(str(i) for i in range(12000)),3,workers=4)
+pid=os.fork()
+if pid == 0:
+    try:
+        session_shards(('child',),3)
+    except RuntimeError as exc:
+        os._exit(0 if 'spawn' in str(exc) else 2)
+    os._exit(3)
+_,status=os.waitpid(pid,0)
+raise SystemExit(os.waitstatus_to_exitcode(status))
+"""
+    subprocess.run(
+        [sys.executable, "-c", script],
+        check=True,
+        timeout=20,
+        cwd=ROOT,
+        env={**os.environ, "XUNTRADE_BACKEND": "native"},
+    )
+
+
 def test_native_error_does_not_silently_fall_back(monkeypatch):
     class Broken:
         @staticmethod
